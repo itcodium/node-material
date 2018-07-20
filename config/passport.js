@@ -21,6 +21,7 @@ module.exports = function (passport, config) {
     function signInUser(usuario, done) {
 		try {	
 				process.database.query('CALL usuarios_logIn(?)', usuario,function (error, user, fields) {
+				  console.log("error",error)
 				  if (error) throw error;
 				  
 				  if(user[0].length === 0){

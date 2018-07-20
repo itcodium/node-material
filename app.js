@@ -50,31 +50,29 @@ var port = config.port
 process.config.sql = config.sql;
 
 
-console.log('The value of PORT is:', process.env.PORT);
-
 
 var mysql = require('mysql');
 
-var pool;
-
-	if(process.env.NODE_ENV=="PRODUCTION"){
-		pool= mysql.createPool({
-		  connectionLimit : 50,
-		  host            : 'mysql',
-		  user            : 'root',
-		  password        : '123123',
-		  database        : 'mean'
-		});
-	}else{
-		pool= mysql.createPool({
+var ldb={
 		  connectionLimit : 50,
 		  host            : 'localhost',
 		  user            : 'root',
 		  password        : '123123',
 		  database        : 'mean'
-		});
+		};
+		
+var pool;
+
+	if(process.env.NODE_ENV=="PRODUCTION"){
+		ldb.host="mysql"
+		pool= mysql.createPool( ldb);
+	}else{
+		pool= mysql.createPool(ldb);
 	}
 process.database=pool;
+
+
+console.log('The db is:', ldb);
 
 
 /*

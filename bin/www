@@ -23,7 +23,9 @@ var port; // = normalizePort(process.env.PORT || '8080');
 		port = normalizePort('8080' );	 
 	}	
 	
-console.log("port ", port)	
+
+console.log('The value of PORT is:', port);
+
 app.set('port', port);
 
 /**
