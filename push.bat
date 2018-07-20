@@ -1,3 +1,3 @@
 git add .
-git commit -m "init repo"
-git push
+git commit -m "update uglify-js"
+git push origin master
