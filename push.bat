@@ -1,3 +1,3 @@
 git add .
-git commit -m "Modificacion nombre con mayuscula"
+git commit -m "Modificacion coneccion database"
 git push origin master

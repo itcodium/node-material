@@ -17,14 +17,23 @@
 module.exports = {
  
         site:"PP",
-        port: 5555,
+        port: 8080,
         db: 'mongodb://192.168.5.246:27017/macro_dev',
         root: rootPath,
         notifier: notifier,
         app: {      name: 'App demo',code:"PP"},
         sqlServer : {
-            user: 'test',
+            user: 'root',
             password: "123123",
+            server: 'mysql',
+            database: 'MacroPP_Dev',
+            pool: { max: 10, min: 0, idleTimeoutMillis: 10  },
+            requestTimeout: 15000
+            // , stream: true ,options: {encrypt: true // Use this if you're on Windows Azure}
+        },
+		sqlServer_dev : {
+            user: 'test',
+            password: "root",
             server: 'MYEQ-PC',
             database: 'MacroPP_Dev',
             pool: { max: 10, min: 0, idleTimeoutMillis: 10  },
@@ -37,6 +46,8 @@ module.exports = {
             host: 'localhost',
             database: 'mean'
 		}}
+ 
+ 
  
            
 
