@@ -1,0 +1,142 @@
+<md-card ng-init="load()">
+    <md-toolbar class="md-table-toolbar md-default">
+        <div class="md-toolbar-tools">
+            <span>Reporte Campañas Por Cierre</span>
+            <span flex></span>
+            <md-input-container class="md-toolMaster">
+                <label>Periodo + Entidad</label>
+                <md-select ng-model="grid.query.fechaHasta">
+                    <md-option ng-repeat="periodoInstancia in periodosInstancias"
+                               value="{{periodoInstancia.fecCierre}}">
+                        {{periodoInstancia.periodo + " - " + periodoInstancia.instancia}}
+                    </md-option>
+                </md-select>
+            </md-input-container>
+            <div flex="20">
+                <md-datepicker md-placeholder="Altas Desde" class="form-control input-sm"
+                               ng-model="grid.query.fechaDesde">
+                </md-datepicker>
+            </div>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="onFilter()">
+                <md-icon class="ready" ng-show="!filtrado" md-svg-src="img/icons/playlist_play.svg"></md-icon>
+                <md-icon class="done" ng-show="filtrado" md-svg-src="img/icons/playlist_check.svg"></md-icon>
+                <md-tooltip md-autohide> {{ !filtrado ?  'Aplicar filtro' : 'Filtro Aplicado' }}</md-tooltip>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <md-table-container>
+        <table data-md-table data-md-row-select single-selection="true" ng-model="grid.selected" md-progress="promise" id="grid">
+            <thead md-head data-md-order="grid.order">
+            <tr md-row>
+                <th md-column data-md-order-by="descripcion" ><span>Campaña</span></th>
+                <th md-column data-md-order-by="entidad" ><span>Entidad</span></th>
+                <th md-column data-md-order-by="total"><span>Total Tarjetas</span></th>
+                <th md-column data-md-order-by="habilitadas" >Total Habilitadas<span></span></th>
+            </tr>
+            </thead>
+
+            <tbody md-body>
+            <tr md-select="row" md-on-select="onSelectTotal" md-on-deselect="cleanDetails"
+                md-row data-ng-repeat="row in grid.data | orderBy: grid.order">
+                <td md-cell>{{::row.descripcion}}</td>
+                <td md-cell>{{::row.entidad}}</td>
+                <td md-cell>{{::row.total}}</td>
+                <td md-cell>{{::row.habilitadas}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+</md-card>
+
+<md-card  ng-if="grid.selected.length > 0">
+    <md-toolbar class="md-table-toolbar md-default">
+        <div class="md-toolbar-tools">
+            <span>Detalle</span>
+            <span flex></span>
+            <md-button id="Email" ng-show="detailGrid.count > 0"
+                       class="md-fab md-button md-ink-ripple md-cl-pink md-raised md-primary"
+                       type="button"
+                       ng-click="enviarMail()">
+                <md-tooltip md-autohide>Email</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_mail_white_24px.svg"> </md-icon>
+            </md-button>
+            <md-button class="md-icon-button md-button md-ink-ripple" ng-href="{{exportarAExcel()}}" target="_blank"
+                       ng-disable="detailGrid.data || detailGrid.data.length === 0">
+                <md-icon md-svg-src="img/icons/ic_file_download_36px.svg"></md-icon>
+                <md-tooltip md-autohide>Exportar XLSX</md-tooltip>
+            </md-button>
+            <!--<button class="md-icon-button md-button md-ink-ripple" type="button" ng-href="{{exportarAExcel()}}" target="_blank"
+                    ng-disable="detailGrid.data || detailGrid.data.length === 0">
+                <md-tooltip md-autohide>Exportar XLSX</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_file_download_36px.svg"></md-icon>
+            </button>-->
+        </div>
+    </md-toolbar>
+
+    <md-table-container class="md-scrollX">
+        <table data-md-table data-md-row-select="false" md-progress="promiseDetail" id="detalles">
+
+            <thead md-head data-md-order="detailGrid.query.order" md-on-reorder="onReorder" >
+            <tr md-row>
+                <th md-column data-md-order-by="nroCuenta"><span>Nro de Cuenta</span></th>
+                <th md-column data-md-order-by="entidad"><span>ENTINUME</span></th>
+                <th md-column data-md-order-by="sucursal" ><span>Sucursal</span></th>
+                <th md-column data-md-order-by="nombreSucursal" ><span>Nombre Sucursal</span></th>
+                <th md-column data-md-order-by="region" ><span>Región</span></th>
+                <th md-column data-md-order-by="division" ><span>División</span></th>
+                <th md-column data-md-order-by="fecCierre">ALTAFECHA<span></span></th>
+                <th md-column data-md-order-by="modLiq"><span>Modelo de Liquidación</span></th>
+                <th md-column data-md-order-by="grupoCC"><span>GRUPOCODI</span></th>
+                <th md-column data-md-order-by="estado"><span>CUENTAESTA</span></th>
+                <th md-column data-md-order-by="limComp"><span>Limite Preaprobado</span></th>
+                <th md-column data-md-order-by="nombre"><span>Nombre y Apellido</span></th>
+                <th md-column data-md-order-by="gaf"><span>Gaf</span></th>
+                <th md-column data-md-order-by="tipoDocumento"><span>DOCUTIPO</span></th>
+                <th md-column data-md-order-by="nroDocumento"><span>DOCUNUME</span></th>
+                <th md-column data-md-order-by="nroTarjeta"><span>TARJECATE</span></th>
+                <th md-column data-md-order-by="tarjetaEstado"><span>TARJEESTA</span></th>
+                <th md-column data-md-order-by="vendedor"><span>Vendedor</span></th>
+                <th md-column data-md-order-by="userId"><span>USERID</span></th>
+                <th md-column data-md-order-by="estrategia"><span>Estrategia</span></th>
+                <th md-column data-md-order-by="tipoTarjeta"><span>TipoTar</span></th>
+            </tr>
+            </thead>
+            <tbody md-body>
+            <tr md-row
+                data-ng-repeat="row2 in detailGrid.data
+                                | limitTo: detailGrid.query.limit : (detailGrid.query.page -1) * detailGrid.query.limit">
+                <td md-cell>{{row2.nroCuenta}}</td>
+                <td md-cell>{{row2.entidad}}</td>
+                <td md-cell>{{row2.sucursal}}</td>
+                <td md-cell>{{row2.nombreSucursal}}</td>
+                <td md-cell>{{row2.region}}</td>
+                <td md-cell>{{row2.division}}</td>
+                <td md-cell>{{row2.fecCierre | date: 'dd/MM/yyyy' : 'UTC'}}</td>
+                <td md-cell>{{row2.modLiq}}</td>
+                <td md-cell>{{row2.grupoCC}}</td>
+                <td md-cell>{{row2.estado}}</td>
+                <td md-cell>{{row2.limComp}}</td>
+                <td md-cell>{{row2.nombre}}</td>
+                <td md-cell>{{row2.gaf}}</td>
+                <td md-cell>{{row2.tipoDocumento}}</td>
+                <td md-cell>{{row2.nroDocumento}}</td>
+                <td md-cell>{{row2.nroTarjeta}}</td>
+                <td md-cell>{{row2.tarjetaEstado}}</td>
+                <td md-cell>{{row2.vendedor}}</td>
+                <td md-cell>{{row2.userId}}</td>
+                <td md-cell>{{row2.estrategia}}</td>
+                <td md-cell>{{row2.tipoTarjeta}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+
+    <data-md-table-pagination md-limit="detailGrid.query.limit"
+                              md-page="detailGrid.query.page"
+                              md-total="{{detailGrid.count}}"
+                              md-adc-info="{{detailGrid.message}}"
+                              md-on-paginate="onPaginate"
+                              md-page-select>
+    </data-md-table-pagination>
+</md-card>

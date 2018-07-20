@@ -1,0 +1,34 @@
+<md-card layout-padding>
+    <md-toolbar class="md-table-toolbar md-default" ng-show="cancelaciones.filter.show && cancelaciones.selected.length == 0">
+        <div class="md-toolbar-tools">
+            <span>Cancelaciones</span>
+            <span flex></span>
+            <md-button class="md-icon-button md-button md-ink-ripple"
+                       aria-label="filtrar"
+                       ng-click="cancelaciones.filter.show = false;">
+                <md-tooltip md-autohide>Filtrar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_filter_list_black_24px.svg"></md-icon>
+
+            </md-button>
+            <button class="md-fab md-button md-success md-ink-ripple" type="button" ng-click="config.openAddForm()">
+                <md-tooltip md-autohide>Agregar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_add_white_24px.svg"> </md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <md-toolbar class="md-table-toolbar md-default ng-hide" ng-show="!cancelaciones.filter.show &&  cancelaciones.selected.length ==0">
+        <div class="md-toolbar-tools">
+            <md-icon md-svg-src="img/icons/search.svg"></md-icon>
+            <form flex="" name="formFilter" class="ng-valid flex">
+                <input focus-search="!cancelaciones.filter.show" type="text" ng-model="cancelaciones.query.filter.value" placeholder="Buscar" >
+            </form>
+            <button class="md-icon-button md-button md-ink-ripple" type="button"  ng-click="config.removeFilter()">
+                <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+    <md-table-container class="md-tableHeadLine md-scrollX" >
+        <grilla mostrar-paginacion="true"  paginado-db="false" data="gillaBusqueda" ></grilla>
+    </md-table-container>
+</md-card>

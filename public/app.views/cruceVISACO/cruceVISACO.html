@@ -1,0 +1,349 @@
+<md-content>
+
+    <div layout="column">
+        <md-card>
+            <md-toolbar class="md-table-toolbar md-default">
+                <div class="md-toolbar-tools">
+                    <form name="formFilter" flex layout="row">
+                        
+                        <md-input-container flex="25">
+                            <md-select ng-model="filters.tipo" ng-change="vistaTotales = !vistaTotales">
+                                <md-option ng-repeat="tipo in tipos" ng-value="tipo.codigo">{{tipo.descripcion}}</md-option>
+                            </md-select>
+                        </md-input-container>
+
+                        <md-input-container flex="20">
+                            <md-select ng-model="filters.moneda" name="moneda" placeholder="Moneda">
+                                <md-option ng-value="opt.Moneda" ng-repeat="opt in monedas">{{opt.DescMoneda}}</md-option>
+                            </md-select>
+                        </md-input-container>
+
+                        <md-input-container flex="50">
+                            <md-datepicker required="true" type="date" name="fecProceso" md-placeholder="Fecha proceso"
+                                ng-model="filters.fecProceso"></md-datepicker>
+                            <div class="validation-messages" ng-messages="formFilter.fecProceso.$error">
+                                <div ng-message="valid">El valor no es una fecha valida.</div>
+                                <div ng-message="required">Ingresar fecha.</div>
+                            </div>
+                        </md-input-container>
+
+                        <md-input-container>
+                            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="onFilter()">
+                                <md-icon class="ready" ng-show="!filters.filtered" md-svg-src="img/icons/playlist_play.svg"></md-icon>
+                                <md-icon class="done" ng-show="filters.filtered" md-svg-src="img/icons/playlist_check.svg"></md-icon>
+                                <md-tooltip md-autohide> {{ !filters.filtered ?  'Aplicar filtro' : 'Filtro Aplicado' }}</md-tooltip>
+                            </button>
+                        </md-input-container>
+                    </form>
+                    <span flex></span>
+                    
+                    <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="exportarPDF()">
+                        <md-tooltip md-autohide>Descargar informe Reclamos SO</md-tooltip>
+                        <md-icon md-svg-src="img/icons/ic_launch_24px.svg"> </md-icon>
+                    </button>
+                    <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="enviarMail()">
+                        <md-tooltip md-autohide>Enviar por mail</md-tooltip>
+                        <md-icon md-svg-src="img/icons/ic_email_24px.svg"> </md-icon>
+                    </button>
+                </div>
+            </md-toolbar>
+            <div ng-show="!vistaTotales">
+                <md-card>
+                    <!--TOOLBAR PRINCIPAL-->
+                    <md-toolbar class="md-table-toolbar md-default">
+                        <div class="md-toolbar-tools">
+                            <span flex>Detalle</span>
+                            <div flex></div>
+                            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-disabled="detalleGrid.count === 0" ng-click="exportarExcel()">
+                                <md-tooltip md-autohide>Exportar Excel</md-tooltip>
+                                <md-icon md-svg-src="img/icons/ic_file_download_36px.svg"> </md-icon>
+                            </button>
+                        </div>
+                    </md-toolbar>
+
+                    <md-card class="md-padding" layout-xs="column" layout="row" ng-if="detalleGrid.count === 0">
+                        No se encontraron datos para mostrar
+                    </md-card>
+
+
+                    <md-table-container ng-if="detalleGrid.count > 0">
+                        <table data-md-table md-progress="promiseDetalle">
+
+                            <thead md-head>
+                                <tr md-row>
+                                    <th md-column>
+                                        <span>Usuario</span>
+                                    </th>
+                                    <th md-column>
+                                        <span>Tarjeta</span>
+                                    </th>
+                                    <th md-column>
+                                        <span>Reclamo</span>
+                                    </th>
+                                    <th md-column>
+                                        <span>Cupón</span>
+                                    </th>
+                                    <th md-column>
+                                        <span>Importe</span>
+                                    </th>
+                                    <th md-column>
+                                        <span>Est. SO</span>
+                                    </th>
+                                    <th md-column>
+                                        <span>Est. VISA</span>
+                                    </th>
+                                    <th md-column>
+                                        <span>Rec. VISA</span>
+                                    </th>
+                                    <th md-column>
+                                        <span>Cup. VISA</span>
+                                    </th>
+                                    <th md-column style="text-align: right;">
+                                        <span>Imp. VISA</span>
+                                    </th>
+                                    <th md-column>
+                                        <span>Dif. Estado</span>
+                                    </th>
+                                    <th md-column>
+                                        <span>Dif. Imp</span>
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            <tbody md-body>
+                                <tr md-row ng-repeat="row in detalleGrid.data">
+                                    <td md-cell>{{row.Usuario}}</td>
+                                    <td md-cell>{{row.Tarjeta}}</td>
+                                    <td md-cell>{{row.Reclamo}}</td>
+                                    <td md-cell>{{row.Cupon}}</td>
+                                    <td md-cell>{{formatNumber(row.Importe,',','.') }}</td>
+                                    <td md-cell>{{row.EstadoSO}}</td>
+                                    <td md-cell>{{row.EstadoVISA}}</td>
+                                    <td md-cell>{{row.RecVISA}}</td>
+                                    <td md-cell>{{row.CupVISA}}</td>
+                                    <td md-cell style="text-align: right;">{{formatNumber(row.ImpVISA,',','.') }}</td>
+                                    <td md-cell>{{row.DifEstado}}</td>
+                                    <td md-cell style="text-align: right;">{{formatNumber(row.DifImp,',','.') }}</td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </md-table-container>
+                </md-card>
+
+            </div>
+            <div layout="row" ng-show="vistaTotales">
+                <md-card flex="50" style="height:100%; margin-right:0px !important">
+
+                    <!--TOOLBAR PRINCIPAL-->
+                    <md-toolbar class="md-table-toolbar md-default">
+                        <div class="md-toolbar-tools">
+                            <span flex>Totales por Estado VISACO</span>
+                        </div>
+                    </md-toolbar>
+
+
+
+                    <md-card class="md-padding" layout-xs="column" layout="row" ng-if="totEstVISACOGrid.count === 0">
+                        No se encontraron datos para mostrar
+                    </md-card>
+
+
+                    <md-table-container ng-if="totEstVISACOGrid.count > 0">
+                        <table data-md-table md-progress="promiseEstVISACO">
+
+                            <thead md-head>
+                                <tr md-row>
+                                    <th md-column>
+                                        <span>Est. SO</span>
+                                    </th>
+                                    <th md-column style="text-align: center;">
+                                        <span>Cantidad</span>
+                                    </th>
+                                    <th md-column style="text-align: right;">
+                                        <span>Importe</span>
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            <tbody md-body>
+                                <tr md-row md-on-deselect="false" ng-repeat="row in totEstVISACOGrid.data">
+                                    <td md-cell>{{row.estado}}</td>
+                                    <td md-cell style="text-align: center;">{{row.cant}}</td>
+                                    <td md-cell style="text-align: right;">{{ row.sumImporte | number }}</td>
+                                </tr>
+                                <tr md-row md-on-deselect="false">
+                                    <td md-cell></td>
+                                    <td md-cell style="text-align: center;">Total Visaco:</td>
+                                    <td md-cell style="text-align: right;">{{ totEstVISACOGrid.totCant }} - {{ totEstVISACOGrid.totImporte | number }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </md-table-container>
+                </md-card>
+
+                <md-card flex="50" style="height: 100%">
+                    <md-toolbar class="md-table-toolbar md-default">
+                        <div class="md-toolbar-tools">
+                            <span flex>Totales por Estado reclamos VISA</span>
+                        </div>
+                    </md-toolbar>
+
+                    <md-card class="md-padding" layout-xs="column" layout="row" ng-if="totReclamosVISAGrid.count === 0">
+                        No se encontraron datos para mostrar
+                    </md-card>
+
+                    <md-table-container ng-if="totReclamosVISAGrid.count > 0">
+                        <table data-md-table ng-model="totReclamosVISAGrid.selected" md-progress="promiseTotReclamosVISA">
+                            <thead md-head>
+                                <tr md-row>
+                                    <th md-column>
+                                        <span>Est. VISA</span>
+                                    </th>
+                                    <th md-column style="text-align: center;">
+                                        <span>Cantidad</span>
+                                    </th>
+                                    <th md-column style="text-align: right;">
+                                        <span>Importe</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody md-body>
+                                <tr md-row md-on-deselect="false" ng-repeat="row in totReclamosVISAGrid.data">
+                                    <td md-cell>{{row.estadoVISA}}</td>
+                                    <td md-cell style="text-align: center;">{{row.cantidad}}</td>
+                                    <td md-cell style="text-align: right;">{{row.impReclamo | number}}</td>
+                                </tr>
+                                <tr md-row md-on-deselect="false">
+                                    <td md-cell></td>
+                                    <td md-cell style="text-align: center;">Total Reclamos:</td>
+                                    <td md-cell style="text-align: right;">{{ totReclamosVISAGrid.totCant }} - {{ totReclamosVISAGrid.totImporte | number }}</td>
+                                </tr>
+                            </tbody>
+                            <tfoot md-foot>
+                            </tfoot>
+                        </table>
+                    </md-table-container>
+                </md-card>
+            </div>
+        </md-card>
+    </div>
+
+    <div layout="column" ng-show="vistaTotales">
+        <md-card>
+
+            <div layout="row">
+                <md-card flex="60" style="height:100%; margin-right:0px !important">
+
+                    <!--TOOLBAR PRINCIPAL-->
+                    <md-toolbar class="md-table-toolbar md-default">
+                        <div class="md-toolbar-tools">
+                            <span flex>Totales por Estado VISACO asociado</span>
+                        </div>
+                    </md-toolbar>
+
+
+
+                    <md-card class="md-padding" layout-xs="column" layout="row" ng-if="totVisaAsociadosGrid.count === 0">
+                        No se encontraron datos para mostrar
+                    </md-card>
+
+
+                    <md-table-container ng-if="totVisaAsociadosGrid.count > 0">
+                        <table data-md-table md-progress="promiseTotVISAAsociados">
+
+                            <thead md-head>
+                                <tr md-row>
+                                    <th md-column>
+                                        <span>Est. VISA</span>
+                                    </th>
+                                    <th md-column style="text-align: right;">
+                                        <span>Cant. SO</span>
+                                    </th>
+                                    <th md-column style="text-align: right;">
+                                        <span>Total SO</span>
+                                    </th>
+                                    <th md-column>
+                                        <span>Est. VISA</span>
+                                    </th>
+                                    <th md-column style="text-align: right;">
+                                        <span>Cant. VISA</span>
+                                    </th>
+                                    <th md-column style="text-align: right;">
+                                        <span>Total VISA</span>
+                                    </th>
+                                    <th md-column style="text-align: right;">
+                                        <span>Dif. Cant.</span>
+                                    </th>
+                                    <th md-column style="text-align: right;">
+                                        <span>Dif. Total</span>
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            <tbody md-body>
+                                <tr md-row md-on-deselect="false" ng-repeat="row in totVisaAsociadosGrid.data">
+                                    <td md-cell>{{row.estado}}</td>
+                                    <td md-cell style="text-align: right;">{{row.cantSO}}</td>
+                                    <td md-cell style="text-align: right;">{{formatNumber(row.TotalSO,',','.') }}</td>
+                                    <td md-cell>{{row.estadoVisa}}</td>
+                                    <td md-cell style="text-align: right;">{{row.cantidad}}</td>
+                                    <td md-cell style="text-align: right;">
+                                        {{row.TotalVISA==nul? '': formatNumber(row.TotalVISA,',','.')}}
+                                    </td>
+                                    <td md-cell style="text-align: right;">{{row.DifCant}}</td>
+                                    <td md-cell style="text-align: right;">{{row.diftot==nul? '': formatNumber(row.diftot,',','.')}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </md-table-container>
+                </md-card>
+
+                <md-card flex="40" style="height: 100%">
+                    <md-toolbar class="md-table-toolbar md-default">
+                        <div class="md-toolbar-tools">
+                            <span flex>Totales por cambio de Estado</span>
+                        </div>
+
+                    </md-toolbar>
+
+                    <md-card class="md-padding" layout-xs="column" layout="row" ng-if="totCambioEstadoGrid.count === 0">
+                        No se encontraron datos para mostrar
+                    </md-card>
+
+                    <md-table-container ng-if="totCambioEstadoGrid.count > 0">
+                        <table data-md-table md-progress="promiseCambioEstado">
+                            <thead md-head>
+                                <tr md-row>
+                                    <th md-column>
+                                        <span>Est. SO</span>
+                                    </th>
+                                    <th md-column>
+                                        <span>Est. VISA</span>
+                                    </th>
+                                    <th md-column style="text-align: right;">
+                                        <span>Cant. SO</span>
+                                    </th>
+                                    <th md-column style="text-align: right;">
+                                        <span>Total SO</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody md-body>
+                                <tr md-row md-on-deselect="false" md-row ng-repeat="row in totCambioEstadoGrid.data">
+                                    <td md-cell>{{row.EstSO}}</td>
+                                    <td md-cell>{{row.EstVisa}}</td>
+                                    <td md-cell style="text-align: right;">{{row.CantSO}}</td>
+                                    <td md-cell style="text-align: right;">{{formatNumber(row.TotalSO,',','.') }}</td>
+                                </tr>
+                            </tbody>
+                            <tfoot md-foot>
+                            </tfoot>
+                        </table>
+                    </md-table-container>
+                </md-card>
+            </div>
+        </md-card>
+    </div>
+
+</md-content>

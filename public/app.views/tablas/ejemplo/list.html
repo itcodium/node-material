@@ -1,0 +1,145 @@
+
+
+<!--<div id="toastSelect" xmlns:md="http://www.w3.org/1999/xhtml">-->
+<!--</div>-->
+
+
+<md-card>
+    <!--TOOLBAR PRINCIPAL-->
+    <md-toolbar class="md-table-toolbar md-default" ng-show="!grilla.selected.length && !grilla.filter.show">
+        <div class="md-toolbar-tools">
+            <span>Palanganas</span>
+            <span flex></span>
+            <md-button ng-click="hideCheckboxes = !hideCheckboxes">{{hideCheckboxes ? 'Permitir elegir' : 'No dejar elegir'}}</md-button>
+            <md-button ng-click="hideHead = !hideHead">{{hideHead ? 'Mostrar títulos' : 'Decapitar'}}</md-button>
+            <md-button ng-click="blah = !blah">{{blah ? 'encender' : 'apagar'}}</md-button>
+
+            <span flex></span>
+
+            <md-switch class="md-primary md-body-1"  aria-label="Switch de ejemplo" ng-model="optblah">
+                {{optblah ? 'con eliminados' : 'sin eliminados'}}
+            </md-switch>
+
+            <span flex></span>
+
+            <md-button ng-click="loadStuff()">Load</md-button>
+
+            <md-button class="md-icon-button md-button md-ink-ripple"
+                       aria-label="filtrar"
+                       ng-click="grilla.filter.show = true">
+                <md-tooltip md-autohide>filtrar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_filter_list_black_24px.svg"> </md-icon>
+            </md-button>
+
+            <button class="md-icon-button md-button md-ink-ripple" type="button"  ng-click="gd.add($event)">
+                <md-tooltip md-autohide>Agregar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_add_black_24px.svg"> </md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <!--TOOLBAR PARA SEARCH-->
+    <md-toolbar class="md-table-toolbar md-default ng-hide" ng-show="grilla.filter.show && !grilla.selected.length">
+        <div class="md-toolbar-tools">
+            <md-icon md-svg-src="img/icons/search.svg"></md-icon>
+            <form flex="" name="filter.form" class="ng-valid flex">
+                <input type="text" ng-model="grilla.query.filter" placeholder="search" >
+                <!--ng-model-options="filter.options"-->
+            </form>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="gd.removeFilter()">
+                <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <!--TOOLBAR PARA EDICION-->
+    <md-toolbar class="md-table-toolbar alternate" ng-show="grilla.selected.length">
+        <div class="md-toolbar-tools">
+            <span>{{grilla.selected.length}} {{grilla.selected.length > 1 ? 'items' : 'item'}} seleccionados</span>
+            <span flex></span>
+            <md-button ng-show="grilla.selected.length < 2" class="md-icon-button"
+                       aria-label="funcionalidad no especifica"
+                       ng-click="gd.add($event)">
+                <md-tooltip md-autohide>modificar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_edit_black_24px.svg"></md-icon>
+            </md-button>
+
+            <md-button class="md-icon-button"
+                       aria-label="funcionalidad no especifica"
+                       ng-click="gd.del($event)">
+                <md-tooltip md-autohide>eliminar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_delete_black_24px.svg"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+
+    <!--GRILLA-->
+    <md-table-container>
+        <table data-md-table data-md-row-select="!hideCheckboxes" data-ng-model="grilla.selected" md-progress="promise">
+
+            <!--este es el encabezado metodo automático (con un obj columns dentro del obj grilla)
+            <thead ng-if="!hideHead" md-head md-order="grilla.query.order" md-on-reorder="onReorder">
+            <tr md-row>
+                <th md-column ng-repeat="pepe in griData.columns" md-numeric="column.numeric" md-order-by="{{column.orderBy}}">
+                    <span>{{pepe.name}}</span>
+                    <span ng-if="pepe.tip">({{pepe.tip}})</span>
+                    <md-tooltip ng-if="pepe.tooltip" md-autohide md-direction="top">{{pepe.tooltip}}</md-tooltip>
+                </th>
+            </tr>
+            </thead>
+            -->
+
+            <!--barra de titulos-->
+            <thead ng-if="!hideHead" md-head data-md-order="qrilla.query.order" md-on-reorder="onReorder">
+            <tr md-row>
+                <th md-column md:order:by="name"><span>Palangana (100g en el chino) </span></th>
+
+                <th md-column data-md-order-by="codSucursal">
+                    <span>hay tooltip</span>
+                    <md-tooltip md-autohide md-direction="top">este es un tooltip</md-tooltip>
+                </th>
+
+                <th md-column data-md-numeric data-md-order-by="calories.value" data-md-desc><span>Es numerico</span></th>
+                <th md-column data-md-numeric data-md-order-by="fat.value" data-md-desc><span>Descendente (g)</span></th>
+                <th md-column data-md-numeric data-md-order-by="protein.value" data-hide-sm><span>Protein (g)</span></th>
+                <th md-column data-md-numeric data-md-order-by="iron.value" data-hide-md><span>Este desaparece (%)</span></th>
+                <th md-column data-md-order-by="comment" data-hide-xs>
+                    <md-icon md-svg-src="img/icons/ic_comment_24px.svg"></md-icon>
+                    <span>Comments</span>
+                </th>
+            </tr>
+            </thead>
+
+
+            <!--rows de datos-->
+            <tbody md-body>
+            <tr md-row md:select="row" data-md-on-select="gd.log"
+                md-on-deselect="gd.deselect"
+                x-md-auto-select="!blah"
+                ng-disabled="row.calories.value > 400"
+                data-ng-repeat="row in grilla.data | filter: filter.search | orderBy: grilla.query.order | limitTo: grilla.query.limit : (grilla.query.page -1) * grilla.query.limit">
+
+                <td md-cell>{{row.name}}</td>
+                <td md-cell>
+                    <md-select ng-model="row.type" placeholder="Other">
+                        <md-option ng-value="type" ng-repeat="type in gd.getTypes()">{{type}}</md-option>
+                    </md-select>
+                </td>
+                <td md-cell>{{row.calories.value}}</td>
+                <td md-cell>{{row.fat.value | number: 2}}</td>
+                <td md-cell hide-sm>{{row.protein.value | number: 2}}</td>
+                <td md-cell hide-md>{{row.iron.value}}%</td>
+                <td md-cell hide-xs ng-click="gd.editComment($event, row)" ng-class="{'md-placeholder': !row.comment}">
+                    {{row.comment || 'Add a comment'}}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+
+    <data-md-table-pagination md-limit="grilla.query.limit" md-page="grilla.query.page" md-total="{{grilla.count}}" md-on-paginate="onPaginate" md-page-select>
+    </data-md-table-pagination>
+
+</md-card>
+

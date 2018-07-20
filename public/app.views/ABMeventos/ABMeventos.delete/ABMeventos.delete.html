@@ -1,0 +1,68 @@
+<md-dialog aria-label="ABM eventos"flex="50">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Baja de Eventos</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon md-svg-src="/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="toastParent">
+        <form ng-submit="formEventoDelete.$valid && submit()" name="formEventoDelete" role="form">
+            <div class="md-dialog-content mddc-thead">
+                <div layout-gt-xs="row">
+                    <md-input-container>
+                        <md-datepicker name="fecBaja" required=""
+                                       md-min-date="currentDate"
+                                       ng-model="fecBaja">
+                        </md-datepicker>
+                        <div class="validation-messages" ng-messages="formEventoDelete.fecBaja.$error">
+                            <div ng-message="valid">La fecha no es valida!</div>
+                            <div ng-message="mindate">La fecha no puede ser menor a la fecha actual!</div>
+                            <div ng-message="required">La fecha de baja es obligatoria!</div>
+                        </div>
+                    </md-input-container>
+                </div>
+            </div>
+            <div class="md-dialog-content" style="padding-top: 0;">
+                <div class="modal-body">
+                    <md-table-container>
+                        <table data-md-table>
+
+                            <!--barra de titulos-->
+                            <thead ng-if="!hideHead" md-head data-md-order="eventosDelete.query.order" md-on-reorder="onReorder">
+                            <tr md-row>
+                                <th md-column md:order:by="codEvento"><span>Evento</span></th>
+                                <th md-column data-md-order-by="descripcion"><span>Descripcion</span></th>
+                            </tr>
+                            </thead>
+                            <!--rows de datos-->
+                            <tbody md-body>
+                            <tr md-row data-ng-repeat="row in eventosDelete.data | orderBy: eventosDelete.query.order | limitTo: eventosDelete.query.limit : (eventosDelete.query.page -1) * eventosDelete.query.limit">
+                                <td md-cell>{{row.codEvento}}</td>
+                                <td md-cell class="row-break">{{row.descripcion}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </md-table-container>
+
+                    <data-md-table-pagination
+                            md-limit="eventosDelete.query.limit"
+                            md-page="eventosDelete.query.page"
+                            md-total="{{eventosDelete.data.length}}"
+                            md-on-paginate="onPaginateSuc"
+                            md-page-select>
+                    </data-md-table-pagination>
+
+                </div>
+            </div>
+            <md-dialog-actions layout="row">
+                <a href="javascript:void(0)" class= "md-button md-ink-ripple" ng-click="cancel()">Cancelar</a>
+                <md-button type="submit" class="md-raised md-primary md-button md-ink-ripple">
+                    <span>Aceptar</span>
+                </md-button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog-content>
+</md-dialog>

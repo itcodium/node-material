@@ -1,0 +1,194 @@
+<md-content xmlns:md="http://www.w3.org/1999/xhtml">
+
+    <div layout="column">
+        <md-card>
+            <div layout="row">
+                <md-card flex="50" style="height:100%; margin-right:0px !important">
+
+                    <!--TOOLBAR PRINCIPAL-->
+                    <md-toolbar class="md-table-toolbar md-default">
+                        <div class="md-toolbar-tools">
+                            <span>Totales por CIE</span>
+                            <span flex></span>
+                            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="showAdvanced()" ng-show="totCieGrid.selected.length != 0">
+                                <md-tooltip md-autohide>Detalle</md-tooltip>
+                                <md-icon md-svg-src="img/icons/ic_launch_24px.svg"> </md-icon>
+                            </button>
+                        </div>
+                    </md-toolbar>
+
+
+
+                    <md-card class="md-padding" layout-xs="column" layout="row" ng-if="totCieGrid.count === 0">
+                        No se encontraron datos para mostrar
+                    </md-card>
+
+
+                    <md-table-container ng-if="totCieGrid.count > 0" >
+                        <table data-md-table  md-progress="promiseEstVISACO">
+
+                            <thead md-head >
+                            <tr md-row >
+                                <th md-column ></th>
+                                <th md-column style="text-align: center;" ><span>CIE</span></th>
+                                <th md-column style="text-align: center;"><span>Cantidad</span></th>
+                                <th md-column style="text-align: center;"><span>Importe</span></th>
+                            </tr>
+                            </thead>
+
+                            <tbody md-body>
+                            <tr md-row md:select="row"
+                                data-md-on-select=""
+                                md-on-deselect=""
+                                x-md-auto-select=""
+                                ng-repeat="row in totCieGrid.data | limitTo: totCieGrid.query.limit : (totCieGrid.query.page - 1) * totCieGrid.query.limit">
+                                <td md-cell>
+                                    <md-checkbox ng-model="row.selected" aria-label="" id="{{$index}}" ng-change="selectCheckbox($index, row)"></md-checkbox>
+                                </td>
+                                <td md-cell style="text-align: center;">{{row.nroCie}}</td>
+                                <td md-cell style="text-align: center;">{{showVal(row.cant, 'int')}}</td>
+                                <td md-cell style="text-align:right;padding-right: 10%;">{{showVal(row.importe, 'number')}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </md-table-container>
+
+
+                    <md-table-pagination md-limit= totCieGrid.query.limit
+                                         md-page= totCieGrid.query.page
+                                         md-total= {{totCieGrid.count}}>
+                    </md-table-pagination>
+                </md-card>
+
+                <md-card  flex="50" style="height: 100%">
+                    <md-toolbar class="md-table-toolbar md-default">
+                        <div class="md-toolbar-tools">
+                            <span>Totales por Cancelaciones</span>
+                            <span flex></span>
+                            <md-button class="md-icon-button md-button md-ink-ripple" ng-href="{{exportarExcel()}}" target="_blank" ng-show="totCancelacionesGrid.selected.length != 0">
+                                <md-tooltip md-autohide>Exportar Excel</md-tooltip>
+                                <md-icon md-svg-src="img/icons/ic_file_download_36px.svg"> </md-icon>
+                            </md-button>
+                            <!--
+                            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-href="exportarExcel()" target="_blank" ng-show="totCancelacionesGrid.selected.length != 0">
+                                <md-tooltip md-autohide>Exportar Excel</md-tooltip>
+                                <md-icon md-svg-src="img/icons/ic_file_download_36px.svg"> </md-icon>
+                            </button>
+                            -->
+                            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="showDetailCis()" ng-show="totCancelacionesGrid.selected.length != 0">
+                                <md-tooltip md-autohide>Detalle</md-tooltip>
+                                <md-icon md-svg-src="img/icons/ic_launch_24px.svg"> </md-icon>
+                            </button>
+                        </div>
+                    </md-toolbar>
+
+                    <md-card class="md-padding" layout-xs="column" layout="row" ng-if="totCancelacionesGrid.count === 0">
+                        No se encontraron datos para mostrar
+                    </md-card>
+
+                    <md-table-container ng-if="totCancelacionesGrid.count > 0">
+                        <table data-md-table ng-model="totCancelacionesGrid.selected" md-progress="promiseTotReclamosVISA">
+                            <thead md-head>
+                            <tr md-row >
+                                <th md-column ></th>
+                                <th md-column style="text-align: center;"><span>Fecha</span></th>
+                                <th md-column style="text-align: center;"><span>Cantidad</span></th>
+                                <th md-column style="text-align: center;"><span>Importe</span></th>
+                            </tr>
+                            </thead>
+                            <tbody md-body>
+                            <tr md-row md-on-deselect="false"
+                                md-row ng-repeat="row in totCancelacionesGrid.data">
+                                <td md-cell>
+                                    <md-checkbox ng-model="row.selected" aria-label="" id="{{$index}}" ng-change="selectCheckboxCancelaciones($index, row)"></md-checkbox>
+                                </td>
+                                <td md-cell style="text-align: center;">{{ convertToDate(row.fecha) | date: 'dd/MM/yyyy'}}</td>
+                                <td md-cell  style="text-align: center;">{{row.cant}}</td>
+                                <td md-cell style="text-align:right;padding-right: 10%">{{showVal(row.importe, 'number')}}</td>
+                            </tr>
+                            </tbody>
+                            <tfoot md-foot>
+                            </tfoot>
+                        </table>
+                    </md-table-container>
+
+                    <data-md-table-pagination md-limit="totCancelacionesGrid.query.limit"
+                                              md-page="totCancelacionesGrid.query.page"
+                                              md-total="{{totCancelacionesGrid.count}}"
+                                              md-page-select>
+                    </data-md-table-pagination>
+                </md-card>
+            </div>
+        </md-card>
+    </div>
+
+    <div layout="column">
+        <md-card>
+
+            <div layout="row">
+                <md-card flex="100" style="height:100%; overflow-x:scroll;" >
+
+                    <!--TOOLBAR PRINCIPAL-->
+                    <md-toolbar class="md-table-toolbar md-default">
+                        <div class="md-toolbar-tools">
+                            <span flex >Historico</span>
+                            <span flex style="text-align: right;font-size: 0.65em;"><b> Total Pendiente: {{ appFormatNumber(HistoricoGrid.totalPendiente)}} </b></span>
+                        </div>
+                    </md-toolbar>
+
+
+
+                    <md-card class="md-padding" layout-xs="column" layout="row" ng-if="HistoricoGrid.count === 0">
+                        No se encontraron datos para mostrar
+                    </md-card>
+
+
+                    <md-table-container ng-if="HistoricoGrid.count > 0" >
+                        <table data-md-table md-progress="promiseTotVISAAsociados">
+
+                            <thead md-head >
+                            <tr md-row >
+                                <th md-column style="text-align: right;"><span>CIE</span></th>
+                                <th md-column style="text-align: right;"><span>Fec. Cierre</span></th>
+                                <th md-column style="text-align: left;"><span>Nro. Tarjeta</span></th>
+                                <th md-column style="text-align: right;"><span>Nro. Cpte</span></th>
+                                <th md-column style="text-align: right;"><span>Importe en U$</span></th>
+                                <th md-column style="text-align: right;"><span>Fec. Pago</span></th>
+                                <th md-column style="text-align: right;"><span>Sucursal</span></th>
+                                <th md-column style="text-align: right;"><span>Fec. Origen</span></th>
+                                <th md-column style="text-align: right;"><span>Nro. Comercio</span></th>
+                                <th md-column style="text-align: left;"><span>Nombre Comercio</span></th>
+                                <th md-column style="text-align: right;"><span>Importe</span></th>
+                            </tr>
+                            </thead>
+
+                            <tbody md-body>
+                            <tr md-row
+                                md-on-deselect="false"
+                                ng-repeat="row in HistoricoGrid.data | limitTo: HistoricoGrid.query.limit : (HistoricoGrid.query.page - 1) ">
+                                <td md-cell  style="text-align: right;">{{row.nroCie}}</td>
+                                <td md-cell  style="text-align: right;">{{dateformat(row.fecCIE)}}</td>
+                                <td md-cell  style="text-align: left;">{{row.nroTarjeta}}</td>
+                                <td md-cell  style="text-align: right;">{{row.nroCpte}}</td>
+                                <td md-cell  style="text-align:right;padding-right: 2%">{{row.impDolares}}</td>
+                                <td md-cell  style="text-align: right;">{{dateformat(row.fecPago)}}</td>
+                                <td md-cell  style="text-align: right;">{{row.sucursal}}</td>
+                                <td md-cell  style="text-align: right;">{{dateformat(row.fecOrigen)}}</td>
+                                <td md-cell  style="text-align: right;">{{row.nroComercio}}</td>
+                                <td md-cell  style="text-align: left;">{{row.nombreComercio}}</td>
+                                <td md-cell  style="text-align:right;padding-right: 2%">{{row.importe}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </md-table-container>
+
+                    <md-table-pagination md-limit= HistoricoGrid.query.limit
+                                         md-page= HistoricoGrid.query.page
+                                         md-total= {{HistoricoGrid.data.length}}>
+                    </md-table-pagination>
+                </md-card>
+            </div>
+        </md-card>
+    </div>
+
+</md-content>

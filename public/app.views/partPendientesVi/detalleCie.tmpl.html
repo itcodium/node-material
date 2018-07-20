@@ -1,0 +1,70 @@
+<md-dialog>
+
+    <div layout="row">
+        <md-card style="height:100%;">
+
+            <!--TOOLBAR PRINCIPAL-->
+            <md-toolbar class="md-table-toolbar md-default">
+                <div class="md-toolbar-tools">
+                    <span>Nro. CIE {{detalleCieGrid.data[0].nroCie}}</span>
+<!--
+                    <div style="text-align: right;width: 80%;">
+                        <span style="padding-right: 50px;">Cant: {{detalleCieGrid.data[0].cant}}</span>
+                        <span>Importe: {{detalleCieGrid.data[0].total}}</span>
+                    </div>
+-->
+                </div>
+            </md-toolbar>
+
+
+
+            <md-card class="md-padding" layout-xs="column" layout="row" ng-if="detalleCieGrid.count === 0">
+                No se encontraron datos para mostrar
+            </md-card>
+
+
+            <md-table-container ng-if="detalleCieGrid.count > 0" >
+                <table data-md-table md-progress="promiseEstVISACO">
+
+                    <thead md-head >
+                    <tr md-row>
+                        <th md-column><span>Fecha</span></th>
+                        <th md-column><span>Nro. Tarjeta</span></th>
+                        <th md-column><span>Nro. Ref. Microfilm</span></th>
+                        <th md-column><span>Nro. Cpte</span></th>
+                        <th md-column><span>Imp. en U$</span></th>
+                        <th md-column><span>Cod.Au</span></th>
+                        <th md-column><span>Rubro</span></th>
+                        <th md-column><span>Cod.Ra</span></th>
+                    </tr>
+                    </thead>
+
+                    <tbody md-body>
+                    <tr md-row
+                        md-on-deselect="false"
+                        ng-repeat="row in detalleCieGrid.data | limitTo: detalleCieGrid.query.limit : (detalleCieGrid.query.page - 1) * detalleCieGrid.query.limit">
+                        <td md-cell style="text-align: right">{{showVal(row.fecCie, 'date')}}</td>
+                        <td md-cell>{{row.nroTarjeta}}</td>
+                        <td md-cell>{{row.nroReferencia}}</td>
+                        <td md-cell style="text-align: right">{{row.nroCpte}}</td>
+                        <td md-cell style="text-align: right">{{showVal(row.impDolares, 'number')}}</td>
+                        <td md-cell style="text-align: right">{{row.codAut}}</td>
+                        <td md-cell style="text-align: right">{{row.rubro}}</td>
+                        <td md-cell style="text-align: right">{{row.codRaz}}</td>
+                    </tr>
+                    </tbody>
+
+                </table>
+            </md-table-container>
+
+
+            <md-table-pagination md-limit= detalleCieGrid.query.limit
+                                 md-page= detalleCieGrid.query.page
+                                 md-adc-info="{{detalleCieGrid.totales}}"
+                                 md-total= {{detalleCieGrid.count}}>
+            </md-table-pagination>
+        </md-card>
+    </div>
+
+
+</md-dialog>

@@ -1,0 +1,56 @@
+<md-dialog aria-label="ABM de retencion" ng-init="initPopUp()" ng-cloak flex="30">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>{{operac}} de retencion</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="ctrl.cancel()">
+                <md-icon md-svg-src="/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="toastParent">
+        <div class="md-dialog-content">
+            <div class="modal-body">
+                <form id="Container_Form" ng-submit="ctrl.confirmOperation(formRetencion.$error)" name="formRetencion" role="form">
+                    <div class="row altaPopUp">
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex="20">
+                                <label for="txtCode">Cod.</label>
+                                <input type="text" ng-disabled="operac != 'Alta'" name="code" ng-pattern="regexOnlyNumbers" id="txtCode" maxlength="3"
+                                       ng-model="retencion.codRegimen" required role="codigo">
+                                <span class=".control-group.error .control-label md-error" ng-if="errorForm == true" ng-show="formRetencion.code.$error.pattern">El código de Tipo de Documento <i>sólo acepta carácteres numéricos</i>.</span>
+                                <span class=".control-group.error .control-label md-error" ng-if="errorForm == true" ng-show="formRetencion.code.$error.required">Ingrese Código.</span>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex>
+                                <label for="txtDescripcion">Descripción:</label>
+                                <input type="text" name="descripcion" maxlength="50" id="txtDescripcion"
+                                       ng-model="retencion.descripcion" required role="descripcion">
+                                <span class=".control-group.error .control-label md-error" ng-if="errorForm == true" ng-show="formRetencion.descripcion.$error.required">Ingrese Descripción.</span>
+                            </md-input-container>
+                        </div>
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex>
+                                <label for="selectCuentas">Cuenta:  </label>
+                                <md-select id="selectCuentas" name="cuentas" ng-model="retencion.cuenta" required>
+                                    <md-option ng-value="null"></md-option>
+                                    <md-option  ng-value="cuenta" ng-repeat="cuenta in cuentas">{{cuenta.cuenta}}</md-option>
+                                </md-select>
+                            </md-input-container>
+                            <span class=".control-group.error .control-label md-error" ng-if="errorForm == true" ng-show="formRetencion.cuentas.$error.required">Seleccionar cuenta.</span>
+                        </div>
+
+                    </div>
+                    <input type="submit"
+                           style="position: absolute; left: -9999px; width: 1px; height: 1px;"
+                           tabindex="-1" />
+                </form>
+            </div>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <a href="javascript:void(0)" class="md-button md-ink-ripple" ng-click="ctrl.cancel()">Cancelar</a>
+        <md-button type="button" class="md-raised md-primary md-button md-ink-ripple" ng-click="ctrl.confirmOperation(formRetencion.$error)" data-dismiss="modal">
+            <span>Aceptar</span>
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

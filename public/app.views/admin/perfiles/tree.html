@@ -1,0 +1,22 @@
+
+    <div md-ink-ripple ng-clicable bp4-tree-handle class="tree-node">
+        <div class="tree-list-tree">
+            <a ng-if="node.children && node.children.length > 0 && collapsed" data-nodrag ng-click="toggle(this)">
+                <md-icon class="tree-chevron" md-svg-src="/img/icons/ic_keyboard_arrow_right_24px.svg" aria-label=""></md-icon>
+            </a>
+            <a ng-if="node.children && node.children.length > 0 && !collapsed" data-nodrag ng-click="toggle(this)">
+                <md-icon class="tree-chevron" md-svg-src="/img/icons/ic_keyboard_arrow_down_24px.svg" aria-label=""></md-icon>
+            </a>
+            {{node.title}}
+
+            <md-checkbox aria-label="treenode" ng-model="node.selected" ng-change="toggleChecks(node)"></md-checkbox>
+        </div>
+    </div>
+    <ol bp4-tree-nodes="" ng-model="node.children" ng-class="{hidden: collapsed}" ng-show="!collapsed" style="list-style: none;">
+        <li ng-repeat="node in node.children" bp4-tree-node data-ng-include="'/app.views/admin/perfiles/tree.html'">
+        </li>
+    </ol>
+
+
+
+

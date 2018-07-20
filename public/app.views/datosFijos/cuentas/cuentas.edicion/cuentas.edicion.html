@@ -1,0 +1,104 @@
+<md-dialog aria-label="ABM porcentaje comisión" flex="50">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>{{mode}} </h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon md-svg-src="/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <form name="formComision" ng-submit="submit()" role="form" novalidate>
+        <md-dialog-content class="toastParent">
+            <div class="md-dialog-content">
+                <div class="modal-body">
+                        <div class="row altaPopUp">
+                            <div layout-gt-sm="row">
+                                <md-input-container class="md-block" flex>
+                                    <label>Ente</label>
+                                    <md-select ng-model="comision.codEnte" name="codEnte" required ng-disabled="mode != 'Alta'">
+                                        <md-option ng-value="opt.codEnte" ng-repeat="opt in entes">{{ opt.descripcion }}</md-option>
+                                    </md-select>
+
+                                    <div ng-messages="formComision.codEnte.$error">
+                                        <div ng-message="required">El campo es obligatorio</div>
+                                    </div>
+                                </md-input-container>
+                                <md-input-container class="md-block" flex>
+                                    <label>Tipo de pago</label>
+                                    <md-select name="tipoPago" ng-model="comision.tipoPago" placeholder="Tipo de pago" required ng-disabled="mode != 'Alta'">
+                                        <md-option value="0">0</md-option>
+                                        <md-option value="1">1</md-option>
+                                        <md-option value="2">2</md-option>
+                                    </md-select>
+
+                                    <div ng-messages="formComision.tipoPago.$error">
+                                        <div ng-message="required">El campo es obligatorio</div>
+                                    </div>
+                                </md-input-container>
+                                <md-input-container class="md-block" flex>
+                                    <label>Porcentaje</label>
+                                    <input type="number" step="1" name="porcentaje" ng-model="comision.porcentaje" required
+                                           max="100" min="0" ng-keypress="validateNumber($event)" ng-pattern="/^\s*\d+(\.\d{1,2})?\s*$/" />
+
+                                    <div ng-messages="formComision.porcentaje.$error">
+                                        <div ng-message="required">El campo es obligatorio</div>
+                                        <div ng-message="max">El valor no puede ser mayor a 100</div>
+                                        <div ng-message="min">El valor tiene que ser mayor o igual a 0</div>
+                                        <div ng-message="pattern">Solo se permite 2 decimales</div>
+                                        <div ng-message="number">Número inválido</div>
+                                    </div>
+                                </md-input-container>
+                            </div>
+
+                            <div layout-gt-sm="row">
+                                <md-input-container class="md-block" flex>
+                                    <label>Importe mínimo</label>
+                                    <input type="number" step="any" name="impMinimo" ng-model="comision.impMinimo"
+                                           min="0" max="999999999999999999.99" ng-pattern="/^\s*\d+(\.\d{1,2})?\s*$/" 
+                                           required ng-keypress="validateNumber($event)">
+
+                                    <div ng-messages="formComision.impMinimo.$error">
+                                        <div ng-message="required">El campo es obligatorio</div>
+                                        <div ng-message="max">Superó el valor maximo permitido</div>
+                                        <div ng-message="min">El valor tiene que ser mayor o igual a 0</div>
+                                        <div ng-message="pattern">Solo se permite 2 decimales</div>
+                                        <div ng-message="number">Número inválido</div>
+                                    </div>
+                                </md-input-container>
+                                <md-input-container class="md-block" flex>
+                                    <label>Importe máximo</label>
+                                    <input type="number" name="impMaximo" ng-model="comision.impMaximo"
+                                           min="0" max="999999999999999999.999999" ng-pattern="/^\s*-?\d+(\.\d{1,2})?\s*$/" 
+                                           required ng-keypress="validateNumber($event)">
+
+                                    <div ng-messages="formComision.impMaximo.$error">
+                                        <div ng-message="required">El campo es obligatorio</div>
+                                        <div ng-message="max">Superó el valor maximo permitido</div>
+                                        <div ng-message="min">El valor tiene que ser mayor o igual a 0</div>
+                                        <div ng-message="pattern">Solo se permite 2 decimales</div>
+                                    </div>
+                                </md-input-container>
+                                <md-input-container class="md-block" flex>
+                                    <label for="txtCodPostal">IVA</label>
+                                    <input type="number" name="IVA" ng-model="comision.IVA"
+                                           max="100" min="0" max="100" required ng-keypress="validateNumber($event)">
+
+                                    <div ng-messages="formComision.IVA.$error">
+                                        <div ng-message="required">El campo es obligatorio</div>
+                                        <div ng-message="max">Superó el valor maximo permitido</div>
+                                    </div>
+                                </md-input-container>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <a href="javascript:void(0)" class="md-button md-ink-ripple" ng-click="cancel()">Cancelar</a>
+            <md-button type="submit" class="md-raised md-primary md-button md-ink-ripple">
+                <span>Aceptar</span>
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

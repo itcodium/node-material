@@ -1,0 +1,35 @@
+extends ../layouts/default
+
+block content
+  div.container(style="max-width: 485px; padding-top: 30px")
+    md-card
+      md-card-content
+        form(name="frmSignin",action="/users/session", method="post")
+          div(layout-gt-sm="row")
+            md-input-container.md-block(flex-gt-xs)
+              label Usuario
+              input#usuario(required=true,autofocus =true,  type='text', value="",name="usuario", placeholder='Usuario')
+              div(ng-messages="frmSignin.usuario.$error")
+                div(ng-message="required",ng-if="true") *
+          div(layout-gt-sm="row")
+            md-input-container.md-block(flex-gt-xs)
+              label Contraseña
+              input#password(required=true,autofocus =true,  type='password',value="", name="password", placeholder='Contraseña')
+              div(ng-messages="frmSignin.password.$error")
+                div(ng-message="required",ng-if="true") *
+          div(layout-gt-sm="row")
+            md-input-container.md-block(flex-gt-xs)
+              md-checkbox Recordar mi sesión en este browser
+
+          div( layout-gt-sm="row")
+            md-input-container.md-block(flex-gt-sm)
+            md-button.md-raised.md-primary( type="submit") Enviar
+
+
+      div.panel-footer
+          if (message != '')
+            md-toolbar.md-warn
+              div.md-toolbar-tools
+                h2.md-flex=message
+
+            md-button.md-primary( ng-href="/precargasignin", style="display:none") Registrar usuario

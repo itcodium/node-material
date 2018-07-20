@@ -1,0 +1,627 @@
+<section flex layout="row" style="height: 100%">
+
+  <div ng-init="initAgenda()" style="width : 100%">
+
+    <!------------------------Automáticos ----------------------->
+    <md-card ng-if="agendasAutomaticas.show" ng-style="!agendasManuales.filter.show && agendasManuales.count == 0 && agendasManuales.data.length== 0 ? { 'height': '85%' } : ''">
+      <md-toolbar class="md-table-toolbar md-default"
+                  ng-show="!agendasAutomaticas.filter.show &&
+                           !agendasAutomaticas.advancedSearch.show &&
+                           !agendasAutomaticas.calendar.show &&
+                           agendasAutomaticas.data.length!= 0">
+        <div class="md-toolbar-tools">
+          <span>Automáticos</span>
+          <span flex></span>
+          <md-button class="md-icon-button md-button md-ink-ripple"
+                     aria-label="filtrar"
+                     ng-click="agendasAutomaticas.filter.show = true">
+            <md-tooltip md-autohide>Proceso</md-tooltip>
+            <md-icon md-svg-src="img/icons/search.svg"></md-icon>
+          </md-button>
+          <md-button class="md-icon-button md-button md-ink-ripple"
+                     aria-label="filtrar"
+                     ng-click="agendasAutomaticas.advancedSearch.show = true">
+            <md-tooltip md-autohide>Filtros</md-tooltip>
+            <md-icon md-svg-src="img/icons/ic_filter_list_24px.svg"></md-icon>
+          </md-button>
+        </div>
+      </md-toolbar>
+
+      <!--TOOLBAR PARA SEARCH-->
+      <md-toolbar class="md-table-toolbar md-default mddc-thead" ng-show="agendasAutomaticas.filter.show">
+        <div class="md-toolbar-tools">
+          <md-icon md-svg-src="img/icons/search.svg"></md-icon>
+          <form flex="" name="filter.form" class="ng-valid flex">
+            <input focus-search="agendasAutomaticas.filter.show" type="text" ng-model="agendasAutomaticas.query.filter"
+                   placeholder="Buscar Procesos">
+            <!--ng-model-options="filter.options"-->
+          </form>
+          <button class="md-icon-button md-button md-ink-ripple" type="button"
+                  ng-click="gdAgenda.removeFilterAutomatico()">
+            <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+          </button>
+        </div>
+      </md-toolbar>
+
+      <md-toolbar class="md-table-toolbar md-default mddc-thead ng-hide" ng-show="agendasAutomaticas.advancedSearch.show">
+        <div class="md-toolbar-tools" style="padding: 0 !important;">
+          <div flex layout="row" class="agenda-toolbar">
+            <md-input-container class="font" ng-if="sitio === 'TC'">
+              <label>Ent.</label>
+              <md-select ng-model="agendasAutomaticas.advancedSearch.marca" class="cat">
+                <md-option ng-value="marca.valor" ng-repeat="marca in ::marcas">{{::marca.descripcion}}
+                </md-option>
+              </md-select>
+            </md-input-container>
+
+            <md-input-container class="font proceso" style="width: 75px;">
+              <label style="">Proceso</label>
+              <input ng-model="agendasAutomaticas.advancedSearch.proceso" type="text"/>
+            </md-input-container>
+
+            <md-input-container class="font periodo ic" ng-if="sitio === 'TC'">
+              <label style="font-size: 12px !important;">Período</label>
+              <md-select ng-model="agendasAutomaticas.advancedSearch.periodo">
+                <md-option ng-repeat="periodo in periodos" value="{{::periodo}}">{{::periodo}}</md-option>
+              </md-select>
+            </md-input-container>
+
+            <md-input-container class="font cartera" style="width: 65px;" ng-if="sitio === 'TC'">
+              <label>Cartera</label>
+              <input ng-model="agendasAutomaticas.advancedSearch.instancia" type="number" min="1" max="4"/>
+            </md-input-container>
+
+            <md-input-container class="font vto ic">
+              <md-icon md-svg-src="img/icons/ic_today_black_24px.svg"></md-icon>
+              <md-datepicker md-placeholder="Corrida" style="display:flex;"
+                             ng-model="agendasAutomaticas.advancedSearch.fecVencimiento">
+              </md-datepicker>
+            </md-input-container>
+
+            <md-input-container class="font" style="width: 80px;">
+              <label>Estado</label>
+              <md-select ng-model="agendasAutomaticas.advancedSearch.estado" type="text">
+                <md-option ng-value="estado" ng-repeat="estado in ::estados">{{::estado}}
+                </md-option>
+              </md-select>
+            </md-input-container>
+          </div>
+
+          <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="filtroAvanzado()" aria-label="Filtro Aplicado">
+            <md-icon class="ready" ng-show="!agendasAutomaticas.advancedFilterApplied" md-svg-src="img/icons/playlist_play.svg" aria-hidden="true"></md-icon>
+            <md-icon class="ready" ng-show="agendasAutomaticas.advancedFilterApplied" md-svg-src="img/icons/playlist_check.svg" aria-hidden="false"></md-icon>
+          </button>
+          <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="undoFiltroAvanzado()" style="margin-right: 12px !important;">
+            <md-icon md-svg-src="img/icons/close.svg" aria-hidden="true"></md-icon>
+          </button>
+
+        </div>
+      </md-toolbar>
+
+      <md-table-container ng-if="agendasAutomaticas.count != 0 && agendasAutomaticas.data.length!= 0"
+                          ng-style="agendasManuales.filter.show || (agendasManuales.count != 0 &&
+                                 agendasManuales.data.length != 0) ? { 'max-height': '310px' } : ''"
+                          class="scrollbar-agenda" id="style-agenda"><!--md-scrollY-->
+        <table data-md-table data-md-row-select="!hideCheckboxes" data-ng-model="agendasAutomaticas.selected"
+               md-progress="promise" class="border-r">
+          <!--barra de titulos-->
+          <thead ng-if="!hideHead" md-head data-md-order="" md-on-reorder="onReorder">
+          <tr md-row>
+            <th md-column md:order:by="marca" ng-if="sitio === 'TC'"><span>Ent.</span></th>
+            <th md-column data-md-order-by="descripcion" class="padder"><span>Proceso</span></th>
+            <th md-column data-md-order-by="periodo" class="padder" ng-if="sitio === 'TC'"><span>Periodo</span></th>
+            <th md-column data-md-order-by="instancia" class="padder" ng-if="sitio === 'TC'"><span>Cartera</span></th>
+            <th md-column data-md-order-by="fecVencimiento" class="padder"><span>Corrida</span></th>
+            <th md-column data-md-order-by="estado" class="padder"><span>Estado</span></th>
+          </tr>
+          </thead>
+          <!--Data table-->
+          <tbody md-body>
+          <tr md-row data-ng-repeat="agendaAutomatica in agendasAutomaticas.data  | limitTo: 25 : (agendasAutomaticas.query.page - 1) * 25">
+            <td md-cell ng-if="sitio === 'TC'">
+              {{::agendaAutomatica.marca}}
+            </td>
+            <td md-cell>
+              <b>{{::agendaAutomatica.descripcion}}</b>
+            </td>
+            <td md-cell ng-if="::(sitio === 'TC' && agendaAutomatica.periodo !== '')">
+              {{::agendaAutomatica.periodo | date:'yyyy MMMM' : 'UTC'}}
+            </td>
+            <td md-cell ng-if="::(sitio === 'TC' && agendaAutomatica.periodo === '')">
+
+            </td>
+            <td md-cell class="txt-cnt" ng-if="sitio === 'TC'">
+              {{::agendaAutomatica.instancia}}
+            </td>
+
+            <td md-cell>
+              <md-icon md-svg-src="img/icons/ic_keyboard_arrow_down_green_24px.svg"></md-icon>
+              {{::agendaAutomatica.fecCorrida | date:'dd/MM/yyyy HH:mm:ss'}}
+              <br/>
+              <md-icon md-svg-src="img/icons/ic_keyboard_arrow_down_red_24px.svg"
+                       ng-if="agendaAutomatica.fecVencimiento != null"></md-icon>
+              {{::agendaAutomatica.fecVencimiento | date:'dd/MM/yyyy HH:mm:ss'}}
+            </td>
+
+            <td md-cell style="width:100px">
+              <div ng-class="agendaAutomatica.estado"><b>{{agendaAutomatica.estado}}</b></div>
+            </td>
+
+            <td md-cell style="padding:0 23px 0 0">
+              <md-icon ng-if="agendaAutomatica.estado == 'En Curso'"
+                       ng-click="updateAgendaAutomatica(agendaAutomatica)"
+                       ng-class="{ 'running-update-agenda': agendaAutomatica.updating }"
+                       md-svg-src="img/icons/ic_refresh_24px.svg">
+                <md-tooltip md-direction="left">Actualizar</md-tooltip>
+              </md-icon>
+            </td>
+            <td md-cell style="padding:0 23px 0 0">
+              <md-icon ng-click="toggleRightNavAgenda(agendaAutomatica)" md-svg-src="img/icons/ic_list_grey_24px.svg"
+                       ng-hide="agendaAutomatica.estado === 'PENDIENTE'">
+                <md-tooltip md-direction="left">Detalle</md-tooltip>
+              </md-icon>
+            </td>
+            <td md-cell style="padding:0 23px 0 0">
+              <md-tooltip md-direction="left">Habilitar / Deshabilitar</md-tooltip>
+              <md-switch ng-model="agendaAutomatica.deshabilitarAutomatico" aria-label="HABILITAR / DESHABILITAR"
+                         ng-change="habilitar(agendaAutomatica)" class="md-success md-body-1"
+                         ng-class="{'md-checked': agendaAutomatica.deshabilitarAutomatico}"
+                         ng-value="agendaAutomatica.deshabilitarAutomatico" ng-false-value="false" ng-true-value="true" style="margin: 0 !important;">
+              </md-switch>
+            </td>
+            <td md-cell style="padding:0 23px 0 0">
+              <md-icon class="{{agendaAutomatica.estado}}-boton agenda-play"
+                       ng-hide="agendaAutomatica.estado === 'OK' || agendaAutomatica.estado === 'En Curso'"
+                       ng-click="agendaAutomatica.running || gdAgenda.runProcess(agendaAutomatica)"
+                       md-svg-src="img/icons/ic_play_arrow_grey_24px.svg">
+                <md-tooltip md-direction="left">
+                  Correr
+                </md-tooltip>
+              </md-icon>
+            </td>
+            <td md-cell style="padding:0 23px 0 0">
+              <md-icon ng-if="agendaAutomatica.estado == 'En Curso' && user.destrabaAgenda"
+                       ng-click="destrabarAgenda(agendaAutomatica)"
+                       ng-class="{ 'running-update-agenda': agendaAutomatica.updating }"
+                       md-svg-src="img/icons/ic_build_24px.svg">
+                <md-tooltip md-direction="left">
+                  Destrabar
+                </md-tooltip>
+              </md-icon>
+            </td>
+
+          </tr>
+          </tbody>
+        </table>
+      </md-table-container>
+      <data-md-table-pagination md-limit="25"
+                                md-page="agendasAutomaticas.query.page"
+                                md-total="{{agendasAutomaticas.count}}"
+                                md-page-select
+                                md-rows-select="false">
+      </data-md-table-pagination>
+    </md-card>
+    <!-- FIN Automáticos -->
+
+
+    <!------------------------Manuales ----------------------->
+
+    <md-card  ng-if="agendasManuales.show" ng-style="!agendasAutomaticas.filter.show && agendasAutomaticas.data.length== 0 ? { 'height': '85%' } : ''">
+      <md-toolbar class="md-table-toolbar md-default"
+                  ng-if="agendasManuales.count != 0 && agendasManuales.data.length!=0"
+                  ng-show="!agendasManuales.filter.show && !agendasManuales.calendar.show && agendasManuales.data.length!=0">
+        <div class="md-toolbar-tools">
+          <span>Manuales</span>
+          <span flex></span>
+          <md-button class="md-icon-button md-button md-ink-ripple"
+                     aria-label="filtrar"
+                     ng-click="agendasManuales.filter.show = true">
+            <md-tooltip md-autohide>Filtrar</md-tooltip>
+            <md-icon md-svg-src="img/icons/search.svg"></md-icon>
+          </md-button>
+          <md-button class="md-icon-button md-button md-ink-ripple"
+                     aria-label="filtrar"
+                     ng-click="agendasManuales.calendar.show = true">
+            <md-tooltip md-autohide>Período</md-tooltip>
+            <md-icon md-svg-src="img/icons/ic_filter_list_24px.svg"></md-icon>
+          </md-button>
+        </div>
+      </md-toolbar>
+
+      <!--TOOLBAR PARA SEARCH Manuales -->
+      <md-toolbar class="md-table-toolbar md-default mddc-thead ng-hide"
+                  ng-show="agendasManuales.filter.show && !agendasManuales.selected.length">
+        <div class="md-toolbar-tools">
+          <md-icon md-svg-src="img/icons/search.svg"></md-icon>
+          <form flex="" name="filter.form" class="ng-valid flex">
+            <input focus-search="agendasManuales.filter.show" type="text" ng-model="agendasManuales.query.filter"
+                   placeholder="Buscar">
+          </form>
+          <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="gdAgenda.removeFilterManual()">
+            <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+          </button>
+        </div>
+      </md-toolbar>
+
+
+
+
+
+      <!--TOOLBAR PARA CALENDAR-->
+      <md-toolbar class="md-table-toolbar md-default mddc-thead ng-hide" ng-show="agendasManuales.calendar.show">
+        <div class="md-toolbar-tools">
+          <form flex="" name="calendar.form" class="ng-valid flex">
+            <div class="col-sm-5" style="float:left;">
+              <md-datepicker id="desdeManual" name="desdeManual" ng-change="filtrarManualesFecha()" md-placeholder="Desde"
+                             class="form-control input-sm"
+                             ng-model="dateAgendaManual.desdeManualFec"></md-datepicker>
+            </div>
+            <div class="col-sm-5" style="float:left;">
+              <md-datepicker id="hastaManual" name="hastaManual" ng-change="filtrarManualesFecha()" md-placeholder="Hasta"
+                             class="form-control input-sm"
+                             md-min-date="dateAgendaManual.desdeManualFec"
+                             ng-model="dateAgendaManual.hastaManualFec"></md-datepicker>
+            </div>
+          </form>
+
+          <button class="md-icon-button md-button md-ink-ripple" type="button"
+                  ng-click="gdAgenda.removeCalendarManual()">
+            <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+          </button>
+        </div>
+      </md-toolbar>
+      <md-table-container ng-if="agendasManuales.count != 0 && agendasManuales.data.length!=0"
+                          ng-style="agendasAutomaticas.filter.show || (agendasAutomaticas.count !== 0 && agendasAutomaticas.data.length !== 0) ? { 'max-height': '310px' } : ''"
+                          class="scrollbar-agenda" id="style-agenda"><!--md-scrollY-->
+        <table data-md-table  data-md-row-select="!hideCheckboxes" data-ng-model="agendasManuales.selected" md-progress="promise" class="border-r">
+          <!--barra de titulos-->
+          <thead ng-if="!hideHead" md-head data-md-order="agendasManuales.query.order" md-on-reorder="onReorder">
+          <tr md-row>
+            <th md-column md:order:by="Proceso"><span>Proceso</span></th>
+            <th md-column data-md-order-by="" class="padder"><span></span></th>
+            <th md-column data-md-order-by="" class="padder"><span></span></th>
+            <th md-column data-md-order-by="Última corrida" class="padder"><span>Última corrida</span></th>
+            <th md-column data-md-order-by="Estado" class="padder"><span>Estado</span></th>
+            <th md-column data-md-order-by="" class="padder"><span></span></th>
+          </thead>
+          <tbody md-body>
+          <tr md-row md:select="agendaManual" data-md-on-select="log" md-on-deselect="deselect"
+              data-ng-repeat="agendaManual in agendasManuales.data | filter : agendasManuales.query.filter">
+            <td md-cell><b>{{agendaManual.descripcion}}</b></td>
+            <td md-cell><b>&nbsp;</b></td>
+            <td md-cell><b>&nbsp;</b></td>
+            <td md-cell>
+              <div ng-if="agendaManual.fecInicioCorrida != null">
+                <div class="titlabel">Ultima corrida.</div>
+                {{agendaManual.fecInicioCorrida | date: 'dd/MM/yyyy HH:mm' : 'UTC'}}
+              </div>
+            </td>
+            <td md-cell style="width:100px">
+              <div ng-class="agendaManual.estado"><b>{{agendaManual.estado}}</b></div>
+            </td>
+
+            <td md-cell style="padding:0 23px 0 0">
+              <md-icon ng-if="agendaManual.estado == 'En Curso'"
+                       ng-click="agendaControl.updateAgenda(agendaManual)"
+                       ng-class="{ 'running-update-agenda': agendaManual.updating }"
+                       md-svg-src="img/icons/ic_refresh_24px.svg">
+                <md-tooltip md-direction="left">
+                  Actualizar
+                </md-tooltip>
+              </md-icon>
+            </td>
+
+            <td md-cell class="td-cell">
+              <md-icon ng-click="toggleRightNavAgenda(agendaManual)" md-svg-src="img/icons/ic_list_grey_24px.svg"
+                       ng-hide="agendaManual.estado === 'PENDIENTE'">
+                <md-tooltip md-direction="left">
+                  Detalle
+                </md-tooltip>
+              </md-icon>
+            </td>
+            <td md-cell class="td-cell">
+              <md-icon class="{{agendaManual.estado}}-boton agenda-play"
+                       ng-hide="agendaManual.estado === 'En Curso'"
+                       ng-click="agendaManual.running || agendaControl.runProcess(agendaManual,event)"
+                       md-svg-src="img/icons/ic_play_arrow_grey_24px.svg">
+                <md-tooltip md-direction="left">
+                  Correr
+                </md-tooltip>
+              </md-icon>
+            </td>
+            <td md-cell class="td-cell" style="padding:0 23px 0 0">
+              <md-icon ng-if="agendaManual.estado == 'En Curso' && user.destrabaAgenda"
+                       ng-click="destrabarAgenda(agendaManual)"
+                       ng-class="{ 'running-update-agenda': agendaManual.updating }"
+                       md-svg-src="img/icons/ic_build_24px.svg">
+                <md-tooltip md-direction="left">
+                  Destrabar
+                </md-tooltip>
+              </md-icon>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+
+      </md-table-container>
+
+      <data-md-table-pagination md-limit="25"
+                                md-page="agendasManuales.query.page"
+                                md-total="{{agendasManuales.count}}"
+                                md-page-select
+                                md-rows-select="false">
+      </data-md-table-pagination>
+    </md-card>
+  </div>
+  <md-sidenav class="md-sidenav-right"
+              md-whiteframe="4"
+              md-is-locked-open="true"
+              md-component-id="historicos"
+              style="width: 450px; height: 850px;">
+    <md-toolbar class="md-table-toolbar md-default"
+                ng-show="!agendasHistoricas.filter.show && !agendasHistoricas.calendar.show">
+      <div class="md-toolbar-tools">
+        <span>Históricos</span>
+        <span flex></span>
+        <md-button class="md-icon-button md-button md-ink-ripple"
+                   aria-label="filtrar"
+                   ng-click="agendasHistoricas.filter.show = true">
+          <md-tooltip md-autohide>Filtrar</md-tooltip>
+          <md-icon md-svg-src="img/icons/search.svg"></md-icon>
+        </md-button>
+        <md-button class="md-icon-button md-button md-ink-ripple"
+                   aria-label="filtrar"
+                   ng-click="agendasHistoricas.calendar.show = true">
+          <md-tooltip md-autohide>Período</md-tooltip>
+          <md-icon md-svg-src="img/icons/ic_date_range_grey_24px.svg"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-content class="contentSidenav scrollbar-agenda" style="height: 100%" id="style-agenda">
+
+      <!--TOOLBAR PARA SEARCH Historicos -->
+      <md-toolbar class="md-table-toolbar md-default mddc-thead ng-hide" ng-show="agendasHistoricas.filter.show">
+        <div class="md-toolbar-tools">
+          <md-icon md-svg-src="img/icons/search.svg"></md-icon>
+          <form flex="" name="filter.form" class="ng-valid flex" ng-submit="agendaControl.getDataHistoricos()">
+            <input focus-search="agendasHistoricas.filter.show" type="text" ng-blur="agendaControl.getDataHistoricos()"
+                   ng-model="agendasHistoricas.query.filter" placeholder="Buscar">
+          </form>
+          <button class="md-icon-button md-button md-ink-ripple" type="button"
+                  ng-click="gdAgenda.removeFilterHistorico()">
+            <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+          </button>
+        </div>
+      </md-toolbar>
+
+      <!--TOOLBAR PARA CALENDAR-->
+      <md-toolbar class="md-table-toolbar md-default mddc-thead ng-hide" ng-show="agendasHistoricas.calendar.show">
+        <div class="md-toolbar-tools">
+          <form flex="" name="calendar.form" class="ng-valid flex">
+            <div class="col-sm-5" style="float:left;">
+              <md-datepicker id="desdeAutomatico" name="desdeAutomatico" ng-change="getDataHistoricos()"
+                             md-placeholder="Desde" class="form-control input-sm"
+                             ng-model="agendasHistoricas.query.desde"></md-datepicker>
+
+            </div>
+            <div class="col-sm-5" style="float:left;">
+              <md-datepicker id="hastaAutomatico" name="hastaAutomatico" ng-change="getDataHistoricos()"
+                             md-placeholder="Hasta" class="form-control input-sm"
+                             md-min-date="agendasHistoricas.query.desde"
+                             ng-model="agendasHistoricas.query.hasta"></md-datepicker>
+
+            </div>
+          </form>
+          <button class="md-icon-button md-button md-ink-ripple" type="button"
+                  ng-click="gdAgenda.removeCalendarHistorico()">
+            <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+          </button>
+        </div>
+      </md-toolbar>
+
+      <md-table-container>
+        <table data-md-table class="md-table-outlander md-historico bb" data-md-row-select="false"
+               data-ng-model="agendasHistoricas.selected" md-progress="promise">
+          <tbody md-body>
+            <tr md-row ng-repeat="historico in agendasHistoricas.data">
+
+              <td md-cell class="padding">
+                <b>{{historico.descripcion}}</b><br>
+                <div class="titlabel">
+                  <span>{{historico.fecInicioCorrida | date:'dd/MM/yyyy' : 'UTC'}}</span>
+                  <span>{{historico.fecInicioCorrida | date:'HH:mm' : 'UTC'}}hs</span>
+                </div>
+              </td>
+
+              <td md-cell class="padding">
+                <!--<div ng-if="historico.periodo !== null"><b>{{historico.periodo |
+                  date:'yyyy/MMMM'}}/{{historico.instancia}}</b><br></div>-->
+                <div class="titlabel">Usuario <br><b>{{historico.creadoPor}}</b></div>
+              </td>
+
+              <td md-cell class="td-state">
+                <b>{{historico.tipo}}</b>
+                <md-icon ng-if="historico.estado === 'ERROR'" md-svg-src="img/icons/ic_error_red_24px.svg"
+                         class="icon-xs">
+                </md-icon>
+                <md-icon ng-if="historico.estado === 'OK'" md-svg-src="img/icons/ic_check_circle_green_24px.svg"
+                         class="icon-xs">
+                </md-icon>
+              </td>
+
+              <td md-cell class="padding">
+                <md-icon md-svg-src="img/icons/ic_launch_24px.svg" ng-click="toggleRightNavAgenda(historico, true)"
+                         class="icon-xs">
+                </md-icon>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </md-table-container>
+
+        <md-button class="md-mini md-button more-btn" ng-click="masHistoricos()" type="button" ng-transclude="" layout-align="center center">
+          <span class="ng-scope">Mas</span>
+        </md-button>
+
+    </md-content>
+  </md-sidenav>
+</section>
+
+<!-- ----------------------SIDENAV PARA LOGS DE LOS PASOS--------------------- -->
+<md-sidenav class="md-sidenav-right md-whiteframe-z2 sidenavClass" md-component-id="rightNavAgenda" style="width:450px;"
+>
+  <md-content class="contentSidenav">
+    <section layout="row" layout-sm="column" layout-align="left center" layout-wrap class="instanciaDescripcion">
+      <b>{{agendaSeleccionada.descripcion}}</b> <span ng-if="agendaSeleccionada.instancia != NULL">/ Cartera:<b>{{agendaSeleccionada.instancia}}</b></span>
+      <span class="titlabel">Datos de corrida del Proceso</span>
+    </section>
+
+    <section layout="row" layout-sm="column" layout-align="left center" layout-wrap class="logs">
+
+
+      <!-- class="periodoSpan" todo caob-->
+      <md-table-container class="log-detail">
+        <table>
+          <tbody md-body>
+          <tr>
+
+            <td style="width:30%">
+              <div>
+               Usuario: <b>{{agendaSeleccionada.modificadoPor? agendaSeleccionada.modificadoPor.trim(): agendaSeleccionada.creadoPor}}</b>
+              </div>
+              <div ng-show="agendaSeleccionada.periodo">
+               Periodo:  <b>{{agendaSeleccionada.periodo | date:'yyyy MMMM' : 'UTC'}}</b>
+              </div>
+            </td>
+
+            <td style="width:10%">
+
+                <md-button class="curso-btn" ng-show="agendaSeleccionada.estado == 'En Curso'">En curso</md-button>
+
+                <md-button class="error-btn" ng-show="agendaSeleccionada.estado == 'ERROR'">Error</md-button>
+
+                <md-button class="warning-btn" ng-show="agendaSeleccionada.estado == 'WARNING'">Warning</md-button>
+
+                <md-button class="ok-btn" ng-show="agendaSeleccionada.estado == 'OK'">Ok</md-button>
+
+                <md-tooltip class="multiline md-whiteframe-3dp" md-direction="bottom">
+                  Proceso
+                  <br> Inicio: {{agendaSeleccionada.fecInicioCorrida | date: 'yyyy-MM-dd HH:mm:ss:sss' : 'UTC'}}
+                  <br> Final : {{agendaSeleccionada.fecFinCorrida | date: 'yyyy-MM-dd HH:mm:ss:sss' : 'UTC'}}
+                </md-tooltip>
+              <!--<div>{{agendaSeleccionada.estado}}</div>-->
+            </td>
+          </tr>
+
+          </tbody>
+        </table>
+        <div ng-if="agendaSeleccionada.error.toString().indexOf('\n') > -1">
+          <pre>{{agendaSeleccionada.error}}</pre>
+        </div>
+
+        <div ng-if="agendaSeleccionada.error.indexOf('\n') === -1">
+          {{ agendaSeleccionada.error.indexOf('[SQL')<=0
+          ? agendaSeleccionada.error
+          : (agendaSeleccionada.error.substring( agendaSeleccionada.error.indexOf('.') + 2 ,
+          agendaSeleccionada.error.indexOf('[SQL'))).length<=20
+          ? agendaSeleccionada.error.substring( agendaSeleccionada.error.indexOf('.') + 2 ,
+          agendaSeleccionada.error.lastIndexOf('[SQL'))
+          : agendaSeleccionada.error.substring( agendaSeleccionada.error.indexOf('.') + 2 ,
+          agendaSeleccionada.error.indexOf('[SQL')) }}
+        </div>
+
+      </md-table-container>
+    </section>
+
+    <section layout="row" layout-sm="column" layout-align="left center" layout-wrap class="logs">
+      <span class="titlabel">Pasos</span>
+      <md-table-container class="log-detail">
+        <table data-md-table data-ng-model="pasosAgendas.selected">
+          <tbody md-body>
+            <tr md-row data-ng-repeat="(index, pasoAgenda) in pasosAgendas.data | orderBy:'fecInicioCorridaPaso'">
+              <td class="pasoCell">
+                <div class="pasoGrid">
+                  <span class="md-caption ml-none">{{pasoAgenda.pasoInterno}}</span>
+                  <md-tooltip class="multiline md-whiteframe-3dp" md-direction="right">
+                    Tarea {{pasoAgenda.paso}} / Paso {{pasoAgenda.pasoInterno}}
+                    <br> Inicio: {{pasoAgenda.fecInicioCorridaPaso | date: 'yyyy-MM-dd HH:mm:ss:sss' : 'UTC' }}
+                    <br> Final : {{pasoAgenda.fecFinCorridaPaso | date: 'yyyy-MM-dd HH:mm:ss:sss' : 'UTC' }}
+                  </md-tooltip>
+                </div>
+                <div class="lineDiv">
+                  <div class="lineDivChild" ng-class="{'lastIndexLine': $last}"></div>
+                </div>
+              </td>
+
+              <td md-cell class="md-caption">
+                {{pasoAgenda.nombre}}
+                <div class="titlabel" ng-if="pasoAgenda.nombreArchivo" ng-bind-html="pasoAgenda.nombreArchivo"></div>
+                <div class="titlabel" ng-if="pasoAgenda.observaciones" ng-bind-html="pasoAgenda.observaciones"></div>
+
+              </td>
+
+              <td md-cell>
+                <md-icon ng-show="pasoAgenda.estado == 'En Curso'"
+                         md-svg-src="img/icons/ic_directions_run_black_24px.svg">
+                </md-icon>
+                <md-icon ng-if="pasoAgenda.estado == 'ERROR'" md-svg-src="img/icons/ic_error_red_24px.svg">
+                </md-icon>
+                <md-icon ng-if="pasoAgenda.estado == 'WARNING'" md-svg-src="img/icons/ic_warning_yellow_24px.svg">
+                </md-icon>
+                <md-icon ng-if="pasoAgenda.estado == 'OK'" md-svg-src="img/icons/ic_check_circle_green_24px.svg">
+                </md-icon>
+              </td>
+
+            </tr>
+          </tbody>
+        </table>
+      </md-table-container>
+    </section>
+  </md-content>
+
+</md-sidenav>
+
+<md-card class="md-padding" layout-xs="column" layout="row"
+         ng-if="agendasmanuales.count== 0 && $scope.agendaloaded==true">
+  Usted no tiene agendas disponibles en este momento.
+</md-card>
+
+<script type="text/ng-template" id="agendaConvenios.tmpl.html">
+  <md-dialog>
+    <md-dialog-content>
+      <div class="md-dialog-content">
+        <h2 class="md-title">Elija convenios a importar</h2>
+        <div flex="100" ng-repeat="cv in agendaControl.listConvenios" ng-show="cv.show">
+          <md-checkbox ng-model="cv.selected">{{ cv.convenio }}</md-checkbox>
+        </div>
+      </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+      <md-button ng-click="closeDialog()">Cancelar</md-button>
+      <md-button ng-click="aceptar()">Aceptar</md-button>
+    </md-dialog-actions>
+  </md-dialog>
+</script>
+
+
+<!--
+Novedades Masivas - UNIFICADO Respuesta SO
+
+
+-->
+<script type="text/ng-template" id="NovMasUnifRtaSO.tmpl.html">
+  <md-dialog>
+    <md-dialog-content>
+      <div class="md-dialog-content">
+        <h2 class="md-title">Elija tipo de novedad</h2>
+        <div flex="100" ng-repeat="item in tipos">
+          <md-checkbox ng-change="checked(item)" ng-model="item.selected">{{ item.novedad}}</md-checkbox>
+        </div>
+      </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+      <md-button ng-click="closeDialog()">Cancelar</md-button>
+      <md-button ng-click="aceptar()">Aceptar</md-button>
+    </md-dialog-actions>
+  </md-dialog>
+</script>

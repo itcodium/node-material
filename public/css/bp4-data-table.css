@@ -1,0 +1,927 @@
+/*
+
+
+        ACORDÁTE DE ESTO:
+        press [ctrl-alt-.] @ webStorm to navigate between custom folding on this file, rgds, Caob.
+
+/usr/local/bin/node
+
+*/
+
+/*
+ modificaciones de las que no estoy seguro aún, todo caob
+a {
+  text-decoration: none;
+  color: rgb(33,150,243);
+}
+a:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+input::-webkit-input-placeholder {
+  color: rgba(0, 0, 0, 0.26);
+  font-weight: 300;
+}
+input::-moz-placeholder {
+  color: rgba(0, 0, 0, 0.26);
+  font-weight: 300;
+}
+input:-ms-input-placeholder {
+  color: rgba(0, 0, 0, 0.26);
+  font-weight: 300;
+}
+input::input-placeholder {
+  color: rgba(0, 0, 0, 0.26);
+  font-weight: 300;
+}
+*/
+
+/**********      <editor-fold desc="toolbar">   ************
+ * como se comporta la toolbar en la grilla
+ ************/
+
+md-toolbar.md-table-toolbar.ng-hide {
+    display: none;
+}
+
+md-toolbar.md-table-toolbar.alternate .md-toolbar-tools {
+    color: #1e88e5;
+    font-size: 16px;
+    background-color: #e3f2fd;
+}
+
+/*md-toolbar.md-table-toolbar form {
+  margin-left: 16px;   *  todo eom -- anule este cambio pero puede afectar otros?
+}*/
+
+md-toolbar.md-table-toolbar form > input {
+    width: 100%;
+    margin: 0;
+    border: none;
+    color: rgba(0, 0, 0, 0.87);
+}
+
+md-sidenav md-toolbar.md-table-toolbar input,
+md-dialog-content md-toolbar.md-table-toolbar input {
+    width: 100%;
+    margin: 0;
+    border: none;
+    color: rgba(0, 0, 0, 0.87);
+}
+
+md-toolbar.md-table-toolbar form > input:focus {
+    outline: none;
+}
+
+md-sidenav md-content md-toolbar.md-table-toolbar input:focus {
+    outline: none;
+}
+
+/*</editor-fold> */
+
+/**********      <editor-fold desc="md-dialog ">   ************
+ *  todo caob -- revisar son para modificar desde la toolbar pero puede afectar otros?
+ ************/
+/* todo caob -> revisar estos sets about md-dialog */
+
+md-dialog > md-dialog-content.md-dialog-content {
+    padding-bottom: 0;
+}
+
+md-dialog > md-dialog-content > p {
+    margin: 16px 0;
+    color: rgba(0, 0, 0, 0.54);
+    line-height: 22px;
+}
+
+md-dialog > md-dialog-content > p.md-warn {
+    color: #f44336;
+}
+
+md-dialog > md-dialog-content > form:last-child > md-input-container:last-child {
+    padding-bottom: 0;
+}
+
+md-dialog > .md-actions > .md-button {
+    min-width: 60px;
+}
+
+md-dialog[delete-dialog] {
+    max-width: 300px;
+}
+
+md-dialog[add-item-dialog] > md-dialog-content > form > .input-row {
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+
+md-dialog[add-item-dialog] > md-dialog-content > form > .input-row > md-input-container {
+    min-width: 120px;
+}
+
+/*</editor-fold> */
+
+/**********      <editor-fold desc="dialog de edit ">   ************
+ *  todo caob -- revisar también al igual que el dialog normal
+ ************/
+md-backdrop.md-edit-dialog-backdrop {
+    z-index: 80;
+}
+
+md-edit-dialog {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    position: fixed;
+    z-index: 81;
+    background-color: #f9f9f9;
+    border-radius: 2px;
+    cursor: default;
+}
+
+md-edit-dialog > .md-content {
+    padding: 16px 24px 0;
+}
+
+md-edit-dialog > .md-content .md-title {
+    color: rgba(0, 0, 0, 0.87);
+    margin-bottom: 8px;
+}
+
+md-edit-dialog > .md-content md-input-container {
+    margin: 0;
+    font-size: 13px;
+}
+
+md-edit-dialog > .md-content md-input-container input {
+    float: none;
+}
+
+md-edit-dialog > .md-content md-input-container .md-errors-spacer {
+    min-height: auto;
+    min-width: auto;
+    color: rgba(0, 0, 0, 0.54);
+}
+
+md-edit-dialog > .md-content md-input-container .md-errors-spacer .md-char-counter {
+    padding: 5px 2px 5px 0;
+}
+
+md-edit-dialog > .md-content md-input-container [ng-message] {
+    padding: 5px 0 5px 2px;
+}
+
+md-edit-dialog > .md-actions {
+    margin: 0 16px 8px;
+}
+
+md-edit-dialog > .md-actions .md-button {
+    margin: 0;
+    min-width: initial;
+}
+
+md-edit-dialog > .md-actions .md-button + .md-button {
+    margin-left: 8px;
+}
+
+/*</editor-fold> */
+
+/**********      <editor-fold desc="grilla">   ************
+ * temas de la grilla en si misma
+ ************/
+
+.md-table-pagination {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+
+    -webkit-justify-content: space-around;
+    -ms-flex-pack: end;
+    justify-content: space-around;
+
+    box-sizing: border-box;
+    min-height: 56px !important;
+    height: 56px;
+    padding: 0 24px;
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.54);
+    border-top: 1px rgba(0, 0, 0, 0.12) solid;
+}
+
+.md-table-pagination md-select {
+    -webkit-justify-content: flex-end;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+    min-width: 64px;
+}
+
+.md-table-pagination md-select:not([disabled]):focus .md-select-value {
+    color: rgba(0, 0, 0, 0.54);
+}
+
+.md-table-pagination md-select .md-select-value {
+    -webkit-flex-grow: initial;
+    -ms-flex-positive: initial;
+    flex-grow: initial;
+}
+
+.md-table-pagination md-select .md-select-value span.md-select-icon {
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.md-table-pagination md-select .md-select-value span.md-select-icon:after {
+    top: initial;
+    -webkit-transform: scaleY(0.5) scaleX(1);
+    transform: scaleY(0.5) scaleX(1);
+}
+
+.md-table-pagination > md-select + span {
+    margin-left: 32px;
+}
+
+.md-table-pagination > .md-button.md-icon-button {
+    margin: 0;
+}
+
+.md-table-pagination > span + .md-button.md-icon-button {
+    margin-left: 20px;
+}
+
+.md-table-pagination > .md-button.md-icon-button:last-child {
+    margin-right: -16px;
+}
+
+md-select.md-table-select {
+    margin: 0;
+}
+
+md-select.md-table-select > .md-select-value {
+    padding: 0;
+    min-width: initial;
+    min-height: 24px;
+    border-bottom: 0 !important;
+}
+
+md-select.md-table-select > .md-select-value > span {
+    height: auto;
+    -webkit-transform: none !important;
+    transform: none !important;
+}
+
+md-select.md-table-select > .md-select-value > span.md-select-icon {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    height: 24px;
+    margin: 0;
+}
+
+md-select.md-table-select > .md-select-value > span.md-select-icon:after {
+    top: initial;
+}
+
+.md-select-menu-container.md-table-select,
+.md-select-menu-container.md-pagination-select {
+    margin-left: -2px;
+    border-radius: 2px;
+}
+
+.md-select-menu-container.md-table-select md-select-menu,
+.md-select-menu-container.md-pagination-select md-select-menu,
+.md-select-menu-container.md-table-select md-content,
+.md-select-menu-container.md-pagination-select md-content {
+    border-radius: inherit;
+}
+
+.md-select-menu-container.md-table-select md-content,
+.md-select-menu-container.md-pagination-select md-content {
+    padding: 0;
+}
+
+.md-select-menu-container.md-table-select .md-text {
+    font-size: 13px;
+}
+
+.md-select-menu-container.md-pagination-select .md-text {
+    font-size: 12px;
+}
+
+md-toolbar.md-table-toolbar {
+    box-shadow: none;
+}
+
+md-toolbar.md-table-toolbar.md-default-theme:not(.md-menu-toolbar).md-default,
+md-toolbar.md-table-toolbar:not(.md-menu-toolbar).md-default {
+    background-color: #ffffff;
+    color: rgba(0, 0, 0, 0.87);
+}
+
+md-toolbar.md-table-toolbar.md-default-theme:not(.md-menu-toolbar).md-default .md-button,
+md-toolbar.md-table-toolbar:not(.md-menu-toolbar).md-default .md-button {
+    color: rgba(0, 0, 0, 0.87);
+}
+
+md-toolbar.md-table-toolbar:not(.md-menu-toolbar).md-outlander {
+    background-color: #EFEFEF !important;
+    color: #0193cf !important;
+    padding: 0 24px;
+    /*added caob 20160721 para parametros de la grilla */
+    min-height: 64px;
+    max-height: 150px;
+    height: 95px;
+}
+
+.md-buttonLink {
+    background: #DCDCDC;
+    font-family: Arial;
+    color: white;
+    text-transform: lowercase;
+    border-radius: 15px 15px 15px;
+    font-size: 12px;
+}
+
+.md-iconLink {
+    font-size: 12px !important;
+}
+
+@media only screen and (max-width: 959px) and (min-width: 0) and (orientation: landscape) {
+    md-toolbar.md-table-toolbar .md-toolbar-tools {
+        height: 64px;
+        max-height: initial;
+    }
+}
+
+md-toolbar.md-table-toolbar .md-toolbar-tools {
+    padding: 0 24px;
+    /*added caob 20160721 para parametros de la grilla */
+    min-height: 64px;
+    max-height: 150px;
+    height: 95px;
+}
+
+/*tratamiento  colores de los iconos en la toolbar y de los chips */
+md-toolbar.md-table-toolbar .md-toolbar-tools md-icon {
+    color: rgba(0, 0, 0, 0.54);
+    fill: #312d2d;
+}
+
+md-toolbar md-icon.suave {
+    fill: #635f5f !important;
+}
+
+md-toolbar md-icon.ready {
+    fill: #0182be !important;
+}
+
+md-toolbar md-icon.done {
+    fill: #7bdc70 !important;
+}
+
+md-chip md-icon {
+    fill: #d0927f !important;
+}
+
+/*new caob 20160721 - errores en los input de la grilla*/
+.errors {
+    font-size: small;
+    color: #e23247;
+    margin: 4px;
+}
+
+md-toolbar.md-table-toolbar .md-toolbar-tools > .md-button.md-icon-button {
+    margin: 0;
+}
+
+md-toolbar.md-table-toolbar .md-toolbar-tools > .md-button.md-icon-button:first-child {
+    margin-left: -12px;
+}
+
+md-toolbar.md-table-toolbar .md-toolbar-tools > .md-button.md-icon-button:last-child {
+    margin-right: -12px;
+}
+
+md-toolbar.md-table-toolbar .md-toolbar-tools > .md-button.md-icon-button:last-child:not([disabled]):hover {
+    background-color: #F5F5F5;
+    color: white;
+}
+
+md-toolbar.md-table-toolbar .md-toolbar-tools > .md-button.md-icon-button:last-child[disabled] {
+    color: rgb(187, 187, 187);
+    background-color: rgba(230, 230, 229, 0.96);
+}
+
+md-toolbar.md-table-toolbar .md-toolbar-tools > .md-button.md-cl-pink {
+    background: #E91E63;
+}
+
+md-toolbar.md-table-toolbar .md-toolbar-tools > .md-raised.md-primary {
+    background: #DCDCDC;
+}
+
+.md-input[placeholder], [placeholder], *[placeholder] {
+    color: rgba(0, 0, 0, 0.54) !important;
+}
+
+md-card > md-toolbar.md-table-toolbar:first-child,
+md-card > md-table-container:first-child {
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+}
+
+md-card > md-toolbar.md-table-toolbar:last-child,
+md-card > md-table-container:last-child {
+    border-bottom-left-radius: 2px;
+    border-bottom-right-radius: 2px;
+}
+
+.md-table-container {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+table.md-table {
+    width: 100%;
+    border-spacing: 0;
+    overflow: hidden;
+    border-top: 1px rgba(0, 0, 0, 0.12) solid;
+}
+
+table.md-table.md-table-outlander {
+    border-top: 0;
+}
+
+.md-tableHeadLine {
+    border-top: 1px solid rgba(0, 0, 0, 0.12);;
+}
+
+table.md-table thead.md-head > tr.md-row {
+    height: 56px;
+}
+
+table.md-table thead.md-head > tr.md-row span {
+    color: #757575;
+}
+
+table.md-table tbody.md-body > tr.md-row,
+table.md-table tfoot.md-foot > tr.md-row {
+    height: 45px;
+}
+
+#procesoConvenio table.md-table tbody.md-body > tr.md-row,
+#procesoConvenio table.md-table tfoot.md-foot > tr.md-row {
+    height: 25px;
+}
+
+
+table.md-table thead.md-head + .md-table-progress md-progress-linear {
+    top: -3px;
+}
+
+table.md-table .md-table-progress th {
+    padding: 0;
+}
+
+table.md-table .md-table-progress th md-progress-linear {
+    height: 0;
+    transition: opacity 1s;
+}
+
+table.md-table .md-table-progress th md-progress-linear.ng-hide {
+    opacity: 0;
+}
+
+table.md-table .md-table-progress th md-progress-linear > .md-container {
+    height: 3px;
+    top: 0;
+    transition: none;
+}
+
+table.md-table .md-table-progress th md-progress-linear > .md-container > .md-bar {
+    height: 3px;
+}
+
+table.md-table th.md-column {
+    color: rgba(0, 0, 0, 0.54);
+    font-size: 12px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+table.md-table th.md-column.md-sort {
+    cursor: pointer;
+}
+
+table.md-table th.md-column md-icon {
+    height: 16px;
+    width: 16px;
+    /* caob 0 porque material tiene un minimo */
+    min-height: 0;
+    min-width: 0;
+    font-size: 16px !important;
+    line-height: 16px !important;
+}
+
+table.md-table th.md-column md-icon.md-sort-icon {
+    color: rgba(0, 0, 0, 0.26);
+    opacity: 0;
+    transition: -webkit-transform 0.25s, opacity 0.25s;
+    transition: transform 0.25s, opacity 0.25s;
+}
+
+table.md-table th.md-column md-icon.md-sort-icon.md-asc {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+}
+
+table.md-table th.md-column md-icon.md-sort-icon.md-desc {
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+
+table.md-table th.md-column md-icon:not(:first-child) {
+    margin-left: 8px;
+}
+
+table.md-table th.md-column md-icon:not(:last-child) {
+    margin-right: 8px;
+}
+
+table.md-table th.md-column.md-active,
+table.md-table th.md-column.md-active md-icon {
+    color: rgba(0, 0, 0, 0.87);
+}
+
+table.md-table th.md-column:hover md-icon.md-sort-icon,
+table.md-table th.md-column.md-active md-icon.md-sort-icon {
+    opacity: 1;
+}
+
+table.md-table tr.md-row[ng\:repeat].ng-leave,
+table.md-table tr.md-row[ng-repeat].ng-leave,
+table.md-table tr.md-row[x-ng-repeat].ng-leave,
+table.md-table tr.md-row[data-ng-repeat].ng-leave {
+    display: none;
+}
+
+table.md-table.md-row-select tbody.md-body > tr.md-row {
+    transition: background-color 0.2s;
+}
+
+table.md-table.md-row-select tbody.md-body > tr.md-row:not([disabled]):hover {
+    background-color: #eeeeee !important;
+}
+
+table.md-table.md-row-select tbody.md-body > tr.md-row.md-selected {
+    background-color: #f5f5f5;
+}
+
+table.md-table.md-row-select td.md-cell:first-child,
+table.md-table.md-row-select th.md-column:first-child {
+    width: 20px;
+    padding: 0 0 0 24px;
+}
+
+table.md-table.md-row-select td.md-cell:nth-child(2),
+table.md-table.md-row-select th.md-column:nth-child(2) {
+    padding: 0 24px;
+    color: #000;
+    /*font-weight: bold;*/
+}
+
+table.md-table.md-row-select td.md-cell:nth-child(n+3):nth-last-child(n+2),
+table.md-table.md-row-select th.md-column:nth-child(n+3):nth-last-child(n+2) {
+    padding: 0 20px 0 0;
+    /* modif caob 20160711 - tenía 56px  y eom(?) le puso 30 todo caob*/
+    /*0 56px 0 0*/
+}
+
+table.md-table:not(.md-row-select) td.md-cell:first-child,
+table.md-table:not(.md-row-select) th.md-column:first-child {
+    padding: 0 12px; /*24px*/
+}
+
+table.md-table:not(.md-row-select) td.md-cell:nth-child(n+2):nth-last-child(n+2),
+table.md-table:not(.md-row-select) th.md-column:nth-child(n+2):nth-last-child(n+2) {
+    padding: 0 20px 0 0;
+    /*0 56px 0 0*/
+    /* modif caob 20160711 - tenía 56px y eom(?) le puso 30px*/
+}
+
+table.md-table td.md-cell,
+table.md-table th.md-column {
+    vertical-align: middle;
+    text-align: left;
+}
+
+table.md-table td.md-cell > *,
+table.md-table th.md-column > * {
+    vertical-align: middle;
+}
+
+table.md-table td.md-cell:last-child,
+table.md-table th.md-column:last-child {
+    padding: 0 5px 0 0;
+    /* caob 24px*/
+}
+
+table.md-table td.md-cell.md-clickable,
+table.md-table th.md-column.md-clickable {
+    cursor: pointer;
+}
+
+table.md-table td.md-cell.md-clickable:focus,
+table.md-table th.md-column.md-clickable:focus {
+    outline: none;
+}
+
+table.md-table td.md-cell.md-numeric,
+table.md-table th.md-column.md-numeric {
+    text-align: right;
+}
+
+table.md-table td.md-cell md-checkbox,
+table.md-table th.md-column md-checkbox {
+    margin: 0;
+    width: 20px;
+}
+
+table.md-table td.md-cell {
+    color: rgba(0, 0, 0, 0.87);
+    font-size: 12px;
+    border-top: 1px rgba(0, 0, 0, 0.12) solid;
+}
+
+table.md-historico.md-table td.md-cell {
+    padding: 10px 12px 5px !important;
+}
+
+table.md-table-outlander.md-table tbody tr.md-row:first-child td.md-cell {
+    border-top: 1px rgba(0, 0, 0, 0.12) solid;
+}
+
+table.md-table td.md-cell.md-numeric md-select {
+    -webkit-justify-content: flex-end;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+}
+
+table.md-table td.md-cell.md-numeric md-select .md-select-value {
+    -webkit-flex-grow: initial;
+    -ms-flex-positive: initial;
+    flex-grow: initial;
+}
+
+table.md-table td.md-cell.md-placeholder {
+    color: rgba(0, 0, 0, 0.26);
+}
+
+table.md-table td.md-cell md-select > .md-select-value > span.md-select-icon {
+    -webkit-justify-content: flex-end;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+    color: rgba(0, 0, 0, 0.54);
+    width: 18px;
+    text-align: right;
+}
+
+table.md-table td.md-cell md-select > .md-select-value > span.md-select-icon:after {
+    -webkit-transform: scaleY(0.4) scaleX(0.8);
+    transform: scaleY(0.4) scaleX(0.8);
+}
+
+/*</editor-fold> */
+
+/**********      <editor-fold desc="tabla emergente">   ************
+ * excepciones tabla emergente
+ ************/
+
+.md-dialog-container table.md-table {
+    border-top: none !important;
+}
+
+.md-dialog-container table.md-table thead.md-head > tr.md-row {
+    height: 34px;
+}
+
+md-backdrop.md-sidenav-backdrop {
+    z-index: 43 !important;
+}
+
+.md-sidenav-right {
+    z-index: 44 !important;
+}
+
+.md-sidenav-right.md-closed {
+    z-index: 40 !important;
+}
+
+/*</editor-fold> */
+
+md-content.flex.ng-scope._md.md-no-flicker  {
+  overflow: hidden !important;
+}
+
+.width-full {
+  width: 100%;
+}
+
+.md-toolMaster {
+    font-size: 14px;
+    color: #C0C0C0;
+}
+
+.md-scrollX {
+    overflow: scroll;
+    overflow-y: hidden;
+}
+
+.md-scrollY {
+    overflow: scroll;
+    overflow-x: hidden;
+}
+
+.md-scroll-none {
+    overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.md-error {
+    display: block;
+    font-size: 10px !important;
+    color: rgb(221, 44, 0);
+    line-height: 11px !important;
+    margin-top: 35px;
+}
+
+.tarj-row {
+    white-space: initial !important;
+    max-width: 40px;
+    vertical-align: top !important;
+    padding-top: 25px !important;
+}
+
+table.md-table thead.md-head > tr.md-row.he-t {
+    height: 85px;
+}
+.h-row {
+    height: 44px;
+}
+
+.ml-none{
+  margin-left: 0 !important;
+}
+
+table.md-table.border-r {
+  border-right: 1px rgba(0, 0, 0, 0.12) solid;
+}
+.scrollbar-agenda {
+  float: left;
+  width: 100%;
+  background: transparent;
+  overflow-y: scroll;
+}
+#style-agenda::-webkit-scrollbar-track {
+  border-radius: 6px;
+  background-color: transparent;
+}
+#style-agenda::-webkit-scrollbar {
+  width: 6px;
+  background-color: transparent;
+}
+#style-agenda::-webkit-scrollbar-thumb {
+  border-radius: 6px;
+  background-color: #A9A9A9;
+}
+
+#style-agenda::-webkit-scrollbar-thumb:hover  {
+  background-color: #808080;
+}
+
+.cat .md-select-value  {
+  min-width: 50px !important;
+}
+.cat .md-select-value .md-select-icon {
+  margin-left: 0 !important;
+  width: 19px !important;
+}
+
+.agenda-toolbar {
+  align-content: flex-start;
+}
+
+md-input-container.md-icon-left.ic{
+  padding-left: 30px !important;
+}
+
+/*.padder {
+  padding: 0 11px 0 0 !important;
+}*/
+
+.font{
+  font-size: 12px !important;
+}
+.font label{
+  font-size: 12px !important;
+}
+
+.proceso label  {
+  line-height: 2;
+}
+
+.font.vto md-datepicker {
+    margin-left: 15px;
+}
+
+.font.vto md-datepicker .md-datepicker-input-container {
+    width: 70px;
+}
+
+.font.vto md-datepicker .md-datepicker-input {
+    width: 70px !important;
+    font-size: 12px;
+    max-width: auto;
+    min-width: auto;
+}
+
+.font.vto .md-datepicker-button {
+    display: none;
+}
+
+.cartera label{
+  line-height: 2;
+}
+
+.td-cell  {
+  padding:0 23px 0 0;
+}
+
+.bb .padding{
+  padding: 10px 8px 5px !important;
+}
+
+.td-state {
+  display: inline-table;
+  padding: 23px 8px 5px !important;
+}
+
+.td-state b{
+  margin-right: 5px;
+}
+
+/*Desktop XL*/
+@media (min-width: 1800px) {
+  .font.proceso {width: 175px !important; margin-right: 35px; margin-left: 30px;}
+  .font.periodo {width: 100px !important; margin-left: 91px; margin-right: 70px;}
+  .font.vto {width: 150px;}
+  .font.cartera {width: 75px !important; margin-right: 50px;}
+}
+
+.scrollbar {
+  float: left;
+  height: 95%;
+  width: 100%;
+  background: transparent;
+  overflow-y: scroll;
+}
+#style-bar::-webkit-scrollbar-track {
+  border-radius: 6px;
+  background-color: transparent;
+}
+#style-bar::-webkit-scrollbar {
+  width: 6px;
+  background-color: transparent;
+}
+#style-bar::-webkit-scrollbar-thumb {
+  border-radius: 6px;
+  background-color:  rgba(255, 255, 255, 0.2);
+}
+
+/*Estilos para Switch color verde*/
+
+md-switch.active.md-checked .md-thumb  {
+  background-color: rgb(67, 165, 70) !important;
+}
+md-switch.active.md-checked .md-ink-ripple  {
+  color: rgb(67, 165, 70) !important;
+}
+md-switch.active.md-checked .md-bar {
+  background-color: rgb(116, 201, 118) !important;
+}
+
+

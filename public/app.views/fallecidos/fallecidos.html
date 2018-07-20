@@ -1,0 +1,195 @@
+<div id="toastSelect">
+    <p></p>
+</div>
+
+
+<style>
+    .md-fab-custom-fallecido{
+        color: #fff;
+        line-height:2.6rem;
+        min-width: 0;
+        width: 2.6rem;
+        height: 2.6rem;
+        border-radius: 50%;
+    }
+
+</style>
+
+<!--
+<table>
+<tr  ng-repeat="agendaAutomatica in vFallecidos.agendas" style="padding: 5px;margin: 5px;">
+   <td ng-class="agendaAutomatica.estado">
+            {{agendaAutomatica.estado}}
+   </td>
+    <td>{{agendaAutomatica.descripcion}}</td>
+    <td>
+        <md-icon class="{{agendaAutomatica.estado}}-boton agenda-play"
+                 ng-click="vFallecidos.runProcess($index)"
+                 md-svg-src="img/icons/ic_play_arrow_grey_24px.svg">
+            <md-tooltip md-direction="left">
+                Correr
+            </md-tooltip>
+        </md-icon>
+    </td>
+
+</tr>
+</table>
+
+-->
+
+<md-card ng-init="init()">
+    <div id="toastSelect">
+        <p></p>
+    </div>
+
+
+    <!--TOOLBAR PRINCIPAL -->
+    <md-toolbar class="md-table-toolbar md-default" ng-show="!fallecidosGrilla.selected.length && !fallecidosGrilla.filter.show">
+        <div class="md-toolbar-tools">
+            <span>Fallecidos DataEntry</span>
+            <span flex></span>
+            <md-button id="Filter" class="md-icon-button md-button md-ink-ripple" aria-label="filtrar"
+                       ng-click='fallecidosGrilla.filter.show = true' >
+                <md-tooltip md-autohide>Filtrar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_filter_list_black_24px.svg"></md-icon>
+            </md-button>
+            <!--<button class="md-fab md-button md-success md-ink-ripple" ng-if="fallecidosGrilla.data.length<=0"  type="button"ng-click="gdFallecidos.add($event)">-->
+                <!--<md-tooltip md-autohide>Agregar</md-tooltip>-->
+                <!--<md-icon md-svg-src="img/icons/ic_add_white_24px.svg"> </md-icon>-->
+            <!--</button>-->
+            <p>
+                <md-button style="color: #fff;"
+                           class="{{agendaAutomatica.estado}} md-fab-custom-fallecido"
+                           ng-repeat='agendaAutomatica in vFallecidos.agendas  | orderBy:"order"'
+                           ng-click="vFallecidos.runProcess(agendaAutomatica)"
+                           md-svg-src="img/icons/ic_play_arrow_grey_24px.svg"aria-label="Add"    >
+                    <md-tooltip md-direction="bottom">
+                        {{agendaAutomatica.tooltip}}
+                    </md-tooltip>
+                    {{$index+1}}
+                </md-button>
+            </p>
+            <md-button class="md-icon-button md-button md-ink-ripple" aria-label="Generar Robots" ng-click="vFallecidos.iniciarProcesoGenerarTxt()">
+                <md-tooltip md-autohide>Generar Robots de contabilidad</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_account_balance_black_24px.svg"></md-icon>
+            </md-button>
+            <md-button class="md-icon-button md-button md-ink-ripple" ng-href="{{exportarAExcel()}}" target="_blank"
+                       ng-disable="detailGrid.data || detailGrid.data.length === 0">
+                <md-icon md-svg-src="img/icons/ic_file_download_36px.svg"></md-icon>
+                <md-tooltip md-autohide>Exportar XLSX</md-tooltip>
+            </md-button>
+
+
+        </div>
+    </md-toolbar>
+
+    <!--TOOLBAR PARA SEARCH-->
+       <md-toolbar class="md-table-toolbar md-default ng-hide" ng-show="fallecidosGrilla.filter.show && !fallecidosGrilla.selected.length">
+           <div class="md-toolbar-tools">
+
+                <form flex="" name="filter.form" class="ng-valid flex">
+                    <md-datepicker id="fecha" name="fecha" type="date" md-placeholder="Fecha"
+                                   ng-model="fallecidosGrilla.query.filter.fecha" ng-change="changeFecha()">
+                    </md-datepicker>
+
+                    <md-input-container class="md-toolMaster">
+                        <label>Estado</label>
+                        <md-select id="selectEstado" name="selectEstado"
+                                   ng-change="selectEstado()"
+                                   ng-model="fallecidosGrilla.query.filter.estado"
+                                   aria-label="true">
+                            <md-option ng-value="estado.value" ng-repeat="estado in estados">{{estado.estado}}</md-option>
+                        </md-select>
+                    </md-input-container>
+                    <md-input-container class="md-toolMaster">
+                        <label>Estado DataEntry</label>
+                        <md-select id="selectEstadoDataEntry" name="selectEstadoDataEntry"
+                                   ng-change="selectEstadoDataEntry()"
+                                   ng-model="fallecidosGrilla.query.filter.estadoDataEntry"
+                                   aria-label="true">
+                            <md-option ng-value="estadoDataEntry.value" ng-repeat="estadoDataEntry in estadosDataEntry">{{estadoDataEntry.estado}}</md-option>
+                        </md-select>
+                    </md-input-container>
+                    <md-input-container class="md-toolMaster">
+                        <label>Cuenta</label>
+                        <input type="text" ng-model="fallecidosGrilla.query.filter.nroCuenta">
+                    </md-input-container>
+
+
+
+                    <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="gdFallecidos.getData()">
+                        <md-icon class="ready" ng-show="!filtrado" md-svg-src="img/icons/playlist_play.svg"></md-icon>
+                        <md-icon class="done" ng-show="filtrado" md-svg-src="img/icons/playlist_check.svg"></md-icon>
+                        <md-tooltip md-autohide> {{ !filtrado ?  'Aplicar filtro' : 'Filtro Aplicado' }}</md-tooltip>
+                    </button>
+                </form>
+
+
+
+               <button class="md-icon-button md-button md-ink-ripple" type="button"
+                       ng-click="gdFallecidos.removeFilter()">
+                   <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+               </button>
+
+        </div>
+    </md-toolbar>
+    <!--GRILLA-->
+
+
+    <!--GRILLA DATOS
+       ng-hide="agendaAutomatica.estado === 'OK' || agendaAutomatica.estado === 'En Curso'"
+    -->
+
+
+
+    <md-table-container ng-if="fallecidosGrilla.data.length" class="md-scrollX">
+        <table data-md-table data-md-row-select="false" md-progress="promiseObj" id="grillaList" layout-margin>
+            <!--barra de titulos-->
+
+            <thead md-head data-md-order="fallecidosGrilla.query.order" md-on-reorder="onReorder">
+            <tr md-row>
+                <th ng-show="column.show" md-column
+                    ng-repeat="column in columns"
+                    data-md-numeric="column.filter == 'number'"
+                    data-md-order-by="{{column.field}}"
+                    ng-style="{'width': column.width}"
+                        >
+                    <span ng-bind-html="column.name | html"></span>
+                    <md-tooltip ng-if="column.tip" md-autohide md-direction="top">{{column.tip}}</md-tooltip>
+                </th>
+            </tr>
+            </thead>
+
+            <!--rows de datos-->
+            <tbody md-body>
+            <!--orderBy: grilla.query.order |-->
+            <tr md-row data-ng-repeat="row in fallecidosGrilla.data | orderBy: fallecidosGrilla.query.order | limitTo: fallecidosGrilla.query.limit : (fallecidosGrilla.query.page -1) * fallecidosGrilla.query.limit">
+                <td md-cell ng-repeat="column in columns" ng-show="column.show"
+                    ng-click="fallecidosUpdate($event,column,row)"
+                    ng-style="{'width': column.width, 'text-align': column.align,cursor:getCursor(column)}">
+                    {{ showVal(row[column.field], column.filter )}}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+<!--
+    <data-md-table-pagination ng-if="fallecidosGrilla.data.length"
+                              md-limit="fallecidosGrilla.query.limit"
+                              md-page="fallecidosGrilla.query.page"
+                              md-total="{{fallecidosGrilla.count}}"
+                              md-on-paginate="onPaginate"
+                              md-page-select>
+    </data-md-table-pagination>
+
+-->
+
+
+</md-card>
+
+<!--
+
+-->
+<md-card class="md-padding" layout-xs="column" layout="row" ng-if="fallecidosGrilla.data.length === 0">
+    No se encontraron datos para mostrar
+</md-card>

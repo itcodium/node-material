@@ -1,0 +1,77 @@
+<md-dialog aria-label="ABM Distribuciones" ng-init="init()" ng-cloak flex="50">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>{{operac}} de Distribuciones</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon md-svg-src="/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <form id="formCampanias" ng-submit="formDistribuciones.$invalid || save()" name="formDistribuciones" novalidate>
+        <md-dialog-content class="toastParent">
+            <div class="md-dialog-content mddc-thead">
+                <div class="modal-body">
+                    <div class="row altaPopUp">
+                        <div layout-gt-sm="row" layout-align="space-around">
+                            <md-input-container class="md-block" flex="20">
+                                <label for="codigo">Cod.</label>
+                                <input type="text" name="codigo" id="codigo" ng-disabled="operac !== 'Alta'" maxlength="2"
+                                       ng-model="distribucion.codigo" required>
+                                <div ng-messages="formDistribuciones.codigo.$error">
+                                    <div ng-message="required">El campo código es obligatorio</div>
+                                </div>
+                            </md-input-container>
+
+                            <md-input-container class="md-block" flex="60">
+                                <label for="descripcion">Descripcion</label>
+                                <input type="text" name="descripcion" id="descripcion" maxlength="100"
+                                       ng-model="distribucion.descripcion" required>
+                                <div ng-messages="formDistribuciones.descripcion.$error">
+                                    <div ng-message="required">El campo descripción es obligatorio</div>
+                                </div>
+                            </md-input-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="md-dialog-content" style="padding-bottom: 0 !important; height: 265px;">
+                <div class="modal-body">
+                    <div class="row altaPopUp">
+                        <div layout-gt-sm="row" flex="100">
+                            <md-table-container flex="100">
+                                <table data-md-table data-md-row-select="operac === 'Alta'" md-progress="promise" ng-model="distribucion.campanias" multiple="false">
+                                    <thead md-head>
+                                    <tr md-row>
+                                        <th md-column style="width: 40%;"><span>Código</span></th>
+                                        <th md-column style="width: 60%;"><span>Descripción</span></th>
+                                    </tr>
+                                    </thead>
+
+                                    <tbody md-body>
+                                    <tr md-row md:select="row"
+                                        ng-repeat="row in campanias.data | orderBy: campanias.query.order | limitTo: campanias.query.limit : (campanias.query.page - 1) * campanias.query.limit">
+                                        <td md-cell>{{row.codigo}}</td>
+                                        <td md-cell>{{row.descripcion}}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </md-table-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div layout-gt-sm="row" flex="100">
+              <data-md-table-pagination class="width-full" md-limit="campanias.query.limit" md-page="campanias.query.page" md-total="{{campanias.count}}" md-on-paginate="onPaginate" md-page-select>
+              </data-md-table-pagination>
+            </div>
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row">
+            <a href="javascript:void(0)" class="md-button md-ink-ripple" ng-click="cancel()">Cancelar</a>
+            <md-button type="submit" class="md-raised md-primary md-button md-ink-ripple" ng-keyup="$event.keyCode == 13" data-dismiss="modal">
+                <span>Aceptar</span>
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

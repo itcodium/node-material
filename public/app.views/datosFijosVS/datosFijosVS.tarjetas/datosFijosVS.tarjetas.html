@@ -1,0 +1,83 @@
+<md-card ng-controller="datosFijosVS.tarjetas.ctrl">
+    <md-table-container class="md-scrollX" ng-show="tarjetaGrid.data.length > 0">
+        <table data-md-table md-progress="promiseTarjetas" ng-model="tarjetaGrid.selected">
+
+            <thead md-head data-md-order="tarjetaGrid.query.order">
+                <tr md-row>
+                    <th md-column></th>
+                    <th md-column md:order:by="codigoAltaTarjeta">
+                        <span>Cod. Mov</span>
+                    </th>
+                    <th md-column data-md-order-by="banco">
+                        <span>Banco</span>
+                    </th>
+                    <th md-column data-md-order-by="tipoTarjeta">
+                        <span>Tipo Tarjeta</span>
+                    </th>
+                    <th md-column data-md-order-by="categoriaTarjeta">
+                        <span>Cat. Tarjeta</span>
+                    </th>
+                    <th md-column data-md-order-by="bonificacion">
+                        <span>Bonificación</span>
+                    </th>
+                    <th md-column data-md-order-by="ocupacion">
+                        <span>Ocupación</span>
+                    </th>
+                    <th md-column data-md-order-by="habilitacion">
+                        <span>Habilitación</span>
+                    </th>
+                    <th md-column data-md-order-by="cargo">
+                        <span>Cargo</span>
+                    </th>
+                    <th md-column data-md-order-by="distribucion">
+                        <span>Distribución</span>
+                    </th>
+                    <th md-column data-md-order-by="codProducto">
+                        <span>Cod. Producto</span>
+                    </th>
+                    <th md-column data-md-order-by="ctaEmpresa">
+                        <span>CtaEmpresa</span>
+                    </th>
+                    <th md-column data-md-order-by="tipoTarjetaProducto">
+                        <span>Tipo Tarj. Pcto.</span>
+                    </th>
+                    <th md-column data-md-order-by="marcaOrigen">
+                        <span>Marca Origen</span>
+                    </th>
+                    <th md-column data-md-order-by="cuartaLinea">
+                        <span>4ta Línea</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody md-body>
+                <tr md-row data-ng-repeat="row in tarjetaGrid.data | orderBy: tarjetaGrid.query.order | filter: filtering | limitTo: tarjetaGrid.query.limit : (tarjetaGrid.query.page - 1) * tarjetaGrid.query.limit">
+                    <td md-cell>
+                        <md-checkbox ng-model="row.selected" aria-label="check fila" ng-change="onSelectRow(row, $index)">
+                        </md-checkbox>
+                    </td>
+                    <td md-cell>{{ row.codigoAltaTarjeta }}</td>
+                    <td md-cell>{{ row.banco }}</td>
+                    <td md-cell>{{ row.tipoTarjeta }}</td>
+                    <td md-cell>{{ row.categoriaTarjeta }}</td>
+                    <td md-cell>{{ row.bonificacion }}</td>
+                    <td md-cell>{{ row.ocupacion }}</td>
+                    <td md-cell>{{ row.habilitacion }}</td>
+                    <td md-cell>{{ row.cargo }}</td>
+                    <td md-cell>{{ row.distribucion }}</td>
+                    <td md-cell>{{ row.codProducto }}</td>
+                    <td md-cell>{{ row.ctaEmpresa }}</td>
+                    <td md-cell>{{ row.tipoTarjetaProducto }}</td>
+                    <td md-cell>{{ row.marcaOrigen }}</td>
+                    <td md-cell>{{ row.cuartaLinea }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+    <data-md-table-pagination ng-if="tarjetaGrid.data.length" md-limit="tarjetaGrid.query.limit" md-limit-options="[5, 10, 15]"
+        md-page="tarjetaGrid.query.page" md-total="{{tarjetaGrid.data.length}}" md-page-select>
+    </data-md-table-pagination>
+
+    <div class="md-padding" layout-xs="column" ng-show="tarjetaGrid.data.length == 0">
+        No se encontraron datos para mostrar
+    </div>
+</md-card>

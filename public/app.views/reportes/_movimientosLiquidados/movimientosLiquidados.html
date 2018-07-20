@@ -1,0 +1,194 @@
+<div id="toastSelect">
+    <p></p>
+</div>
+
+<md-card ng-init = "init()">
+
+    <!--TOOLBAR PRINCIPAL-->
+    <md-toolbar class="md-table-toolbar md-default"  ng-show="!show.filter">
+        <div class="md-toolbar-tools">
+            <span>Reporte Movimientos Liquidados</span>
+            <span flex></span>
+
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="show.filter=true">
+                <md-tooltip md-autohide>Filtros</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_filter_list_24px.svg"></md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <!-- TOOLBAR PARA FILTROS -->
+
+    <md-toolbar class="md-table-toolbar md-default ng-hide" ng-show="show.filter">
+        <div class="md-toolbar-tools">
+            <form flex="" name="filterfrm" class="ng-valid flex">
+                <div flex layout="row" layout-align="space-around center">
+                    <md-input-container class="md-toolMaster" style="width: 100px">
+                        <label>Entidad </label>
+                        <md-select ng-model="filter_entidad" ng-change="changeLimit()" required>
+                            <md-option ng-value="itemEntidad" ng-repeat="itemEntidad in entidades"   >{{itemEntidad.entidad}}</md-option>
+                        </md-select>
+                    </md-input-container>
+                    <!-- -->
+                    <md-input-container class="md-toolMaster" style="width: 120px">
+                        <label>Nº de Cuenta</label>
+                        <input ng-model="grilla.query.filter.nroCuenta"
+                               type="text"
+                               limit-Digits="{{LimitNroCuentaEntidad}}" required/>
+                    </md-input-container>
+
+                    <div flex="20">
+                        <md-datepicker md-placeholder="Fec. Cierre Desde" class="form-control input-sm"
+                                       ng-model="grilla.query.filter.fechaDesde">
+                        </md-datepicker>
+                    </div>
+
+                    <div flex="20">
+                        <md-datepicker md-placeholder="Fec. Cierre Hasta" class="form-control input-sm"
+                                       ng-model="grilla.query.filter.fechaHasta">
+                        </md-datepicker>
+                    </div>
+                </div>
+            </form>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="filterfrm.$invalid || onFilter()">
+                <md-icon class="ready" ng-show="!filtrado" md-svg-src="img/icons/playlist_play.svg"></md-icon>
+                <md-icon class="done" ng-show="filtrado" md-svg-src="img/icons/playlist_check.svg"></md-icon>
+                <md-tooltip md-autohide> {{ !filtrado ?  'Aplicar filtro' : 'Filtro Aplicado' }}</md-tooltip>
+            </button>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="show.filter=false">
+                <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+                <md-tooltip md-autohide>Cerrar</md-tooltip>
+            </button>
+            <button class="md-icon-button md-button md-ink-ripple" type="button"
+                    ng-click="exportarAExcel()">
+                <md-tooltip md-autohide>Exportar XLSX</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_file_download_36px.svg"></md-icon>
+            </button>
+
+        </div>
+    </md-toolbar>
+
+
+    <!--GRILLA DATOS VISA-->
+    <div ng-show="EntidadShow == 'VISA'">
+        <div class="md-scrollX">
+            <md-table-container ng-if="filterApplied || !loaded" class="md-scrollX">
+                <table data-md-table data-md-row-select="false" md-progress="promiseObj" id="grillaList">
+                    <!--barra de titulos-->
+                    <thead md-head data-md-order="grilla.query.order" md-on-reorder="onReorder">
+                    <tr md-row>
+                        <th ng-show="column.show" md-column
+                            ng-repeat="column in columns"
+                            data-md-order-by="{{column.field}}"
+                            ng-style="{'width': column.width}">
+                            <span ng-bind-html="column.name | html"></span>
+                            <md-tooltip ng-if="column.tip" md-autohide md-direction="top">{{column.tip}}</md-tooltip>
+                        </th>
+                    </tr>
+                    </thead>
+
+                    <!--rows de datos-->
+                    <tbody md-body>
+                    <!--orderBy: grilla.query.order |-->
+                    <tr md-row data-ng-repeat="row in grilla.data | orderBy: grilla.query.order | limitTo: grilla.query.limit : (grilla.query.page -1) * grilla.query.limit">
+                        <td md-cell ng-repeat="column in columns" ng-show="column.show"
+                            ng-style="{'width': column.width, 'text-align': column.filter == 'number' ? 'right' : 'center'}">
+                            {{ showVal(row[column.field], column.filter )}}
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </md-table-container>
+        </div>
+        <data-md-table-pagination ng-if="filterApplied || !loaded"
+                                  md-limit="grilla.query.limit"
+                                  md-page="grilla.query.page"
+                                  md-total="{{grilla.count}}"
+                                  md-on-paginate="onPaginate"
+                                  md-adc-info="{{grilla.nohayDatos}}"
+                                  md-page-select>
+        </data-md-table-pagination>
+    </div>
+    <!--GRILLA DATOS MASTER-->
+    <div ng-show="EntidadShow == 'Master'">
+        <h3 style="background: #106CC8;color: #FFF;padding: 10px;font-weight: normal;cursor: pointer;" >CC120D</h3>
+        <div class="md-scrollX">
+            <md-table-container ng-if="filterApplied || !loaded" >
+                <table data-md-table data-md-row-select="false" md-progress="promise" id="grillaListMasterCC120" >
+                    <!--barra de titulos-->
+                    <thead md-head data-md-order="grilla.query.order" md-on-reorder="onReorder">
+                    <tr md-row>
+                        <th ng-show="column.show" md-column
+                            ng-repeat="column in columnsMC120"
+                            data-md-order-by="{{column.field}}"
+                            ng-style="{'width': column.width}">
+                            <span ng-bind-html="column.name | html"></span>
+                            <md-tooltip ng-if="column.tip" md-autohide md-direction="top">{{column.tip}}</md-tooltip>
+                        </th>
+                    </tr>
+                    </thead>
+
+                    <!--rows de datos-->
+                    <tbody md-body>
+                    <!--orderBy: grilla.query.order |-->
+                    <tr md-row data-ng-repeat="row in grilla.data | orderBy: grilla.query.order | limitTo: grilla.query.limit : (grilla.query.page -1) * grilla.query.limit">
+                        <td md-cell ng-repeat="column in columnsMC120" ng-show="column.show"
+                            ng-style="{'width': column.width, 'text-align': column.filter == 'number' ? 'right' : 'left'}">
+                            {{ showVal(row[column.field], column.filter)}}
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </md-table-container>
+        </div>
+        <data-md-table-pagination ng-if="filterApplied || !loaded"
+                                  md-limit="grilla.query.limit"
+                                  md-page="grilla.query.page"
+                                  md-total="{{grilla.count}}"
+                                  md-on-paginate="onPaginate"
+                                  md-adc-info="{{grilla.nohayDatos}}"
+                                  md-page-select>
+        </data-md-table-pagination>
+        <h3 style="background: #106CC8;color: #FFF;padding: 10px;font-weight: normal;cursor: pointer;">CC108D</h3>
+        <div class="md-scrollX">
+            <md-table-container ng-if="filterApplied || !loaded">
+                <table data-md-table data-md-row-select="false" md-progress="promiseObj" id="grillaListMaster">
+                    <!--barra de titulos-->
+                    <thead md-head data-md-order="grilla.queryMC.order" md-on-reorder="onReorderMC">
+                    <tr md-row>
+                        <th ng-show="column.show" md-column
+                            ng-repeat="column in columnsMC"
+                            data-md-order-by="{{column.field}}"
+                            ng-style="{'width': column.width}">
+                            <span ng-bind-html="column.name | html"></span>
+                            <md-tooltip ng-if="column.tip" md-autohide md-direction="top">{{column.tip}}</md-tooltip>
+                        </th>
+                    </tr>
+                    </thead>
+
+                    <!--rows de datos-->
+                    <tbody md-body>
+                    <!--orderBy: grilla.query.order |-->
+                    <tr md-row data-ng-repeat="row in grilla.dataMC | orderBy: grilla.queryMC.order | limitTo: grilla.queryMC.limit : (grilla.queryMC.page -1) * grilla.queryMC.limit">
+                        <td md-cell ng-repeat="column in columnsMC" ng-show="column.show"
+                            ng-style="{'width': column.width, 'text-align': column.filter == 'number' ? 'right' : 'left'}">
+                            {{ showVal(row[column.field], column.filter )}}
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </md-table-container>
+        </div>
+        <data-md-table-pagination ng-if="filterApplied || !loaded"
+                                  md-limit="grilla.queryMC.limit"
+                                  md-page="grilla.queryMC.page"
+                                  md-total="{{grilla.countMC}}"
+                                  md-on-paginate="onPaginateMC"
+                                  md-adc-info="{{grilla.nohayDatosMC}}"
+                                  md-page-select>
+        </data-md-table-pagination>
+    </div>
+    <md-card class="md-padding" layout-xs="column" layout="row"  ng-if="!filterApplied && loaded"  >
+        Usted debe ingresar la entidad y el n&uacute;mero de cuenta para acortar la busqueda
+    </md-card>
+</md-card>

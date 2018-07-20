@@ -1,0 +1,61 @@
+<md-card>
+    ﻿<md-toolbar class="md-table-toolbar md-default" ng-show="!grillaPorDia.filterShow">
+        <div class="md-toolbar-tools">
+            <span>Riesgo Contingente</span>
+            <span flex></span>
+            <md-input-container class="md-block" >
+                <md-select id="selectPeriodo" name="selectPeriodo"  ng-model="query.periodo" ng-change="changeParam();" aria-label="true">
+                    <md-option ng-value="periodo" ng-repeat="periodo in periodos" >{{periodo.periodo}}</md-option>
+                </md-select>
+            </md-input-container>
+            <md-input-container class="md-toolMaster">
+                <md-select ng-model="solapa" >
+                    <md-option ng-repeat="tipo in tipos" value="{{tipo.codigo}}">{{tipo.descripcion}}</md-option>
+                </md-select>
+            </md-input-container>
+            <md-button class="md-icon-button md-button md-ink-ripple" ng-href="{{exportarAExcel()}}" target="_blank"
+                       ng-disable="detailGrid.data || detailGrid.data.length === 0">
+                <md-icon md-svg-src="img/icons/ic_file_download_36px.svg"></md-icon>
+                <md-tooltip md-autohide>Exportar XLSX</md-tooltip>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+</md-card>
+
+<md-card ng-if="solapa=='RC'"  layout-padding style="overflow:auto">
+    <div class="md-toolbar-tools">
+        <span>Totales Por Día</span>
+    </div>
+    <grilla mostrar-paginacion="false"  paginado-db="false" data="grillaPorDia" ></grilla>
+</md-card>
+
+<md-card ng-if="solapa=='RC'"  layout-padding style="overflow:auto">
+    <div class="md-toolbar-tools">
+        <span>Totales Por Región</span>
+    </div>
+
+    <grilla mostrar-paginacion="false" paginado-db="false" data="grillaPorRegion"></grilla>
+
+</md-card>
+
+<md-card ng-if="solapa=='TBRECUP'"  layout-padding style="overflow:auto">
+    <div class="md-toolbar-tools">
+        <span>T-BCO RECUPERADO</span>
+    </div>
+    <grilla mostrar-paginacion="true" paginado-db="true" data="grillaBcoRecuperado" ></grilla>
+</md-card>
+
+<md-card ng-if="solapa=='TBRIESGO'"  layout-padding style="overflow:auto">
+    <div class="md-toolbar-tools">
+        <span>T-BCO Riesgo</span>
+    </div>
+    <grilla mostrar-paginacion="true" paginado-db="true" data="grillaBcoRiesgo"></grilla>
+</md-card>
+
+<md-card ng-if="solapa=='NIG'"  layout-padding style="overflow:auto">
+    <div class="md-toolbar-tools">
+        <span>No Informar a Gestiva</span>
+    </div>
+    <grilla mostrar-paginacion="true" paginado-db="true" data="grillaNoInformarAGestiva"></grilla>
+</md-card>

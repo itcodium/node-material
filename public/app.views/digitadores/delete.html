@@ -1,0 +1,84 @@
+<md-dialog aria-label="Baja de Digitadores"  ng-cloak flex="50">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>{{ParentScope.operac}} de Digitadores</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon md-svg-src="/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="toastParent">
+        <form id="formDigitadorDelete" ng-submit="ParentScope.config.submit(formDigitadorDelete, digitadores);" name="formDigitadorDelete" role="form">
+            <div class="md-dialog-content mddc-thead">
+                <div layout-gt-xs="row">
+                    <md-input-container class="md-block" flex="50">
+                        <md-datepicker
+                                id="fecBajaAll"
+                                name="fecBajaAll"
+                                md-placeholder="Fecha baja:"
+                                ng-model="digitadores.fecBajaAll"
+                                required
+                                md-min-date="currentDate"
+                        ></md-datepicker>
+                        <div class="validation-messages" ng-messages="formDigitadorDelete.fecBajaAll.$error">
+                            <div ng-message="valid">La fecha ingresada no es valida.</div>
+                            <div ng-message="required">El campo es requerido</div>
+                            <div ng-message="mindate">La fecha de baja no puede ser menor al día en curso.</div>
+                        </div>
+                    </md-input-container>
+                </div>
+            </div>
+            <div class="md-dialog-content" style="padding-top: 0;">
+                <div class="modal-body">
+                    <md-table-container>
+                        <table data-md-table data-md-row-select="true" data-ng-model="digitadorDeleteGrilla.selected" md-progress="promise">
+
+                            <!--barra de titulos-->
+                            <thead ng-if="!hideHead" md-head data-md-order="digitadorDeleteGrilla.query.order" md-on-reorder="onReorder">
+                            <tr md-row>
+                                <th md-column md:order:by="cuenta"><span>Cuenta</span></th>
+                                <th md-column data-md-order-by="proceso"><span>Proceso</span></th>
+                                <th md-column data-md-order-by="digitador"><span>Digitador</span></th>
+                                <th md-column data-md-order-by="accion"><span>Acción</span></th>
+                            </tr>
+                            </thead>
+                            <!--rows de datos-->
+                            <tbody md-body>
+                            <tr md-row data-ng-repeat="row in digitadores.selected | orderBy: digitadores.selected.query.order | limitTo: digitadores.selected.query.limit : (digitadores.selected.query.page -1) * digitadores.selected.query.limit">
+                                <td md-cell>{{row.cuenta}}</td>
+                                <td md-cell>{{row.Nombre}}</td>
+                                <td md-cell>{{row.digitador}}</td>
+                                <td md-cell>{{row.accion}}</td>
+                                <!--
+                                <td md-cell>{{row.fecBaja | date:'dd/MM/yyyy'}}</td>
+                                -->
+                            </tr>
+                            </tbody>
+                        </table>
+                    </md-table-container>
+
+                    <data-md-table-pagination
+                            md-limit="digitadores.query.limit"
+                            md-page="digitadores.query.page"
+                            md-total="{{digitadores.selected.length}}"
+                            md-on-paginate="onPaginate"
+                            md-page-select>
+                    </data-md-table-pagination>
+<!--
+                    <input type="submit"
+                           style="position: absolute; left: -9999px; width: 1px; height: 1px;"
+                           tabindex="-1" />
+-->
+                </div>
+            </div>
+            <md-dialog-actions layout="row">
+                <a href="javascript:void(0)" class= "md-button md-ink-ripple" ng-click="cancel()">Cancelar</a>
+                <md-button type="submit" ng-disabled="formDigitadorDelete.$valid==false" class="md-raised md-primary md-button md-ink-ripple" ng-keyup="$event.keyCode == 13" data-dismiss="modal">
+                    <span>Aceptar</span>
+                </md-button>
+            </md-dialog-actions>
+
+        </form>
+    </md-dialog-content>
+</md-dialog>

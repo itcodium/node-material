@@ -1,0 +1,184 @@
+
+.tree-list{
+    padding-right: 5%;  /*particularmnte para check en lista que no es tree */
+}
+.tree-list-check {
+    float: right;
+    margin: 10px 25px;
+}
+
+.tree-list-label {
+    float: right;
+    margin-top: 11px;
+    border-color: #7986CB;
+    border-radius: 5px;
+}
+
+.tree-list-tree {
+    margin-top: 9px;
+
+}
+
+.tree-list-node {
+    background: #f8faff;
+    border: 1px solid #dae2ea;
+    color: #7c9eb2;
+    padding: 0px 0px 0px 10px;    /*modif by caob 20160627 */
+    margin: 5px 0px 5px;
+    min-height: 22px;
+}
+
+
+.tree-list-node:hover {
+    background: #f4f6f7;
+    border-color: #dce2e8;
+    border: 0px;
+}
+
+.tree-list-node md-checkbox md-icon{
+    border-color: #7986CB;
+    border-radius: 5px;
+}
+
+.tree-list-node md-checkbox.md-checked .md-icon {
+    background-color: #9CCC65;
+}
+
+/* especial para el check de marcar todos en la lista que no es tree*/
+.tree-list md-checkbox.md-checked .md-icon {
+    background-color: #9CCC65;
+}
+
+.bp4-tree-handle {
+    background: #f8faff;
+    border: 1px solid #dae2ea;
+    color: #7c9eb2;
+    padding: 0px 0px 0px 10px;
+    margin: 5px 0px 5px;
+    min-height: 22px;
+}
+
+.bp4-tree-handle:hover {
+    background: #f4f6f7;
+    border-color: #dce2e8;
+    /*border: 0px;*/
+    border-bottom: 0;
+    border-right: 0;
+    border-left: 0;
+}
+
+.tree-node {
+    border: 1px solid #dae2ea;
+    background: rgba(243, 229, 245, 0.31);  /*#f8faff;*/
+    color: #607D8B;
+    /*border: 0px!important;     este activado, evita el efecto de movimiento que tiene al pasar por los renglones */
+    height: 40px;
+}
+
+
+.bp4-tree-nodes {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.bp4-tree-nodes .bp4-tree-nodes {
+    padding-left: 20px;
+}
+
+.bp4-tree-node, .bp4-tree-placeholder {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    min-height: 20px;
+}
+
+.bp4-tree-node md-checkbox{
+    float: right;
+    margin: 0px;
+    margin-right: 30px;  /*new*/
+}
+
+.bp4-tree-node md-checkbox md-icon{
+    border-color: #7986CB;
+    border-radius: 5px;
+}
+
+md-icon.tree-chevron{
+    color: #4c425f;
+}
+
+.bp4-tree-node md-checkbox.md-checked .md-icon {
+    background-color: #9CCC65;
+}
+
+
+
+
+
+/*          de aqui para abajo FUTURO FUTURO FUTURO          */
+
+
+
+.bp4-tree-hidden {
+    display: none;
+}
+
+.bp4-tree-placeholder {
+    margin: 5px 0;
+    padding: 0;
+    min-height: 30px;
+}
+
+
+.group-title {
+    background-color: #687074 !important;
+    color: #FFF !important;
+}
+
+
+.nodrop {
+    background-color: #f2dede;
+}
+
+
+.bp4-tree-placeholder {
+    background: #f0f9ff;
+    border: 2px dashed #bed2db;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+
+.bp4-tree-drag {
+    position: absolute;
+    pointer-events: none;
+    z-index: 999;
+    opacity: .8;
+}
+
+
+.bp4-tree-placeholder {
+    background: #f0f9ff;
+    border: 2px dashed #bed2db;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.bp4-tree-empty {
+    border: 1px dashed #bbb;
+    min-height: 100px;
+    background-color: #e5e5e5;
+    background-image: -webkit-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff), -webkit-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
+    background-image: -moz-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff), -moz-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
+    background-image: linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff), linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
+    background-size: 60px 60px;
+    background-position: 0 0, 30px 30px;
+}
+
+tr.bp4-tree-empty {
+    height:100px
+}

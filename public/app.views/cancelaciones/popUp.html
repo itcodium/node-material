@@ -1,0 +1,237 @@
+<md-dialog aria-label="ABM Cancelaciones" ng-init="init()" ng-cloak flex="70">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 ng-if="ParentScope.operac!='Modificar'">{{ParentScope.operac}} de Cancelaciones</h2>
+            <h2 ng-if="ParentScope.operac=='Modificar'">Modificación de Cancelaciones</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon md-svg-src="/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <form id="formCancelaciones" ng-submit="ParentScope.config.submit(this.formCancelaciones,cancelaciones);" name="formCancelaciones" novalidate>
+        <md-dialog-content class="toastParent">
+            <div class="md-dialog-content">
+                <div class="modal-body">
+                    <div class="row altaPopUp">
+                        <!-- nroCIE - fecPago - sucursal -->
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex>
+                                <label for="nroCIE">Nro CIE</label>
+                                <input
+                                        md-no-resize
+                                        required="true"
+                                        type="number"
+                                        name="nroCIE"
+                                        id="nroCIE"
+                                        step='any'
+                                        max="2147483648"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                        xng-disabled="ParentScope.operac.toUpperCase() !== 'ALTA'"
+                                        ng-model="cancelaciones.model.nroCIE"
+                                        ng-change="ParentScope.config.ValidarDuplicidad(cancelaciones)"
+                                >
+                                </input>
+                                <div ng-messages="formCancelaciones.nroCIE.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                    <div ng-message="max">El número es mayor al maximo permitido</div>
+                                </div>
+                                <div immediate-error class="md-caption" style="color:rgb(221,44,0)" ng-show="cancelaciones.codigoExistente">
+                                    Ya existe una cancelación cargada con ese Nro. CIE y Nro. Comprobante.
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex>
+                                <label for="fecPago">Fecha Pago *</label>
+                                <md-datepicker
+                                        id="fecPago"
+                                        name="fecPago"
+                                        ng-model="cancelaciones.model.fecPago"
+                                        required="true"
+                                >
+                                </md-datepicker>
+                                <div class="validation-messages" ng-messages="formCancelaciones.fecPago.$error">
+                                    <div ng-message="valid">No es una fecha valida.</div>
+                                    <div ng-message="required">El campo es requerido</div>
+                                </div>
+                            </md-input-container>
+                        </div>
+                        <!-- nroEstablecimiento - descripcion -> nroComercio - nombreComercio -->
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex>
+                                <label for="nroComercio">Nro Establecimiento</label>
+                                <textarea
+                                        md-no-resize
+                                        required="true"
+                                        type="number"
+                                        step='any'
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                        name="nroComercio"
+                                        id="nroComercio"
+                                        maxlength="15"
+                                        xng-disabled="ParentScope.operac.toUpperCase() !== 'ALTA'"
+                                        ng-model="cancelaciones.model.nroComercio"
+                                >
+                                </textarea>
+                                <div ng-messages="formCancelaciones.nroComercio.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex>
+                                <label for="nombreComercio">Descripción</label>
+                                <textarea
+                                        md-no-resize
+                                        type="text"
+                                        name="nombreComercio"
+                                        id="nombreComercio"
+                                        maxlength="250"
+                                        xng-disabled="ParentScope.operac.toUpperCase() !== 'ALTA'"
+                                        ng-model="cancelaciones.model.nombreComercio"
+                                >
+                                </textarea>
+                                <div ng-messages="formCancelaciones.nombreComercio.$error">
+                                </div>
+                            </md-input-container>
+                        </div>
+                        <!-- nroTarjeta - fecOrigen -->
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex>
+                                <label for="nroTarjeta">Nro Tarjeta</label>
+                                <textarea
+                                        md-no-resize
+                                        type="text"
+                                        name="nroTarjeta"
+                                        id="nroTarjeta"
+                                        maxlength="20"
+                                        xng-disabled="ParentScope.operac.toUpperCase() !== 'ALTA'"
+                                        ng-model="cancelaciones.model.nroTarjeta"
+                                >
+                                </textarea>
+                                <div ng-messages="formCancelaciones.nroTarjeta.$error">
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex>
+                                <label for="fecOrigen" style="padding-left: 0px; padding-right: 0px; margin-right: 15px;">Fecha Origen *</label>
+                                <md-datepicker
+                                        id="fecOrigen"
+                                        name="fecOrigen"
+                                        ng-model="cancelaciones.model.fecOrigen"
+                                        required="true"
+                                >
+                                </md-datepicker>
+                                <div class="validation-messages" ng-messages="formCancelaciones.fecOrigen.$error">
+                                    <div ng-message="valid">La fecha ingresada no es valida.</div>
+                                    <div ng-message="required">El campo es requerido</div>
+                                    <div ng-message="mindate">La fecha de baja no puede ser menor al día en curso.</div>
+                                </div>
+                            </md-input-container>
+                        </div>
+                        <!-- nroExpediente -->
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex>
+                                <label for="nroExpediente">Nro Expediente</label>
+                                <textarea
+                                        md-no-resize
+                                        type="text"
+                                        name="nroExpediente"
+                                        id="nroExpediente"
+                                        maxlength="15"
+                                        xng-disabled="ParentScope.operac.toUpperCase() !== 'ALTA'"
+                                        ng-model="cancelaciones.model.nroExpediente"
+                                >
+                                </textarea>
+                                <div ng-messages="formCancelaciones.nroExpediente.$error">
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex>
+                                <label for="sucursal">Sucursal</label>
+                                <input
+                                        md-no-resize
+                                        required="true"
+                                        type="number"
+                                        step='any'
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                        name="sucursal"
+                                        id="sucursal"
+                                        xng-disabled="ParentScope.operac.toUpperCase() !== 'ALTA'"
+                                        ng-model="cancelaciones.model.sucursal"
+                                >
+                                </input>
+                                <div ng-messages="formCancelaciones.sucursal.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                </div>
+                            </md-input-container>
+                        </div>
+                        <!-- nroCpte - importe -->
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex>
+                                <label for="nroCpte">Nro Cpte</label>
+                                <textarea
+                                        md-no-resize
+                                        required="true"
+                                        type="text"
+                                        name="nroCpte"
+                                        id="nroCpte"
+                                        maxlength="15"
+                                        xng-disabled="ParentScope.operac.toUpperCase() !== 'ALTA'"
+                                        ng-model="cancelaciones.model.nroCpte"
+                                        ng-change="ParentScope.config.ValidarDuplicidad(cancelaciones)"
+                                >
+                                </textarea>
+                                <div ng-messages="formCancelaciones.nroCpte.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex>
+                                <label for="importe">Importe</label>
+                                <input
+                                        sdsmd-no-resize
+                                        required="true"
+                                        type="number"
+                                        max="999999999999.999999"
+                                        step="0.000001"
+                                        pattern="^\d+(?:\.\d{1,6})?$"
+                                        name="importe"
+                                        id="importe"
+                                        ng-model="cancelaciones.model.importe"
+                                >
+                                </input>
+                                <div ng-messages="formCancelaciones.importe.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                    <div ng-message="number">Ingresar solo números</div>
+                                    <div ng-message="pattern">El valor puede tener hasta 6 decimales</div>
+                                    <div ng-message="max">El importe supera al valor máximo</div>
+                                </div>
+                            </md-input-container>
+                        </div>
+                        <!-- observaciones -->
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex>
+                                <label for="observaciones">Observaciones</label>
+                                <textarea
+                                        md-no-resize
+                                        type="text"
+                                        name="observaciones"
+                                        id="observaciones"
+                                        maxlength="250"
+                                        xng-disabled="ParentScope.operac.toUpperCase() !== 'ALTA'"
+                                        ng-model="cancelaciones.model.observaciones"
+                                >
+                                </textarea>
+                                <div ng-messages="formCancelaciones.observaciones.$error">
+                                </div>
+                            </md-input-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row">
+            <a href="javascript:void(0)" class="md-button md-ink-ripple" ng-click="cancel()">Cancelar</a>
+            <md-button type="submit"  ng-disabled="formCancelaciones.$valid==false"  class="md-raised md-primary md-button md-ink-ripple" ng-keyup="$event.keyCode == 13" data-dismiss="modal">
+                <span>Aceptar</span>
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

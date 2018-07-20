@@ -1,0 +1,182 @@
+<div id="toastSelect">
+    <p></p>
+</div>
+
+<md-card ng-init="load()">
+    <!--TOOLBAR PRINCIPAL-->
+    <md-toolbar class="md-table-toolbar md-default">
+        <div class="md-toolbar-tools">
+            <span>Reporte Tarjetas en Boletín</span>
+            <span flex></span>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="exportarExcel()">
+                <md-tooltip md-autohide>Exportar Excel</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_file_download_36px.svg"> </md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+
+    <!--GRILLA 01-->
+    <md-table-container>
+        <table data-md-table data-md-row-select="false" md-progress="promiseTarjetasBoletin" id="grilla">
+            <!--barra de titulos-->
+            <thead md-head data-md-order="grilla.query.order" md-on-reorder="onReorder">
+            <tr md-row>
+                <th md-column md:order:by="archivo" ><span>Archivo</span></th>
+                <th md-column data-md-order-by="entidad" ><span>Entidad</span></th>
+                <th md-column data-md-order-by="codVerificacion"><span>Código Verificación</span></th>
+                <th md-column md:order:by="region" > Región<span></span></th>
+                <th md-column data-md-order-by="nroBoletin" ><span>Número Boletín</span></th>
+                <th md-column data-md-order-by="fecVigencia"><span>Fecha Vigencia</span></th>
+                <th md-column data-md-order-by="totTarjetasRegion"><span>Total Tarjetas Región</span></th>
+            </tr>
+            </thead>
+
+            <!--rows de datos-->
+            <tbody md-body>
+            <tr md-row data-ng-repeat="row in grilla.data">
+                <td md-cell>{{row.archivo}}</td>
+                <td md-cell>{{row.entidad}}</td>
+                <td md-cell>{{row.codVerificacion}}</td>
+                <td md-cell>{{row.region}}</td>
+                <td md-cell>{{row.nroBoletin}}</td>
+                <td md-cell>{{row.fecVigencia | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                <td md-cell>{{row.totTarjetasRegion}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+
+
+    <data-md-table-pagination ng-if="filterApplied || !loaded"
+                              md-limit="grilla.query.limit"
+                              md-page="grilla.query.page"
+                              md-total="{{grilla.count}}"
+                              md-on-paginate="onPaginate"
+                              md-adc-info="{{grilla.data.length==0 ? 'No se encontraron datos' : ''}}"
+                              md-page-select>
+    </data-md-table-pagination>
+
+</md-card>
+
+
+
+
+<md-card ng-init="load()">
+    <!--TOOLBAR PRINCIPAL-->
+    <md-toolbar class="md-table-toolbar md-default" ng-show="!grilla.filterShow">
+        <div class="md-toolbar-tools">
+            <span>Detalle</span>
+            <span flex></span>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="toolbarToogle();">
+                <md-tooltip md-autohide>Filtros</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_filter_list_24px.svg"></md-icon>
+            </button>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="exportarExcel()">
+                <md-tooltip md-autohide>Exportar Excel</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_file_download_36px.svg"> </md-icon>
+            </button>
+        </div>
+
+    </md-toolbar>
+
+
+
+    <md-toolbar class="md-table-toolbar md-default ng-hide" ng-show="grilla.filterShow">
+        <div class="md-toolbar-tools">
+            <div flex layout="row" layout-align="left">
+                <form ng-submit="onFilter()" name="frmCreditCard">
+                    <md-input-container class="md-toolMaster" style="width: 180px">
+                        <label>Nº Tarjeta de Crédito</label>
+                        <input id="RPT_Credit_Card_Number" required ng-keypress="onKeyUp($event)"  ng-model="grillaDetalle.query.filter" minlength="8" style="width: 200px;" type="text" maxlength="16" name="credit_card_number" ng-pattern="/^[0-9]*$/"  />
+                        <div ng-messages="frmCreditCard.credit_card_number.$error" >
+                            <div ng-message="number">Ingresar solo números</div>
+                            <div ng-message="min">Ingresar números mayores a cero.</div>
+                            <div ng-message="minlength">Ingresar al menos 8 caracteres.</div>
+                            <div ng-message="pattern">Ingresar números enteros</div>
+                        </div>
+                    </md-input-container>
+                    <button class="md-icon-button md-button md-ink-ripple" type="submit" >
+                        <md-icon class="ready" ng-show="!filtrado" md-svg-src="img/icons/playlist_play.svg"></md-icon>
+                    </button>
+                </form>
+
+            </div>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="onFilter()">
+                <md-icon class="done" ng-show="filtrado" md-svg-src="img/icons/playlist_check.svg"></md-icon>
+                <md-tooltip md-autohide> {{ !filtrado ?  'Aplicar filtro' : 'Filtro Aplicado' }}</md-tooltip>
+            </button>
+
+
+            <button ng-hide="grillaDetalle.data.length==0" class="md-icon-button md-button md-ink-ripple" type="button"
+                    ng-disable="grillaDetalle.data || grillaDetalle.data.length === 0"
+                    ng-click="exportarExcelDetalle()">
+                <md-tooltip md-autohide>Exportar CSV</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_file_download_36px.svg"></md-icon>
+            </button>
+
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="toolbarToogle();" >
+                <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+                <md-tooltip md-autohide>Cerrar</md-tooltip>
+            </button>
+        </div>
+    </md-toolbar>
+
+
+    <!--GRILLA 02 -->
+
+    <md-table-container ng-show="grillaDetalle.data.length>0">
+        <table data-md-table data-md-row-select="false" md-progress="promiseTarjetasBoletinDetalle" id="tarjetasBoletinDetalle" >
+
+            <thead md-head data-md-order="grillaDetalle.query.order" md-on-reorder="onReorderDetalle" >
+            <tr md-row ><!-- class="he-t" -->
+                <th md-column data-md-order-by="entidad" class="tarj-row"><span>Entidad</span></th>
+                <th md-column md:order:by="sucursal" class="tarj-row"><span>Sucursal</span></th>
+                <th md-column data-md-order-by="region"class="tarj-row"><span>Región</span></th>
+                <th md-column md:order:by="nroTarjeta" class="tarj-row">Número Tarjeta<span></span></th>
+                <th md-column data-md-order-by="fecAlta" class="tarj-row"><span>Fecha de Alta</span></th>
+                <th md-column data-md-order-by="nroBoletinActual"class="tarj-row"><span>Número Boletín Actual</span></th>
+                <th md-column data-md-order-by="fecVigenciaBoletin" class="tarj-row"><span>Fecha Vigencia Boletín</span></th>
+                <th md-column data-md-order-by="fecBajaTarjeta" class="tarj-row"><span>Fecha Baja Tarjeta</span></th>
+                <th md-column data-md-order-by="vtoTarjeta" class="tarj-row"><span>Vto Tarjeta</span></th>
+                <th md-column data-md-order-by="motivoInclusion" class="tarj-row"><span>Motivo Inclusión</span></th>
+                <th md-column data-md-order-by="nroBoletinAlta" class="tarj-row"><span>Número Boletín Alta</span></th>
+                <th md-column data-md-order-by="fecVigenBoletinSem" class="tarj-row"><span>Fecha Vigencia Boletín Sem</span></th>
+                <th md-column data-md-order-by="fecVigenBoletinDiario" class="tarj-row"><span>Fecha Vigencia Boletín Diario</span></th>
+                <th md-column data-md-order-by="estadoPublicacion" class="tarj-row"><span>Estado Publicación</span></th>
+                <th md-column data-md-order-by="origen" class="tarj-row"><span>Origen</span></th>
+            </tr>
+            </thead>
+            <tbody md-body>
+            <tr data-ng-repeat="row2 in grillaDetalle.data">
+                <td md-cell class="h-row">{{row2.entidad}}</td>
+                <td md-cell>{{row2.sucursal}}</td>
+                <td md-cell>{{row2.region}}</td>
+                <td md-cell>{{row2.nroTarjeta}}</td>
+                <td md-cell>{{row2.fecAlta}}</td>
+                <td md-cell>{{row2.nroBoletinActual}}</td>
+                <td md-cell>{{row2.fecVigenciaBoletin}}</td>
+                <td md-cell>{{row2.fecBajaTarjeta}}</td>
+                <td md-cell>{{row2.vtoTarjeta}}</td>
+                <td md-cell>{{row2.motivoInclusion}}</td>
+                <td md-cell>{{row2.nroBoletinAlta}}</td>
+                <td md-cell>{{row2.fecVigenBoletinSem}}</td>
+                <td md-cell>{{row2.fecVigenBoletinDiario}}</td>
+                <td md-cell>{{row2.estadoPublicacion}}</td>
+                <td md-cell>{{row2.origen}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+
+    <data-md-table-pagination
+            md-limit="grillaDetalle.query.limit"
+            md-page="grillaDetalle.query.page"
+            md-total="{{grillaDetalle.count}}"
+            md-on-paginate="onPaginateDetalle"
+            md-page-select
+            md-adc-info="{{grillaDetalle.data.length==0 ? 'No se encontraron datos' : ''}}">
+    </data-md-table-pagination>
+</md-card>
+
+

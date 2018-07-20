@@ -1,0 +1,35 @@
+<md-dialog>
+    <div layout="column" layout-padding>
+        <div class="md-title">Alta caracter especial</div>
+        <form name="addDialog" layout="column" ng-submit="">
+            <div layout="row">
+                <md-input-container md-no-float>
+                    <input maxlength="1" md-input-maxlength="1" name="caracEspecial" ng-model="caracter.caracEspecial" md-maxlength="1" md-autofocus placeholder="Caracter Especial" required>
+                    <div ng-if="addDialog.caracEspecial.$touched || submitted" ng-messages="addDialog.caracEspecial.$error">
+                        <div ng-message="required">El campo es requerido</div>
+                    </div>
+                </md-input-container>
+                <md-input-container md-no-float>
+                    <input maxlength="1" name="remplazoPor" ng-model="caracter.remplazarPor" md-maxlength="1" md-autofocus placeholder="Reemplazo Por" required>
+                    <div ng-if="addDialog.remplazoPor.$touched || submitted" ng-messages="addDialog.remplazoPor.$error">
+                        <div ng-message="required">El campo es requerido</div>
+                    </div>
+                </md-input-container>
+                <md-input-container md-no-float>
+                    <label>Signo</label>
+                    <md-select name="input" ng-model="caracter.signo">
+                        <md-option value="" ></md-option>
+                        <md-option value="1" >1</md-option>
+                        <md-option value="-1" >-1</md-option>
+                    </md-select>
+                </md-input-container>
+            </div>
+        </form>
+    </div>
+    <md-dialog-actions layout="row">
+        <a href="javascript:void(0)" class="md-button md-ink-ripple" ng-click="dismiss()">Cancelar</a>
+        <md-button type="button" class="md-raised md-primary md-button md-ink-ripple" ng-click="submit()">
+            <span>Aceptar</span>
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

@@ -1,0 +1,53 @@
+<md-dialog aria-label="ABM Campañas" ng-init="init()" ng-cloak flex="30">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>{{operac}} de Campañas</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon md-svg-src="/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <form id="formCampanias" ng-submit="formCampanias.$invalid || save()" name="formCampanias" novalidate>
+        <md-dialog-content class="toastParent">
+            <div class="md-dialog-content">
+                <div class="modal-body">
+                        <div class="row altaPopUp">
+                            <div layout-gt-sm="row">
+                                <md-input-container class="md-block" flex="40">
+                                    <label for="codigo">Cod.</label>
+                                    <input type="text" name="codigo" id="codigo" ng-disabled
+                                            ="operac !== 'Alta'" maxlength="25"
+                                           ng-model="campania.codigo" required>
+                                    <div ng-messages="formCampanias.codigo.$error">
+                                        <div ng-message="required">El campo código es obligatorio</div>
+                                    </div>
+                                </md-input-container>
+                                <md-switch class="active"
+                                        ng-model="campania.esEmpresa"
+                                        aria-label="Disabled active switch">
+                                    Es Empresa
+                                </md-switch>
+                            </div>
+                            <div layout-gt-sm="row">
+                                <md-input-container class="md-block" flex="100">
+                                    <label for="descripcion">Descripcion</label>
+                                    <input type="text" name="descripcion" id="descripcion" maxlength="100"
+                                           ng-model="campania.descripcion" required>
+                                    <div ng-messages="formCampanias.descripcion.$error">
+                                        <div ng-message="required">El campo descripción es obligatorio</div>
+                                    </div>
+                                </md-input-container>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <a href="javascript:void(0)" class="md-button md-ink-ripple" ng-click="cancel()">Cancelar</a>
+            <md-button type="submit" class="md-raised md-primary md-button md-ink-ripple" ng-keyup="$event.keyCode == 13" data-dismiss="modal">
+                <span>Aceptar</span>
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

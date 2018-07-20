@@ -1,0 +1,109 @@
+<md-card>
+    <md-toolbar class="md-table-toolbar md-default" ng-show="!show.filter && cotizacionGrid.selected.length == 0">
+        <div class="md-toolbar-tools">
+            <span>Cotización</span>
+            <span flex></span>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="show.filter=true">
+                <md-tooltip md-autohide>Filtros</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_filter_list_24px.svg"> </md-icon>
+            </button>
+            <button class="md-fab md-button md-success md-ink-ripple" type="button" ng-click="dialogShow()">
+                <md-tooltip md-autohide>Agregar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_add_white_24px.svg"> </md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <!--TOOLBAR FILTROS-->
+    <md-toolbar class="md-table-toolbar md-default" ng-show="show.filter">
+            <div class="md-toolbar-tools">
+                <form flex="" name="formFilter" class="ng-valid flex" flex="20">
+
+                    <md-input-container flex="10">
+                        <md-icon md-svg-src="img/icons/ic_date_range_grey_24px.svg"></md-icon>
+                        <input moment-picker="ctrl.fecInicio"
+                                md-placeholder="Fecha"
+                                name="fecInicio"
+                                max-view="year"
+                                min-view="year"
+                                start-view="year"
+                                format="MM/YYYY"
+                                ng-model="cotizacionGrid.query.filter.month"
+                                onkeypress="return false"
+                                required
+                        />
+                    </md-input-container>
+
+                    <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="formFilter.param.$error || onFilter()">
+                        <md-icon class="ready" ng-show="!cotizacionGrid.filtered" md-svg-src="img/icons/playlist_play.svg"></md-icon>
+                        <md-icon class="done" ng-show="cotizacionGrid.filtered" md-svg-src="img/icons/playlist_check.svg"></md-icon>
+                        <md-tooltip md-autohide> {{ !filtrado ?  'Aplicar filtro' : 'Filtro Aplicado' }}</md-tooltip>
+                    </button>
+                </form>
+
+                <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="show.filter=false">
+                    <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+                </button>
+            </div>
+        </md-toolbar>
+
+    <md-toolbar class="md-table-toolbar md-default alternate" ng-show="cotizacionGrid.selected.length > 0 ">
+        <div class="md-toolbar-tools">
+            <span>{{cotizacionGrid.selected.length}} {{cotizacionGrid.selected.length > 1 ? 'items seleccionados' : 'item seleccionado'}}</span>
+            <span flex></span>
+            <md-button ng-show="true" class="md-icon-button"
+                       aria-label="Modificar"
+                       ng-click="dialogShow()"
+                       ng-if="cotizacionGrid.selected.length === 1">
+                <md-tooltip md-autohide>Modificar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_edit_black_24px.svg"></md-icon>
+            </md-button>
+            <md-button class="md-icon-button"
+                       aria-label="Dar de baja"
+                       ng-click="delConfirm()">
+                <md-tooltip md-autohide>Baja</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_delete_black_24px.svg"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <md-card class="md-padding" layout-xs="column" layout="row" ng-if="cotizacionGrid.data.length === 0">
+        No se encontraron datos para mostrar
+    </md-card>
+
+    <md-table-container ng-show="cotizacionGrid.data.length > 0">
+        <table md-progress="promisecotizacion" data-md-table ng-model="cotizacionGrid.selected">
+
+            <thead data-md-order="cotizacionGrid.query.order" md-head >
+            <tr md-row>
+                <th md-column></th>
+                <th md-column md-order-by="monedaOrigen" ><span>Moneda Origen</span></th>
+                <th md-column md-order-by="monedaDestino" ><span>Moneda Destino</span></th>
+                <th md-column md-order-by="dia" ><span>Día</span></th>
+                <th md-column md-order-by="cotizacion" ><span>Cotización</span></th>
+            </tr>
+            </thead>
+            <tbody md-body>
+            <tr md-row data-ng-repeat="row in cotizacionGrid.data | orderBy: cotizacionGrid.query.order | limitTo: cotizacionGrid.query.limit : (cotizacionGrid.query.page -1) * cotizacionGrid.query.limit">
+                <td md-cell>
+                    <md-checkbox
+                            ng-model="row.selected"
+                            aria-label="check fila"
+                            ng-change="onSelectRow(row, $index)">
+                    </md-checkbox>
+                </td>
+                <td md-cell>{{ row.monedaOrigen }}</td>
+                <td md-cell>{{ row.monedaDestino }}</td>
+                <td md-cell>{{ row.dia | date: 'dd/MM/yyyy': 'UTC' }}</td>
+                <td md-cell style="text-align: center">{{ row.cotizacion | number }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+    <data-md-table-pagination ng-if="cotizacionGrid.data.length"
+                              md-limit="cotizacionGrid.query.limit"
+                              md-page="cotizacionGrid.query.page"
+                              md-total="{{cotizacionGrid.data.length}}"
+                              md-page-select>
+    </data-md-table-pagination>
+</md-card>

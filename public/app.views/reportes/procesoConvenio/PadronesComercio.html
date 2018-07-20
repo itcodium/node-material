@@ -1,0 +1,120 @@
+<!-- VISA -->
+
+<md-card ng-show="grillaFiltered==true" class="md-scrollX">
+  <div class="md-toolbar-tools"><span flex="30">Visa</span></div>
+  <md-table-container >
+    <table data-md-table md-progress="grillaPromise[VISA]">
+      <thead md-head data-md-order="grilla[VISA].query.order" md-on-reorder="comercio_padrones.onReorderBase">
+        <tr md-row>
+          <th ng-show="column.show" md-column
+              ng-repeat="column in grilla[VISA].columns"
+              data-md-numeric="column.filter == 'number'"
+              data-md-order-by="{{column.field+';'+VISA}}"
+              ng-style="{'width': column.width}">
+              <span ng-bind-html="column.name | html"></span>
+              <md-tooltip ng-if="column.tip" md-autohide md-direction="top">{{column.tip}}</md-tooltip>
+          </th>
+        </tr>
+      </thead>
+      <tbody md-body>
+        <tr md-row data-ng-repeat="row_visa in grilla[VISA].data">
+          <td md-cell ng-repeat="column in grilla[VISA].columns" ng-show="column.show"
+              ng-style="{'width': column.width, 'text-align': column.align}">
+              {{ showVal(row_visa[column.field], column.filter )}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </md-table-container>
+  <md-card class="md-padding" layout-xs="column" layout="row" ng-if="grilla[VISA].data.length===0 && grilla[VISA].showNoRegister">
+      No se encontraron datos para mostrar
+  </md-card>
+  <data-md-table-pagination md-limit="grilla[VISA].query.limit"
+                            md-page="grilla[VISA].query.page"
+                            md-total="{{grilla[VISA].count}}"
+                            md-on-paginate="comercio_padrones.onPaginateVisa"
+                            md-page-select
+                            ng-if="!grilla[VISA].data.length<=0">
+  </data-md-table-pagination>
+</md-card>
+
+<!-- MASTER -->
+
+<md-card ng-show="grillaFiltered==true"  class="md-scrollX">
+  <div class="md-toolbar-tools"><span>Master</span></div>
+  <md-table-container>
+      <table data-md-table data-md-row-select="false" md-progress="grillaPromise[MASTER]" id="grillaMaster">
+      <thead md-head data-md-order="grilla[MASTER].query.order" md-on-reorder="comercio_padrones.onReorderBase">
+        <tr md-row>
+          <th ng-show="column_master.show" md-column
+              ng-repeat="column_master in grilla[MASTER].columns"
+              data-md-numeric="column_master.filter == 'number'"
+              data-md-order-by="{{column_master.field+';'+MASTER}}"
+              ng-style="{'width': column_master.width}">
+              <span ng-bind-html="column_master.name | html"></span>
+              <md-tooltip ng-if="column_master.tip" md-autohide md-direction="top">{{column_master.tip}}</md-tooltip>
+          </th>
+        </tr>
+      </thead>
+      <tbody md-body>
+        <tr md-row data-ng-repeat="row_master in grilla[MASTER].data">
+          <td md-cell ng-repeat="column_master2 in grilla[MASTER].columns"
+              ng-show="column_master2.show"
+              ng-style="{'width': column_master2.width, 'text-align': column_master2.align}">
+              {{ showVal(row_master[column_master2.field], column_master2.filter )}}
+          </td>
+        </tr>
+      </tbody>
+  </table>
+  </md-table-container>
+  <md-card class="md-padding" layout-xs="column" layout="row" ng-if="grilla[MASTER].data.length===0 && grilla[MASTER].showNoRegister">
+      No se encontraron datos para mostrar
+  </md-card>
+  <data-md-table-pagination md-limit="grilla[MASTER].query.limit"
+                            md-page="grilla[MASTER].query.page"
+                            md-total="{{grilla[MASTER].count}}"
+                            md-on-paginate="comercio_padrones.onPaginateMaster"
+                            md-page-select
+                            ng-if="!grilla[MASTER].data.length<=0">
+  </data-md-table-pagination>
+</md-card>
+
+<!-- CABAL -->
+
+<md-card  ng-show="grillaFiltered==true" class="md-scrollX">
+  <div class="md-toolbar-tools"><span>Cabal</span></div>
+  <md-table-container>
+    <table data-md-table md-progress="grillaPromise[CABAL]">
+      <thead md-head data-md-order="grilla[CABAL].query.order" md-on-reorder="comercio_padrones.onReorderBase">
+      <tr md-row>
+        <th ng-show="column_cabal.show" md-column
+            ng-repeat="column_cabal in grilla[CABAL].columns"
+            data-md-numeric="column_cabal.filter == 'number'"
+            data-md-order-by="{{column_cabal.field+';'+CABAL}}"
+            ng-style="{'width': column_cabal.width}">
+            <span ng-bind-html="column_cabal.name | html"></span>
+            <md-tooltip ng-if="column_cabal.tip" md-autohide md-direction="top">{{column_cabal.tip}}</md-tooltip>
+        </th>
+      </tr>
+      </thead>
+      <tbody md-body>
+      <tr md-row data-ng-repeat="row_cabal in grilla[CABAL].data">
+        <td md-cell ng-repeat="column_cabal2 in grilla[CABAL].columns" ng-show="column_cabal2.show"
+            ng-style="{'width': column_cabal2.width, 'text-align': column_cabal2.align}">
+            {{ showVal(row_cabal[column_cabal2.field], column_cabal2.filter )}}
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </md-table-container>
+  <md-card class="md-padding" layout-xs="column" layout="row" ng-if="grilla[CABAL].data.length===0 && grilla[CABAL].showNoRegister">
+      No se encontraron datos para mostrar
+  </md-card>
+  <data-md-table-pagination md-limit="grilla[CABAL].query.limit"
+                            md-page="grilla[CABAL].query.page"
+                            md-total="{{grilla[CABAL].count}}"
+                            md-on-paginate="comercio_padrones.onPaginateCabal"
+                            md-page-select
+                            ng-if="!grilla[CABAL].data.length<=0">
+  </data-md-table-pagination>
+</md-card>

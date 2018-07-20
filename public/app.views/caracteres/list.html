@@ -1,0 +1,76 @@
+<div id="toastSelect">
+    <p></p>
+</div>
+
+<md-card>
+    <!--TOOLBAR PRINCIPAL-->
+    <md-toolbar class="md-table-toolbar md-default" ng-show="!caracteresGrilla.selected.length && !caracteresGrilla.filter.show">
+        <div class="md-toolbar-tools">
+            <span>Caracteres Especiales</span>
+            <span flex></span>
+
+            <button id="addButton" class="md-fab md-button md-success md-ink-ripple" type="button" ng-click="gdCaracteres.add($event)">
+                <md-tooltip md-autohide>Agregar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_add_white_24px.svg"> </md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <!--TOOLBAR PARA EDICION-->
+    <md-toolbar class="md-table-toolbar alternate" ng-show="caracteresGrilla.selected.length">
+        <div class="md-toolbar-tools">
+            <span>{{categoriaGrilla.caracteresGrilla.length}} {{caracteresGrilla.selected.length > 1 ? 'items' : 'item'}} seleccionados</span>
+            <span flex></span>
+            <md-button ng-show="caracteresGrilla.selected.length < 2" class="md-icon-button"
+                       aria-label="funcionalidad no especifica"
+                       ng-click="gdCaracteres.edit($event)">
+                <md-tooltip md-autohide>Modificar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_edit_black_24px.svg"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+
+    <!--GRILLA-->
+    <md-table-container class="md-scrollX">
+        <table data-md-table data-md-row-select="false" data-ng-model="caracteresGrilla.selected" md-progress="promise">
+            <!--barra de titulos-->
+            <thead ng-if="!hideHead" md-head data-md-order="caracteresGrilla.query.order" md-on-reorder="onReorder">
+            <tr md-row>
+                <th md-column md:order:by="caracEspecial"><span>Caracter especial</span></th>
+                <th md-column ><span>Reemplazar por</span></th>
+                <th md-column ><span>Signo</span></th>
+                <th md-column data-md-order-by="creadoPor"><span>Creado Por</span></th>
+                <th md-column data-md-order-by="fecCreacion"><span>Fecha de Creación</span></th>
+                <th md-column data-md-order-by="modificadoPor"><span>Modificado Por</span></th>
+                <th md-column data-md-order-by="fecModificacion"><span>Fecha de Modificación</span></th>
+            </tr>
+            </thead>
+
+
+            <!--rows de datos-->
+            <tbody md-body>
+            <tr md-row md:select="row" data-md-on-select="gdCaracteres.log"
+                md-on-deselect="gdCaracteres.deselect"
+                x-md-auto-select="!blah"
+                data-ng-repeat="row in caracteresGrilla.data | filter: filter.search | orderBy: caracteresGrilla.query.order | limitTo: caracteresGrilla.query.limit : (caracteresGrilla.query.page -1) * caracteresGrilla.query.limit">
+
+
+                <td md-cell class="primary-column" ng-click="gdCaracteres.editCaracEspecial($event, row)">{{row.caracEspecial}}</td>
+                <td md-cell ng-click="gdCaracteres.editReemplazarPor($event, row)">{{row.remplazarPor}}</td>
+                <td md-cell ng-click="gdCaracteres.editSigno($event, row)">{{row.signo}}</td>
+                <td md-cell>{{row.creadoPor}}</td>
+                <td md-cell>{{row.fecCreacion | date:'dd/MM/yyyy'}}</td>
+                <td md-cell>{{row.modificadoPor }}</td>
+                <td md-cell>{{row.fecModificacion | date:'dd/MM/yyyy'}}</td>
+
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+
+    <data-md-table-pagination md-limit="caracteresGrilla.query.limit" md-page="caracteresGrilla.query.page" md-total="{{caracteresGrilla.count}}" md-on-paginate="onPaginate" md-page-select>
+    </data-md-table-pagination>
+
+</md-card>
+

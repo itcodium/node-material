@@ -1,0 +1,85 @@
+<md-card style="overflow:auto">
+
+    <!--TOOLBAR PRINCIPAL-->
+    <md-toolbar class="md-table-toolbar md-default" ng-show="cantidadCuentasTarjetasGrid.selected.length === 0">
+        <div class="md-toolbar-tools">
+            <span>Cantidad Cuentas Tarjetas</span>
+            <span flex></span>
+            <button class="md-fab md-button md-success md-ink-ripple" type="button" ng-click="openAddForm()">
+                <md-tooltip md-autohide>Agregar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_add_white_24px.svg"> </md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+
+    <!--TOOLBAR PARA EDICION-->
+    <md-toolbar class="md-table-toolbar alternate" ng-show="cantidadCuentasTarjetasGrid.selected.length > 0">
+        <div class="md-toolbar-tools">
+            <span>{{cantidadCuentasTarjetasGrid.selected.length}} {{cantidadCuentasTarjetasGrid.selected.length > 1 ? 'items' : 'item'}} seleccionado</span>
+            <span flex></span>
+            <md-button ng-show="cantidadCuentasTarjetasGrid.selected.length < 2" class="md-icon-button"
+                       aria-label="funcionalidad no especifica"
+                       ng-click="edit()">
+                <md-tooltip md-autohide>Modificar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_edit_black_24px.svg"></md-icon>
+            </md-button>
+
+            <md-button class="md-icon-button"
+                       aria-label="funcionalidad no especifica"
+                       ng-click="delConfirm()">
+                <md-tooltip md-autohide>Eliminar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_delete_black_24px.svg"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <div>
+        <md-table-container>
+            <table data-md-table md-progress="promiseGrilla" ng-model="cantidadCuentasTarjetasGrid.selected">
+
+                <thead md-head data-md-order="cantidadCuentasTarjetasGrid.query.order">
+                <tr md-row>
+                    <th md-column></th>
+                    <th md-column md:order:by="entidad"><span>Entidad</span></th>
+                    <th md-column data-md-order-by="sucursal"><span>Sucursal</span></th>
+                    <th md-column data-md-order-by="codigoAltaCuenta"><span>Código de alta de cuenta</span></th>
+                    <th md-column data-md-order-by="NroSolicitudAltaCuenta"><span>Número de solicitud de cuenta</span></th>
+                    <th md-column data-md-order-by="codigoAltaTarjeta"><span>Código de alta de tarjeta</span></th>
+                    <th md-column data-md-order-by="NroSolicitudAltaTarjeta"><span>Número de solicitud de tarjeta</span></th>
+                    <th md-column data-md-order-by="codigoTipoCuenta"><span>Tipo de cuenta</span></th>
+                    <th md-column data-md-order-by="cantidad"><span>Cantidad</span></th>
+                </tr>
+                </thead>
+
+                <tbody md-body>
+                <tr md-row
+                    data-ng-repeat="row in cantidadCuentasTarjetasGrid.data | orderBy: cantidadCuentasTarjetasGrid.query.order | filter: filtering | limitTo: cantidadCuentasTarjetasGrid.query.limit : (cantidadCuentasTarjetasGrid.query.page - 1) * cantidadCuentasTarjetasGrid.query.limit">
+                    <td md-cell>
+                        <md-checkbox
+                                ng-model="row.selected"
+                                aria-label="check fila"
+                                ng-change="onSelectRow(row, $index)">
+                        </md-checkbox>
+                    </td>
+                    <td md-cell>{{ row.entidad }}</td>
+                    <td md-cell>{{ row.sucursal }}</td>
+                    <td md-cell>{{ row.codigoAltaCuenta }}</td>
+                    <td md-cell>{{ row.NroSolicitudAltaCuenta }}</td>
+                    <td md-cell>{{ row.codigoAltaTarjeta }}</td>
+                    <td md-cell>{{ row.NroSolicitudAltaTarjeta }}</td>
+                    <td md-cell>{{ row.descCuenta }}</td>
+                    <td md-cell>{{ row.cantidad }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </md-table-container>
+        <data-md-table-pagination ng-if="cantidadCuentasTarjetasGrid.data.length"
+                                  md-limit="cantidadCuentasTarjetasGrid.query.limit"
+                                  md-limit-options="[5, 10, 15]"
+                                  md-page="cantidadCuentasTarjetasGrid.query.page"
+                                  md-total="{{cantidadCuentasTarjetasGrid.data.length}}"
+                                  md-page-select>
+        </data-md-table-pagination>
+    </div>
+</md-card>

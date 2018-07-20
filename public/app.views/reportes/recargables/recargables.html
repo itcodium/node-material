@@ -1,0 +1,101 @@
+<div id="toastSelect">
+    <p></p>
+</div>
+
+<!-- Reporte Encabezado -->
+<md-card ng-init="load()">
+    <md-toolbar class="md-table-toolbar md-default">
+        <div class="md-toolbar-tools">
+            <span>{{detailGrid.query.report}}</span>
+            <span flex></span>
+
+            <md-input-container class="md-toolMaster">
+                <md-select ng-model="detailGrid.query.report" ng-change="load()">
+                    <md-option ng-repeat="report in reports" value="{{report}}">{{report}}</md-option>
+                </md-select>
+            </md-input-container>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="exportToExcel()">
+                <md-tooltip md-autohide>Exportar Excel</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_file_download_36px.svg"> </md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <md-table-container>
+        <table data-md-table data-md-row-select="false" md-progress="promiseRecargable" id="grid">
+            <!--barra de titulos-->
+            <thead md-head data-md-order="grid.query.order" md-on-reorder="onReorder">
+            <tr md-row>
+                <th style="text-align:right"  md-column data-md-order-by="sucursal" ><span>{{tituloBancoEntidad}}</span></th>
+                <th md-column data-md-order-by="fecProceso" ><span>Fecha</span></th>
+                <th md-column data-md-order-by="nombreArchivo"><span>Archivo</span></th>
+                <th style="text-align:right"  md-column data-md-order-by="cantRegTotales" > Registros Cant. Total<span></span></th>
+                <th style="text-align:right"  md-column data-md-order-by="cantRegAceptados" ><span>Registros Cant. Aceptados</span></th>
+                <th style="text-align:right"  md-column data-md-order-by="cantRegRechazados"><span>Registros Cant. Rechazados/Inhabilitados</span></th>
+            </tr>
+            </thead>
+
+            <!--rows de datos-->
+            <tbody md-body>
+            <tr   md-row data-ng-repeat="row in grid.data | orderBy: grid.query.order ">
+                <td style="text-align:right" md-cell>{{row.sucursal}}</td>
+                <td md-cell>{{row.fecProceso | date:'dd/MM/yyyy'}}</td>
+                <td md-cell>{{row.nombreArchivo}}</td>
+                <td style="text-align:right" md-cell>{{formatNumber(row.cantRegTotales,',','.').replace('.00','') }}</td>
+                <td style="text-align:right" md-cell>{{formatNumber(row.cantRegAceptados,',','.').replace('.00','') }}</td>
+                <td style="text-align:right;padding-right: 2%" md-cell>{{formatNumber(row.cantRegRechazados,',','.').replace('.00','') }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+</md-card>
+
+<!-- Detalle -->
+<md-card>
+    <md-toolbar class="md-table-toolbar md-default">
+        <div class="md-toolbar-tools">
+            <span>Detalle</span>
+            <span flex></span>
+        </div>
+
+    </md-toolbar>
+
+    <md-table-container>
+        <table data-md-table data-md-row-select="false" md-progress="promiseRecargable" id="detalles">
+
+            <thead md-head data-md-order="detailGrid.query.order" md-on-reorder="onReorder" >
+            <tr md-row   >
+                <th style="text-align:right" md-column md:order:by="sucursal"><span>{{tituloSucursalEntidad}}</span></th>
+                <th style="text-align:center" md-column data-md-order-by="fecProceso">Fecha</th>
+                <th style="text-align:right" md-column data-md-order-by="grupoAfinidad">Grupo de Afinidad</th>
+                <th style="text-align:center" md-column data-md-order-by="detalle">Detalle</th>
+                <th style="text-align:right" md-column data-md-order-by="moneda">Moneda</th>
+                <th style="text-align:right" md-column data-md-order-by="importe">Importe</th>
+                <th style="text-align:right" md-column data-md-order-by="cantidad"> Cantidad</th>
+            </tr>
+            </thead>
+            <tbody md-body>
+            <tr  md-row
+                data-ng-repeat="row2 in detailGrid.data | orderBy: detailGrid.query.order
+                                | limitTo: detailGrid.query.limit : (detailGrid.query.page -1) * detailGrid.query.limit">
+                <td style="text-align:right" md-cell>{{row2.sucursal}}</td>
+                <td style="text-align:center" md-cell>{{row2.fecProceso | date:'dd/MM/yyyy' : 'UTC'}}</td>
+                <td style="text-align:right" md-cell >{{row2.grupoAfinidad }}</td>
+                <td style="text-align:center" md-cell>{{row2.detalle}}</td>
+                <td style="text-align:right" md-cell ng-if="row2.moneda == 1"  >{{row2.moneda   }}</td>
+                <td style="text-align:center" md-cell ng-if="row2.moneda != 1">{{row2.moneda  }}</td>
+                <td style="text-align:right"  md-cell > {{formatNumber(row2.importe,',','.')  }}</td>
+                <td style="text-align:right;padding-right: 2%" md-cell>{{formatNumber(row2.cantidad,',','.').replace('.00','')  }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+
+    <data-md-table-pagination md-limit="detailGrid.query.limit"
+                              md-page="detailGrid.query.page"
+                              md-total="{{detailGrid.count}}"
+                              md-adc-info="{{detailGrid.message}}"
+                              md-on-paginate="onPaginate"
+                              md-page-select>
+    </data-md-table-pagination>
+</md-card>

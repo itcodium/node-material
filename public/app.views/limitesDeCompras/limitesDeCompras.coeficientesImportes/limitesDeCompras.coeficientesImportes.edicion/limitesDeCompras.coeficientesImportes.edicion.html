@@ -1,0 +1,75 @@
+<md-dialog aria-label="Coeficientes e Importes" flex="50">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>{{mode}} </h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon md-svg-src="/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <form name="formcoeficienteImporte" ng-submit="formcoeficienteImporte.$valid && submit()" role="form" novalidate>
+        <md-dialog-content class="toastParent">
+            <div class="md-dialog-content">
+                <div class="modal-body">
+                    <div class="row altaPopUp">
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex>
+                                <label>Marca</label>
+                                <md-select ng-model="coeficienteImporte.marca" name="marca" required ng-disabled="mode !== 'Alta'" placeholder="Seleccione">
+                                    <md-option ng-value="opt" ng-repeat="opt in marcas">{{ opt }}</md-option>
+                                </md-select>
+
+                                <div ng-messages="formcoeficienteImporte.marca.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex>
+                                <label>Letra</label>
+                                <input type="text" name="letra" required ng-model="coeficienteImporte.letra" maxlength="1" ng-disabled="mode !== 'Alta'">
+
+                                <div ng-messages="formcoeficienteImporte.letra.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                </div>
+                            </md-input-container>
+
+                        </div>
+
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex>
+                                <label>Coeficiente</label>
+                                <input type="number" step="1" name="coeficiente" ng-model="coeficienteImporte.coeficiente" ng-disabled="mode !== 'Alta'"
+                                    required pattern="\d+">
+
+                                <div ng-messages="formcoeficienteImporte.coeficiente.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                    <div ng-message="pattern">Solo se permite ingresar números</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex>
+                                <label>Importe</label>
+                                <input type="number" name="importe" ng-model="coeficienteImporte.importe" required min="0" max="9999999999" ng-pattern="/^\s*-?\d+(\.\d{1,2})?\s*$/"
+                                    ng-keypress="validateNumber($event)">
+
+                                <div ng-messages="formcoeficienteImporte.importe.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                    <div ng-message="max">El valor es mayor al permitido</div>
+                                    <div ng-message="min">Valor menor al permitido</div>
+                                    <div ng-message="pattern">Solo se permite 2 decimales</div>
+                                    <div ng-message="number">No es un número válido</div>
+                                </div>
+                            </md-input-container>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <a href="javascript:void(0)" class="md-button md-ink-ripple" ng-click="cancel()">Cancelar</a>
+            <md-button type="submit" class="md-raised md-primary md-button md-ink-ripple">
+                <span>Aceptar</span>
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

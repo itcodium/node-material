@@ -1,0 +1,513 @@
+<div id="toastSelect">
+    <p></p>
+</div>
+
+<md-card>
+    <!--TOOLBAR PRINCIPAL-->
+    <md-toolbar class="md-table-toolbar md-default" ng-show="!controlData.buscarPeriodo">
+        <div class="md-toolbar-tools">
+            <span>Master & Makro</span>
+            <span flex></span>
+            <md-button class="md-icon-button md-button md-ink-ripple"
+                       aria-label="filtrar"
+                       ng-click="controlData.buscarPeriodo = true">
+                <md-tooltip md-autohide>Filtrar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_filter_list_black_24px.svg"> </md-icon>
+            </md-button>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="exportarAExcel()">
+                <md-tooltip md-autohide>Exportar Excel</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_file_download_36px.svg"> </md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <!--TOOLBAR PARA SEARCH-->
+    <md-toolbar class="md-table-toolbar md-default ng-hide" ng-show="controlData.buscarPeriodo">
+        <div class="md-toolbar-tools">
+            <span>Master & Makro</span>
+            <span flex></span>
+            <form flex="20" name="filter.form" class="ng-valid flex">
+                <md-select id="selectRegion" name="selectRegion" ng-change="selectPeriodo()" ng-model="periodo" aria-label="true">
+                    <md-option ng-value="periodo.periodo" ng-repeat="periodo in periodos">{{periodo.periodo}}</md-option>
+                </md-select>
+            </form>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="removerFiltro()">
+                <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+            </button>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="exportarAExcel()">
+                <md-tooltip md-autohide>Exportar Excel</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_file_download_36px.svg"> </md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+
+    <md-table-container class="md-tableHeadLine md-scrollY" style="max-height: 310px;">
+		<table id="archivosMC" data-md-table data-md-row-select="false" data-ng-model="caracteresGrilla.selected" class="md-table-outlander" md-progress="promise">
+            <thead md-head>
+                <tr md-row>
+                    <th md-column ><span>Entidad</span></th>
+                    <th md-column ><span>Archivos</span></th>
+                    <th md-column ><span>Cantidad de Registros Procesados</span></th>
+                    <th md-column ><span>Cantidad de Registros Cobis</span></th>
+                    <th md-column></th>
+                </tr>
+            </thead>
+
+            <tbody md-body>
+                <tr md-row ng-if="controlData.instancia2" style="height: 30px;">
+                    <td md-cell colspan="5" class="coNarj">GPO 11 y 15 | Fecha de cierre = "{{instanciasData.fechaCierre2}}" Fecha de control = "{{instanciasData.fechaControl2}}"</td>
+                    <td md-cell class="coNarj">
+                                <md-icon id="MC2"  ng-hide="instanciasData.envioMail2" ng-click="enviarEmail(2,'MC')"  md-svg-src="img/icons/ic_mail_white_24px.svg" class="">
+                                    <md-tooltip md-autohide>Enviar email</md-tooltip>
+                                </md-icon>
+                                <md-icon id="MC2C"  ng-show="instanciasData.envioMail2"  md-svg-src="img/icons/ic_mail_white_open_24px.svg" class="">
+                                    <md-tooltip md-autohide>Ya enviado</md-tooltip>
+                                </md-icon>
+                    </td>
+                </tr>
+                <tr md-row ng-repeat="arch in archivosMCMK | filter: { instancia: '2' }" >
+                    <td md-cell>{{arch.entidad}}</td>
+                    <td md-cell>{{arch.nombre}}</td>
+                    <td md-cell>{{arch.cantRegProcesados}}</td>
+                    <td md-cell ng-click="editarCobis($event, arch)" colspan="2">
+                        <md-tooltip md-autohide>Modificar Cantidad de Registros Cobis</md-tooltip>
+                        <md-icon md-svg-src="img/icons/ic_edit_black_24px.svg" class="icoApa"></md-icon>
+                        {{arch.cantRegCobis}}
+                    </td>
+                    <td md-cell>
+                        <button class="md-icon-button md-button md-ink-ripple" type="button" 
+                                ng-click="mostrarEncabezado(arch.tabla, arch.idEncabezado, arch.nombre)"
+                                ng-if="arch.tabla !== null">
+                            <md-tooltip md-autohide>Encabezado</md-tooltip>
+                            <md-icon md-svg-src="img/icons/ic_launch_24px.svg"> </md-icon>
+                        </button>
+                    </td>
+                </tr>
+
+
+
+                <tr md-row ng-if="controlData.instancia1" style="height: 30px;">
+                    <td md-cell colspan="5" class="coNarj">GPO 12 y 16 | Fecha de cierre = "{{instanciasData.fechaCierre1}}" Fecha de control = "{{instanciasData.fechaControl1}}"</td>
+                    <td md-cell class="coNarj">
+                        <md-icon ng-hide="instanciasData.envioMail1"   ng-click="enviarEmail(1,'MC')"  md-svg-src="img/icons/ic_mail_white_24px.svg" class="">
+                            <md-tooltip md-autohide>Enviar email</md-tooltip>
+                        </md-icon>
+                        <md-icon  ng-show="instanciasData.envioMail1"  md-svg-src="img/icons/ic_mail_white_open_24px.svg" class="">
+                            <md-tooltip md-autohide>Ya enviado</md-tooltip>
+                        </md-icon>
+                    </td>
+                </tr>
+                <tr md-row ng-repeat="arch in archivosMCMK | filter: { instancia: '1' }">
+                    <td md-cell>{{arch.entidad}}</td>
+                    <td md-cell>{{arch.nombre}}</td>
+                    <td md-cell>{{arch.cantRegProcesados}}</td>
+                    <td md-cell ng-click="editarCobis($event, arch)" colspan="2">
+                        <md-icon md-svg-src="img/icons/ic_edit_black_24px.svg" class="icoApa"></md-icon>
+                        {{arch.cantRegCobis}}
+                    </td>
+                    <td md-cell>
+                        <button class="md-icon-button md-button md-ink-ripple" type="button"
+                                ng-click="mostrarEncabezado(arch.tabla, arch.idEncabezado, arch.nombre)"
+                                ng-if="arch.tabla !== null">
+                            <md-tooltip md-autohide>Encabezado</md-tooltip>
+                            <md-icon md-svg-src="img/icons/ic_launch_24px.svg"> </md-icon>
+                        </button>
+                    </td>
+                </tr>
+                <tr md-row ng-if="controlData.instancia4" style="height: 30px;">
+                    <td md-cell colspan="5" class="coNarj">GPO 13 y 17 | Fecha de cierre = "{{instanciasData.fechaCierre4}}" Fecha de control = "{{instanciasData.fechaControl4}}"</td>
+                    <td md-cell class="coNarj">
+                        <md-icon ng-hide="instanciasData.envioMail4"  ng-click="enviarEmail(4,'MC')"  md-svg-src="img/icons/ic_mail_white_24px.svg" class="">
+                            <md-tooltip md-autohide>Enviar email</md-tooltip>
+                        </md-icon>
+
+                        <md-icon  ng-show="instanciasData.envioMail4"  md-svg-src="img/icons/ic_mail_white_open_24px.svg" class="">
+                            <md-tooltip md-autohide>Ya enviado</md-tooltip>
+                        </md-icon>
+                    </td>
+                </tr>
+                <tr md-row ng-repeat="arch in archivosMCMK | filter: { instancia: '4' }">
+                    <td md-cell>{{arch.entidad}}</td>
+                    <td md-cell>{{arch.nombre}}</td>
+                    <td md-cell>{{arch.cantRegProcesados}}</td>
+                    <td md-cell ng-click="editarCobis($event, arch)" colspan="2">
+                        <md-icon md-svg-src="img/icons/ic_edit_black_24px.svg" class="icoApa"></md-icon>
+                        {{arch.cantRegCobis}}
+                    </td>
+                    <td md-cell>
+                        <button class="md-icon-button md-button md-ink-ripple" type="button"
+                                ng-click="mostrarEncabezado(arch.tabla, arch.idEncabezado, arch.nombre)"
+                                ng-if="arch.tabla !== null">
+                            <md-tooltip md-autohide>Encabezado</md-tooltip>
+                            <md-icon md-svg-src="img/icons/ic_launch_24px.svg"> </md-icon>
+                        </button>
+                    </td>
+                </tr>
+                <tr md-row ng-if="controlData.instancia4" style="height: 30px;">
+                    <td md-cell colspan="5" class="coNarj">GPO 14 y 18 | Fecha de cierre = "{{instanciasData.fechaCierre3}}" Fecha de control = "{{instanciasData.fechaControl3}}"</td>
+                    <td md-cell class="coNarj">
+                        <md-icon ng-hide="instanciasData.envioMail3"  ng-click="enviarEmail(3,'MC')"  md-svg-src="img/icons/ic_mail_white_24px.svg" class="">
+                            <md-tooltip md-autohide>Enviar email</md-tooltip>
+                        </md-icon>
+                        <md-icon  ng-show="instanciasData.envioMail3"  md-svg-src="img/icons/ic_mail_white_open_24px.svg" class="">
+                            <md-tooltip md-autohide>Ya enviado</md-tooltip>
+                        </md-icon>
+                    </td>
+                </tr>
+
+
+                <tr md-row ng-repeat="arch in archivosMCMK | filter: { instancia: '3' }">
+                    <td md-cell>{{arch.entidad}}</td>
+                    <td md-cell>{{arch.nombre}}</td>
+                    <td md-cell>{{arch.cantRegProcesados}}</td>
+                    <td md-cell ng-click="editarCobis($event, arch)" colspan="2">
+                        <md-icon md-svg-src="img/icons/ic_edit_black_24px.svg" class="icoApa"></md-icon>
+                        {{arch.cantRegCobis}}
+                    </td>
+                    <td md-cell>
+                        <button class="md-icon-button md-button md-ink-ripple" type="button"
+                                ng-click="mostrarEncabezado(arch.tabla, arch.idEncabezado, arch.nombre)"
+                                ng-if="arch.tabla !== null">
+                            <md-tooltip md-autohide>Encabezado</md-tooltip>
+                            <md-icon md-svg-src="img/icons/ic_launch_24px.svg"> </md-icon>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+</md-card>
+
+<md-card>
+    <!--TOOLBAR PRINCIPAL-->
+    <md-toolbar class="md-table-toolbar md-default">
+        <div class="md-toolbar-tools">
+            <span>Visa & Amex</span>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+
+    <md-table-container class="md-tableHeadLine md-scrollY" style="max-height: 310px;">
+        <table id="archivosVI" data-md-table class="md-table-outlander" md-progress="promise">
+            <thead md-head >
+                <tr md-row>
+                    <th md-column ><span>Entidad</span></th>
+                    <th md-column ><span>Archivos</span></th>
+                    <th md-column ><span>Cantidad de Registros Procesados</span></th>
+                    <th md-column ><span>Cantidad de Registros Cobis</span></th>
+                    <th md-column ></th>
+                </tr>
+            </thead>
+            <tbody md-body>
+                <tr md-row ng-if="controlData.grupo4" style="height: 30px;">
+                    <td md-cell colspan="5" class="coNarj"><b>CRA 4 | Fecha de cierre = "{{instanciasData.fechaCierre4}}" Fecha de control = "{{instanciasData.fechaControl4}}"</b></td>
+                    <td md-cell class="coNarj">
+                        <md-icon ng-hide="instanciasData.viax4.envioMail" ng-click="enviarEmail(4,'VIAX')"  md-svg-src="img/icons/ic_mail_white_24px.svg" class="">
+                            <md-tooltip md-autohide>Enviar email</md-tooltip>
+                        </md-icon>
+                        <md-icon  ng-show="instanciasData.viax4.envioMail"  md-svg-src="img/icons/ic_mail_white_open_24px.svg" class="">
+                            <md-tooltip md-autohide>Ya enviado</md-tooltip>
+                        </md-icon>
+                    </td>
+                </tr>
+                <tr md-row ng-repeat="arch in archivosVIAX | filter: { instancia: '4' }">
+                    <td md-cell>{{arch.entidad}}</td>
+                    <td md-cell>{{arch.nombre}}</td>
+                    <td md-cell>{{arch.cantRegProcesados}}</td>
+                    <td md-cell ng-click="editarCobis($event, arch)">
+                        <md-icon md-svg-src="img/icons/ic_edit_black_24px.svg" class="icoApa"></md-icon>
+                        {{arch.cantRegCobis}}
+                    </td>
+                    <td md-cell>
+                        <button class="md-icon-button md-button md-ink-ripple" type="button"
+                                ng-click="mostrarEncabezado(arch.tabla, arch.idEncabezado, arch.nombre)"
+                                ng-if="arch.tabla !== null">
+                            <md-tooltip md-autohide>Encabezado</md-tooltip>
+                            <md-icon md-svg-src="img/icons/ic_launch_24px.svg"> </md-icon>
+                        </button>
+                    </td>
+                </tr>
+                <tr md-row ng-if="controlData.grupo3" style="height: 30px;">
+                    <td md-cell colspan="5" class="coNarj"><b>CRA 3 | Fecha de cierre = "{{instanciasData.fechaCierre3}}" Fecha de control = "{{instanciasData.fechaControl3}}"</b></td>
+                    <td md-cell class="coNarj">
+                        <md-icon ng-hide="instanciasData.viax3.envioMail" ng-click="enviarEmail(3,'VIAX')"  md-svg-src="img/icons/ic_mail_white_24px.svg" class="">
+                            <md-tooltip md-autohide>Enviar email</md-tooltip>
+                        </md-icon>
+                        <md-icon  ng-show="instanciasData.viax3.envioMail"  md-svg-src="img/icons/ic_mail_white_open_24px.svg" class="">
+                            <md-tooltip md-autohide>Ya enviado</md-tooltip>
+                        </md-icon>
+                    </td>
+                </tr>
+                <tr md-row ng-repeat="arch in archivosVIAX | filter: { instancia: '3' }">
+                    <td md-cell>{{arch.entidad}}</td>
+                    <td md-cell>{{arch.nombre}}</td>
+                    <td md-cell>{{arch.cantRegProcesados}}</td>
+                    <td md-cell ng-click="editarCobis($event, arch)">
+                        <md-icon md-svg-src="img/icons/ic_edit_black_24px.svg" class="icoApa"></md-icon>
+                        {{arch.cantRegCobis}}
+                    </td>
+                    <td md-cell>
+                        <button class="md-icon-button md-button md-ink-ripple" type="button"
+                                ng-click="mostrarEncabezado(arch.tabla, arch.idEncabezado, arch.nombre)"
+                                ng-if="arch.tabla !== null">
+                            <md-tooltip md-autohide>Encabezado</md-tooltip>
+                            <md-icon md-svg-src="img/icons/ic_launch_24px.svg"> </md-icon>
+                        </button>
+                    </td>
+                </tr>
+                <tr md-row ng-if="controlData.grupo2" style="height: 30px;">
+                    <td md-cell colspan="5" class="coNarj"><b>CRA 2 | Fecha de cierre = "{{instanciasData.fechaCierre2}}" Fecha de control = "{{instanciasData.fechaControl2}}"</b></td>
+                    <td md-cell class="coNarj">
+                        <md-icon ng-hide="instanciasData.viax2.envioMail" ng-click="enviarEmail(2,'VIAX')"  md-svg-src="img/icons/ic_mail_white_24px.svg" class="">
+                            <md-tooltip md-autohide>Enviar email</md-tooltip>
+                        </md-icon>
+                        <md-icon  ng-show="instanciasData.viax2.envioMail"  md-svg-src="img/icons/ic_mail_white_open_24px.svg" class="">
+                            <md-tooltip md-autohide>Ya enviado</md-tooltip>
+                        </md-icon>
+                    </td>
+                </tr>
+                <tr md-row ng-repeat="arch in archivosVIAX | filter: { instancia: '2' }">
+                    <td md-cell>{{arch.entidad}}</td>
+                    <td md-cell>{{arch.nombre}}</td>
+                    <td md-cell>{{arch.cantRegProcesados}}</td>
+                    <td md-cell ng-click="editarCobis($event, arch)">
+                        <md-icon md-svg-src="img/icons/ic_edit_black_24px.svg" class="icoApa"></md-icon>
+                        {{arch.cantRegCobis}}
+                    </td>
+                    <td md-cell>
+                        <button class="md-icon-button md-button md-ink-ripple" type="button"
+                                ng-click="mostrarEncabezado(arch.tabla, arch.idEncabezado, arch.nombre)"
+                                ng-if="arch.tabla !== null">
+                            <md-tooltip md-autohide>Encabezado</md-tooltip>
+                            <md-icon md-svg-src="img/icons/ic_launch_24px.svg"> </md-icon>
+                        </button>
+                    </td>
+                </tr>
+                <tr md-row ng-if="controlData.grupo1" style="height: 30px;">
+                    <td md-cell colspan="5" class="coNarj">
+                        <b>CRA 1 | Fecha de cierre = "{{instanciasData.fechaCierre1}}" Fecha de control = "{{instanciasData.fechaControl1}}"</b></td>
+                    <td md-cell class="coNarj">
+
+                        <md-icon ng-hide="instanciasData.viax1.envioMail" ng-click="enviarEmail(1,'VIAX')"  md-svg-src="img/icons/ic_mail_white_24px.svg" class="">
+                            <md-tooltip md-autohide>Enviar email</md-tooltip>
+                        </md-icon>
+                        <md-icon  ng-show="instanciasData.viax1.envioMail"  md-svg-src="img/icons/ic_mail_white_open_24px.svg" class="">
+                            <md-tooltip md-autohide>Ya enviado</md-tooltip>
+                        </md-icon>
+                    </td>
+                </tr>
+                <tr md-row ng-repeat="arch in archivosVIAX | filter: { instancia: '1' }">
+                    <td md-cell>{{arch.entidad}}</td>
+                    <td md-cell>{{arch.nombre}}</td>
+                    <td md-cell>{{arch.cantRegProcesados}}</td>
+                    <td md-cell ng-click="editarCobis($event, arch)">
+                        <md-icon md-svg-src="img/icons/ic_edit_black_24px.svg" class="icoApa"></md-icon>
+                        {{arch.cantRegCobis}}
+                    </td>
+                    <td md-cell>
+                        <button class="md-icon-button md-button md-ink-ripple" type="button"
+                                ng-click="mostrarEncabezado(arch.tabla, arch.idEncabezado, arch.nombre)"
+                                ng-if="arch.tabla !== null">
+                            <md-tooltip md-autohide>Encabezado</md-tooltip>
+                            <md-icon md-svg-src="img/icons/ic_launch_24px.svg"> </md-icon>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+</md-card>
+
+<md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="rightNavEncabezado" style="width:500px;">
+    <md-content class="contentSidenav">
+        <section layout="row" layout-sm="column" layout-align="left center" layout-wrap class="instanciaDescripcion">
+            <h2 class="md-title">{{nombreArchivoEncabezado}}</h2>
+        </section>
+        <section layout="row" layout-sm="row" >
+
+            <md-table-container class="log-detail">
+                <table data-md-table md-progress="promiseEncabezado">
+                    <tbody md-body>
+                    <!-- Mastercard Cuotas -->
+                    <tr md-row ng-if="showRow(['mc_cuotasEnc'],tabla)">
+                        <td md-cell class="primary-column" >
+                            Fh. Proceso
+                        </td>
+                        <td md-cell>
+                            {{encabezado.fechaCierreActual | date: 'yyMMdd' : 'UTC'}}
+                        </td>
+                    </tr>
+                    <tr md-row ng-if="showRow(['mc_cuotasEnc'],tabla)">
+                        <td md-cell class="primary-column">
+                            Fh. Cierre
+                        </td>
+                        <td md-cell>
+                            {{encabezado.cierreCtaCte | date: 'yyMMdd' : 'UTC'}}
+                        </td>
+                    </tr>
+                    <tr md-row ng-if="showRow(['mc_cuotasEnc'],tabla)">
+                        <td md-cell class="primary-column">
+                            Cant. Registros
+                        </td>
+                        <td md-cell>
+                            {{encabezado.cantRegistros}}
+                        </td>
+                    </tr>
+                    <tr md-row ng-if="showRow(['mc_cuotasEnc'],tabla)">
+                        <td md-cell class="primary-column">
+                            T-Imp-Otorg/PPP
+                        </td>
+                        <td md-cell>
+                            {{encabezado.impOtorgPpp}}
+                        </td>
+                    </tr>
+                    <tr md-row ng-if="showRow(['mc_cuotasEnc'],tabla)">
+
+                        <td md-cell class="primary-column">
+                            T-Imp-Otorg-Dol
+                        </td>
+                        <td md-cell>
+                            {{encabezado.impOtorgDol}}
+                        </td>
+                    </tr>
+                    <tr md-row ng-if="showRow(['mc_cuotasEnc'],tabla)">
+
+                        <td md-cell class="primary-column">
+                            T-Imp-TRAD
+                        </td>
+                        <td md-cell>
+                            {{encabezado.impTrad}}
+                        </td>
+                    </tr>
+                    <tr md-row ng-if="showRow(['mc_cuotasEnc'],tabla)">
+                        <td md-cell class="primary-column">
+                            T-Imp-TRADD
+                        </td>
+                        <td md-cell>
+                            {{encabezado.impTradd}}
+                        </td>
+                    </tr>
+
+                    <!-- Mastercard Saldos y Usuarios -->
+
+                    <tr md-row ng-if="showRow(['mc_saldosEnc','mc_usuariosEnc'],tabla)">
+                        <td md-cell class="primary-column" >
+                            Fh. Proceso
+                        </td>
+                        <td md-cell>
+                            {{encabezado.fechaProceso | date: 'ddMMyy' : 'UTC'}}
+                        </td>
+                    </tr>
+
+                    <tr md-row ng-if="showRow(['mc_saldosEnc'],tabla)">
+                        <td md-cell class="primary-column">
+                            Tipo Tarjeta
+                        </td>
+                        <td md-cell>
+                            {{encabezado.tipoTarjeta}}
+                        </td>
+                    </tr>
+
+                    <tr md-row ng-if="showRow(['mc_saldosEnc'],tabla)">
+                        <td md-cell class="primary-column">
+                            Cant. Registros
+                        </td>
+                        <td md-cell>
+                            {{encabezado.cantRegistros}}
+                        </td>
+                    </tr>
+
+                    <tr md-row ng-if="showRow(['mc_saldosEnc','mc_usuariosEnc'],tabla)">
+                        <td md-cell class="primary-column">
+                            Sum. DigVerif
+                        </td>
+                        <td md-cell>
+                            {{encabezado.sumDigVerif}}
+                        </td>
+                    </tr>
+
+                    <!-- VISA y AMEX Tarjetas -->
+
+                    <tr md-row ng-if="showRow(['vi_tarjetasEnc','ax_tarjetasEnc'],tabla)">
+                        <td md-cell class="primary-column" >
+                            Fh. Cierre
+                        </td>
+                        <td md-cell>
+                            {{encabezado.fecCierreActual | date: 'ddMMyy' : 'UTC'}}
+                        </td>
+                    </tr>
+
+                    <tr md-row ng-if="showRow(['vi_tarjetasEnc','ax_tarjetasEnc'],tabla)">
+                        <td md-cell class="primary-column">
+                            Cant. Registros
+                        </td>
+                        <td md-cell>
+                            {{encabezado.cantRegistros}}
+                        </td>
+                    </tr>
+
+                    <!--   VISA y AMEX Saldos
+
+                    <tr>
+                        <td>
+                            {{tabla.trim()--'VI_RecargableSaldosEnc'}}
+                            <br>1. {{tabla.trim()=='VI_RecargableSaldosEnc'}}
+                            <br>2. {{tabla.trim()=='VI_RecargableSaldosENC'}}
+                            <br>3. {{showRow(tabla)}}
+                            <br>4. {{showRow(tabla)}}
+                            <br>{{tabla.trim()}}-+
+                            <br>*
+                        </td>
+                    </tr>
+
+
+                    -->
+
+
+                    <tr md-row ng-if="showRow(['vi_saldosEnc','ax_saldosEnc','VI_RecargableTarjetasENC','VI_RecargableSaldosENC'],tabla)"> <!-- tabla === 'vi_saldosEnc' || tabla === 'ax_saldosEnc' ||  tabla.trim()=='VI_RecargableTarjetasEnc ||   -->
+                        <td md-cell class="primary-column" >
+                            Fh. Cierre
+                        </td>
+                        <td md-cell>
+                            {{encabezado.fechaCierreActual | date: 'ddMMyy' : 'UTC'}}
+                        </td>
+                    </tr>
+
+
+                    <tr md-row ng-if="showRow(['vi_saldosEnc','ax_saldosEnc','VI_RecargableTarjetasENC','VI_RecargableSaldosENC'],tabla)">
+                        <td md-cell class="primary-column">
+                            Cant. Registros
+                        </td>
+                        <td md-cell>
+                            {{encabezado.cantRegistros}}
+                        </td>
+                    </tr>
+
+                    <tr md-row ng-if="showRow(['vi_saldosEnc','ax_saldosEnc','VI_RecargableSaldosENC','VI_RecargableSaldosENC'],tabla)">
+                        <td md-cell class="primary-column">
+                            SumSaldos
+                            <br>
+                            ($UltLiq)
+                        </td>
+                        <td md-cell>
+                            {{encabezado.sumSaldosArsUltLiq}}
+                        </td>
+                    </tr>
+                    <tr md-row ng-if="showRow(['vi_saldosEnc','ax_saldosEnc','VI_RecargableSaldosENC','VI_RecargableSaldosENC' ],tabla)">
+                        <td md-cell class="primary-column">
+                            SumSaldos
+                            <br>
+                            (U$D UltLiq)
+                        </td>
+                        <td md-cell>
+                            {{encabezado.sumSaldosUsdUltLiq}}
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </md-table-container>
+        </section>
+    </md-content>
+</md-sidenav>
+

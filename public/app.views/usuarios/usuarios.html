@@ -1,0 +1,42 @@
+<!-- MENSAJE -->
+<div class="alert-division" ng-show="alerts.length > 0">
+    <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">
+        <span ng-show="alert.type === 'danger'" class="glyphicon glyphicon-exclamation-sign" aria-hidden="true">
+        </span>
+        <span class="sr-only">Error:</span>
+        <strong ng-show="alert.strong">{{alert.strong}}</strong>
+        {{alert.msg}}
+        <a ng-show = "alert.ltext" href="" ng-click="frontDoor(alert.lfunc)"
+           class="alert-link">{{alert.ltext}}</a>
+    </alert>
+</div>
+<!-- END MENSAJE -->
+
+<div id="container_user_header" class="row" >
+    <div class="col-xs-5">
+        <h2 style="margin:auto 0 0 0;">Usuarios</h2>
+    </div>
+</div>
+<hr>
+
+<!--div class="panel-heading " id="">
+        <span class="panel-title">ABM Usuarios</span>
+        <div class="pull-right">
+
+        </div>
+</div-->
+
+
+<bandoneon open-sz="100">
+    <bandoneon-group is-open="bd.isOpen.b1">
+        <bandoneon-heading>
+            <div class="row navbar-left">
+                <span class="glyphicon gly-st iso-users-1" aria-hidden="true"></span>
+                <span class="ng-scope ng-tit">Usuarios</span>
+            </div>
+            <span class="pull-right glyphicon iso-pencil" ng-click="frontDoor('editUser', $event)" aria-hidden="true" popover="Editar Usuario" popover-placement="bottom" popover-trigger="mouseenter" />
+            <span class="pull-right glyphicon iso-plus-circled" ng-click="frontDoor('addUser', $event)"  aria-hidden="true" popover="Agregar Usuario" popover-placement="bottom" popover-trigger="mouseenter" />
+        </bandoneon-heading>
+        <div class="gridStyle-xl" ng-grid="gUsers"></div>
+    </bandoneon-group>
+</bandoneon>

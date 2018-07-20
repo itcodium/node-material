@@ -1,0 +1,42 @@
+<div ng-controller="limiteCompras.productos.ctrl">
+    <md-table-container class="md-scrollX" ng-show="productoGrid.data.length > 0">
+        <table data-md-table data-md-row-select="false" md-progress="promiseObj" ng-model="productoGrid.selected">
+            <thead md-head data-md-order="productoGrid.query.order" md-on-reorder="onReorder">
+            <tr md-row>
+                <th md-column></th>
+
+                <th md-column md:order:by="marca" style="text-align:right;">
+                    <span>Marca</span>
+                </th>
+                <th md-column data-md-order-by="tipoCuenta" style="text-align:right;">
+                    <span>Tipo de cuenta</span>
+                </th>
+                <th md-column data-md-order-by="minimo" style="text-align:right;">
+                    <span>Mínimo</span>
+            </tr>
+            </thead>
+
+            <!--rows de datos-->
+            <tbody md-body>
+            <tr md-row data-ng-repeat="row in productoGrid.data | orderBy: productoGrid.query.order | filter: filtering | limitTo: productoGrid.query.limit : (productoGrid.query.page - 1) * productoGrid.query.limit">
+                <td md-cell>
+                    <md-checkbox ng-model="row.selected" aria-label="check fila" ng-change="onSelectRow(row, $index)">
+                    </md-checkbox>
+                </td>
+
+                <td md-cell style="text-align:right">{{ row.marca }}</td>
+                <td md-cell style="text-align:right">{{ row.tipoCuenta }}</td>
+                <td md-cell style="text-align:right">{{ row.minimo | number }}</td>
+                <td md-cell></td>
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+    <data-md-table-pagination ng-if="productoGrid.data.length" md-limit="productoGrid.query.limit" md-limit-options="[5, 10, 15]"
+                              md-page="productoGrid.query.page" md-total="{{productoGrid.data.length}}" md-page-select>
+    </data-md-table-pagination>
+
+    <div class="md-padding" layout-xs="column" ng-show="productoGrid.data.length == 0">
+        No se encontraron datos para mostrar
+    </div>
+</div>

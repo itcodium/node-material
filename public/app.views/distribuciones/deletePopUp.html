@@ -1,0 +1,57 @@
+<md-dialog aria-label="ABM Distribuciones" ng-cloak flex="50">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Baja de Distribuciones</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon md-svg-src="/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <form id="formCampaniasDelete" ng-submit="formDistribucionesDelete.$invalid || save(formDistribucionesDelete.$error)" name="formDistribucionesDelete"  novalidate>
+        <md-dialog-content class="toastParent">
+            <div class="md-dialog-content mddc-thead">
+                <div layout-gt-xs="row">
+                    <md-input-container>
+                        <md-datepicker id="fecBaja" name="fecBaja"
+                                       md-min-date="currentDate"
+                                       ng-model="distribucion.fecBaja"
+                                       ng-required="true">
+                        </md-datepicker>
+                        <div ng-messages="formDistribucionesDelete.fecBaja.$error">
+                            <div ng-message="required">El campo Fecha Baja es obligatorio</div>
+                        </div>
+                    </md-input-container>
+                </div>
+            </div>
+            <div class="md-dialog-content" style="padding-top: 0;">
+                <div class="modal-body">
+                    <md-table-container>
+                        <table data-md-table>
+                            <thead md-head>
+                            <tr md-row>
+                                <th md-column><span>Código de Distribucion</span></th>
+                                <th md-column><span>Descripción</span></th>
+                                <th md-column><span>Codigo de Campaña</span></th>
+                            </tr>
+                            </thead>
+                            <tbody md-body>
+                            <tr md-row>
+                                <td md-cell>{{distribucion.codigo}}</td>
+                                <td md-cell>{{distribucion.descripcion}}</td>
+                                <td md-cell>{{distribucion.codigoCampania}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </md-table-container>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <a href="javascript:void(0)" class= "md-button md-ink-ripple" ng-click="cancel()">Cancelar</a>
+            <md-button type="submit" class="md-raised md-primary md-button md-ink-ripple">
+                <span>Aceptar</span>
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html style="box-shadow: rgb(153, 153, 153) 0px 0px 0px 0px; border-color: rgb(0, 0, 0);">
+
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<style type="text/css">
+		.page-container {
+			bottom: 0;
+			right: 0;
+			overflow: auto;
+		}
+
+		.page {
+			width: 90%;
+			margin: 13px auto;
+		}
+
+		.pc1 {
+			display: block;
+		}
+
+		.grilla {
+			margin-top: 0;
+			border-spacing: 13px;
+			border-collapse: separate;
+		}
+
+		.grilla th {
+			font-family: Arial, Helvetica, sans-serif;
+			font-size: 8pt;
+			font-weight: normal;
+		}
+
+		.grilla td {
+			font-family: Arial, Helvetica, sans-serif;
+			font-size: 8pt;
+		}
+
+		.title {
+			font-family: Verdana, Tahoma, sans-serif;
+			line-height: 1.019531;
+			font-style: normal;
+			font-weight: bold;
+			visibility: visible;
+		}
+
+		.subtitle {
+			font-family: Verdana, Tahoma, sans-serif;
+			line-height: 1.019531;
+			font-style: normal;
+			font-weight: bold;
+			visibility: visible;
+		}
+
+		.fecProceso {
+			font-family: Arial, Helvetica, sans-serif;
+			font-size: 8pt;
+			font-weight: bold;
+			margin-top: 25px;
+		}
+	</style>
+</head>
+
+<body style="box-shadow: rgb(153, 153, 153) 0px 0px 0px 0px; border-color: rgb(0, 0, 0);">
+	<div class="container" style=" box-shadow: rgb(153, 153, 153) 0px 0px 0px 0px; border-color: rgb(0, 0, 0); background-color: rgb(158, 158, 158);">
+		<div class="page" style="border-color: rgb(0, 0, 0); background-color: rgb(255, 255, 255); box-shadow: rgb(51, 51, 51) 1px 1px 3px 1px;">
+			<div class="pc1">
+				<div class="title">@TITULO</div>
+				<div class="subtitle">@SUBTITULO</div>
+
+				<div class="fecProceso">
+					<span>Fec.Proceso:</span>
+					<span style="width: 50px"></span>
+					<span style="margin-left:30px">@FECPROCESO</span>
+				</div>
+				<table class="grilla" cellspacing=10>
+					<tr>
+						<th style="width:60px">Nro.Conv.</th>
+						<th style="width:120px">Empresa</th>
+						<th style="width:60px">Cant.Mov.</th>
+						<th style="width:95px">Imp.Total Mov.</th>
+						<th style="width:65px">Cant.No Apl.</th>
+						<th style="width:90px">Imp.No Apl</th>
+					</tr>
+					@ITEMSGRID
+				</table>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

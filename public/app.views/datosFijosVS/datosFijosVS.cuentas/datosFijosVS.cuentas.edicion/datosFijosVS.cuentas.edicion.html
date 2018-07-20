@@ -1,0 +1,165 @@
+<md-dialog aria-label="ABM porcentaje comisión" flex="50">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>{{mode}} </h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon md-svg-src="/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <form name="formCuenta" ng-submit="formCuenta.$valid && submit()" role="form" novalidate>
+        <md-dialog-content class="toastParent">
+            <div class="md-dialog-content">
+                <div class="modal-body">
+                    <div class="row altaPopUp">
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex="30">
+                                <label>Código de Alta</label>
+                                <input type="number" ng-disabled="true" ng-model="cuenta.codigoAltaCuenta" required ng-value="50">
+
+                                <div ng-messages="formCuenta.codEnte.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="15">
+                                <label>Banco</label>
+                                <input type="text" name="banco" required ng-model="cuenta.banco" ng-disabled="mode !== 'Alta'">
+
+                                <div ng-messages="formCuenta.banco.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="50">
+                                <label>Tipo de Cuenta</label>
+                                <md-select ng-model="cuenta.tipoCuenta" name="tipoCuenta" required ng-disabled="mode !== 'Alta'">
+                                    <md-option ng-value="opt.codigoTipoCuenta" ng-repeat="opt in tipoCuentas">{{ opt.descripcion }}</md-option>
+                                </md-select>
+
+                                <div ng-messages="formCuenta.tipoCuenta.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                </div>
+                            </md-input-container>
+                        </div>
+
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex>
+                                <label>Código Promotor</label>
+                                <input type="text" name="codPromotor" ng-model="cuenta.codPromotor" maxlength="2">
+
+                                <div ng-messages="formCuenta.codPromotor.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                    <div ng-message="maxlength">Máximo 2 caracteres</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex>
+                                <label>Limite Compra</label>
+                                <input type="text" name="codLC" ng-model="cuenta.codLC" maxlength="50" >
+
+                                <div ng-messages="formCuenta.codLC.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex>
+                                <label>% Limite Compra</label>
+                                <input type="text" name="porcFinanciacion" ng-model="cuenta.porcFinanciacion" maxlength="50">
+
+                                <div ng-messages="formCuenta.porcFinanciacion.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                    <div ng-message="max">Superó el valor maximo permitido</div>
+                                </div>
+                            </md-input-container>
+                        </div>
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex>
+                                <label>Mod. Liq</label>
+                                <input type="text" name="modLiq" ng-model="cuenta.modLiq" maxlength="50">
+
+                                <div ng-messages="formCuenta.modLiq.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                    <div ng-message="maxlength">Máximo 2 caracteres</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex>
+                                <label>Forma Pago</label>
+                                <input type="text" name="formaPago" ng-model="cuenta.formaPago" maxlength="50">
+
+                                <div ng-messages="formCuenta.formaPago.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                    <div ng-message="maxlength">Máximo 2 caracteres</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex>
+                                <label>Cartera</label>
+                                <input type="text" name="cartera" ng-model="cuenta.cartera" maxlength="50">
+
+                                <div ng-messages="formCuenta.cartera.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                    <div ng-message="maxlength">Máximo 2 caracteres</div>
+                                </div>
+                            </md-input-container>
+                        </div>
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex>
+                                <label>Cat. Cajero</label>
+                                <input type="text" name="catCajeroAutomatico" ng-model="cuenta.catCajeroAutomatico" maxlength="50">
+
+                                <div ng-messages="formCuenta.catCajeroAutomatico.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex>
+                                <label>GAF</label>
+                                <input type="text" name="GAF" ng-model="cuenta.GAF" maxlength="50">
+
+                                <div ng-messages="formCuenta.GAF.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex>
+                                <label>Sit. IVA</label>
+                                <input type="text" name="sitIVA" ng-model="cuenta.sitIVA" maxlength="50">
+
+                                <div ng-messages="formCuenta.sitIVA.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                </div>
+                            </md-input-container>
+                        </div>
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex>
+                                <label>Agrupa Usuario</label>
+                                <input type="text" name="agrupaUsuario" ng-model="cuenta.agrupaUsuario" maxlength="50">
+
+                                <div ng-messages="formCuenta.agrupaUsuario.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex>
+                                <label>Producto</label>
+                                <input type="text" name="producto" ng-model="cuenta.producto" maxlength="50">
+
+                                <div ng-messages="formCuenta.producto.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex>
+                                <label>Marca</label>
+                                <input type="text" name="marcaOrigen" ng-model="cuenta.marcaOrigen" maxlength="50">
+
+                                <div ng-messages="formCuenta.marcaOrigen.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                </div>
+                            </md-input-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <a href="javascript:void(0)" class="md-button md-ink-ripple" ng-click="cancel()">Cancelar</a>
+            <md-button type="submit" class="md-raised md-primary md-button md-ink-ripple">
+                <span>Aceptar</span>
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

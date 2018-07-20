@@ -1,0 +1,106 @@
+
+
+<!--<div id="toastSelect" xmlns:md="http://www.w3.org/1999/xhtml">-->
+<!--</div>-->
+
+
+<md-card>
+    <!--TOOLBAR PRINCIPAL-->
+    <md-toolbar class="md-table-toolbar md-default" ng-show="!grilla.selected.length && !grilla.filter.show">
+        <div class="md-toolbar-tools">
+            <span>Sucursales</span>
+            <span flex></span>
+
+            <md-button class="md-icon-button md-button md-ink-ripple"
+                       aria-label="filtrar"
+                       ng-click="grilla.filter.show = true">
+                <md-tooltip md-autohide>filtrar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_filter_list_black_24px.svg"> </md-icon>
+            </md-button>
+
+            <button class="md-icon-button md-button md-ink-ripple" type="button"  ng-click="gd.add($event)">
+                <md-tooltip md-autohide>Agregar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_add_black_24px.svg"> </md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <!--TOOLBAR PARA SEARCH-->
+    <md-toolbar class="md-table-toolbar md-default ng-hide" ng-show="grilla.filter.show && !grilla.selected.length">
+        <div class="md-toolbar-tools">
+            <md-icon md-svg-src="img/icons/search.svg"></md-icon>
+            <form flex="" name="filter.form" class="ng-valid flex">
+                <input type="text" ng-model="grilla.query.filter" placeholder="search" >
+                <!--ng-model-options="filter.options"-->
+            </form>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="gd.removeFilter()">
+                <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <!--TOOLBAR PARA EDICION-->
+    <md-toolbar class="md-table-toolbar alternate" ng-show="grilla.selected.length">
+        <div class="md-toolbar-tools">
+            <span>{{grilla.selected.length}} {{grilla.selected.length > 1 ? 'items' : 'item'}} seleccionados</span>
+            <span flex></span>
+            <md-button ng-show="grilla.selected.length < 2" class="md-icon-button"
+                       aria-label="funcionalidad no especifica"
+                       ng-click="gd.add($event)">
+                <md-tooltip md-autohide>modificar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_edit_black_24px.svg"></md-icon>
+            </md-button>
+
+            <md-button class="md-icon-button"
+                       aria-label="funcionalidad no especifica"
+                       ng-click="gd.del($event)">
+                <md-tooltip md-autohide>eliminar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_delete_black_24px.svg"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+
+    <!--GRILLA-->
+    <md-table-container>
+        <table data-md-table data-md-row-select="!hideCheckboxes" data-ng-model="grilla.selected" md-progress="promise">
+
+
+            <!--barra de titulos-->
+            <thead ng-if="!hideHead" md-head data-md-order="qrilla.query.order" md-on-reorder="onReorder">
+            <tr md-row>
+                <th md-column md:order:by="codAgencia"><span>Agencia</span></th>
+                <th md-column data-md-order-by="codSucursal"><span>Sucursal</span></th>
+                <th md-column data-md-order-by="codSucursal"><span>Descripción</span></th>
+                <th md-column data-md-order-by="codSucursal"><span>Localidad</span></th>
+                <th md-column data-md-order-by="codSucursal"><span>Dirección</span></th>
+                <th md-column data-md-order-by="codSucursal"><span>Region</span></th>
+            </tr>
+            </thead>
+
+
+            <!--rows de datos-->
+            <tbody md-body>
+            <tr md-row md:select="row" data-md-on-select="gd.log"
+                        md-on-deselect="gd.deselect"
+                        x-md-auto-select="!blah"
+                        data-ng-repeat="row in grilla.data | filter: filter.search | orderBy: grilla.query.order | limitTo: grilla.query.limit : (grilla.query.page -1) * grilla.query.limit">
+
+
+                <td md-cell>{{row.codAgencia}}</td>
+                <td md-cell>{{row.codSucursal}}</td>
+                <td md-cell>{{row.descripSucursal}}</td>
+                <td md-cell>{{row.descripcionLocalidad}}</td>
+                <td md-cell>{{row.direccion}}</td>
+                <td md-cell>{{row.descripcionRegion}}</td>
+
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+
+    <data-md-table-pagination md-limit="grilla.query.limit" md-page="grilla.query.page" md-total="{{grilla.count}}" md-on-paginate="onPaginate" md-page-select>
+    </data-md-table-pagination>
+
+</md-card>
+

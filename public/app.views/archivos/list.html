@@ -1,0 +1,102 @@
+
+<div id="toastSelect">
+    <p></p>
+</div>
+
+<md-card ng-init="initGrid()">
+    <!--TOOLBAR PRINCIPAL-->
+    <md-toolbar class="md-table-toolbar md-default" ng-show="archivosGrilla.selected === null && !archivosGrilla.filter.show">
+        <div class="md-toolbar-tools">
+            <span>Archivos</span>
+            <span flex></span>
+
+            <md-button class="md-icon-button md-button md-ink-ripple"
+                       aria-label="filtrar"
+                       ng-click="archivosGrilla.filter.show = true">
+                <md-tooltip md-autohide>Filtrar</md-tooltip>
+                <md-icon md-svg-src="img/icons/search.svg"> </md-icon>
+            </md-button>
+            <md-input-container class="md-toolMaster">
+                <md-button class="md-icon-button md-button md-ink-ripple" ng-href="{{gdArchivo.exportarExcel()}}" target="_blank">
+                  <md-icon md-svg-src="img/icons/ic_file_download_36px.svg"></md-icon>
+                  <md-tooltip md-autohide>Exportar</md-tooltip>
+                </md-button>
+              </md-input-container>
+            <button class="md-fab md-button md-success md-ink-ripple" type="button" ng-click="add($event)">
+                <md-tooltip md-autohide>Agregar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_add_white_24px.svg"> </md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <md-toolbar class="md-table-toolbar alternate" ng-show="archivosGrilla.selected">
+        <div class="md-toolbar-tools">
+            <span>1 item seleccionado</span>
+            <span flex></span>
+            <md-button class="md-icon-button"
+                       ng-click="del($event)">
+                <md-tooltip md-autohide>Eliminar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_delete_black_24px.svg"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <!--TOOLBAR PARA SEARCH-->
+    <md-toolbar class="md-table-toolbar md-default ng-hide" ng-show="archivosGrilla.filter.show && !archivosGrilla.selected">
+        <div class="md-toolbar-tools">
+            <md-icon md-svg-src="img/icons/search.svg"></md-icon>
+            <form flex="" name="filter.form" class="ng-valid flex">
+                <input focus-search="archivosGrilla.filter.show" type="text" ng-model="archivosGrilla.query.filter" placeholder="Buscar" >
+                <!--ng-model-options="filter.options"-->
+            </form>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="gdArchivo.removeFilter()">
+                <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <!--GRILLA-->
+    <md-table-container>
+        <table data-md-table data-ng-model="archivosGrilla.selected" md-progress="promise" id="marcas">
+            <!--barra de titulos-->
+            <thead ng-if="!hideHead" md-head data-md-order="archivosGrilla.query.order" md-on-reorder="onReorder">
+                <tr md-row>
+                    <th md-column></th>
+                    <th md-column md:order:by="marca"><span>Marca</span></th>
+                    <th md-column data-md-order-by="entidad"><span>Entidad</span></th>
+                    <th md-column data-md-order-by="instancia"><span>Cartera</span></th>
+                    <th md-column data-md-order-by="archivo"><span>Archivo</span></th>
+                    <th md-column data-md-order-by="descripcion"><span>Descripcion</span></th>
+                    <th md-column data-md-order-by="agrupar"><span>Agrupar</span></th>
+                    <th md-column data-md-order-by="creadoPor"><span>Creado Por</span></th>
+                    <th md-column data-md-order-by="fecCreacion"><span>Fecha de Creación</span></th>
+                </tr>
+            </thead>
+
+            <!--rows de datos-->
+            <tbody md-body>
+                <tr md-row
+                    md:select="row"
+                    data-ng-repeat="row in archivosGrilla.data | orderBy: archivosGrilla.query.order | limitTo: archivosGrilla.query.limit : (archivosGrilla.query.page -1) * archivosGrilla.query.limit">
+                    <td md-cell>
+                        <md-checkbox aria-label="Check Paso" id="Marca_{{$index}}" ng-click="selectMarca($index, row)"></md-checkbox>
+                    </td>
+                    <td md-cell>{{row.marca}}</td>
+                    <td md-cell>{{row.entidad}}</td>
+                    <td md-cell>{{row.instancia}}</td>
+                    <td md-cell>{{row.archivo}}</td>
+                    <td md-cell>{{row.descripcion}}</td>
+                    <td md-cell>{{row.agrupar}}</td>
+                    <td md-cell>{{row.creadoPor}}</td>
+                    <td md-cell>{{row.fecCreacion | date:'dd/MM/yyyy'}}</td>
+
+                </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+
+    <data-md-table-pagination md-limit="archivosGrilla.query.limit" md-page="archivosGrilla.query.page" md-total="{{archivosGrilla.count}}" md-on-paginate="onPaginate" md-page-select>
+    </data-md-table-pagination>
+
+</md-card>
+

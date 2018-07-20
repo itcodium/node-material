@@ -1,0 +1,68 @@
+<md-dialog aria-label="ABM Calendario" ng-init="initPopUp()" ng-cloak flex="40">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>{{operac}} Fallecidos Periodos</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="ctrl.cancel()">
+                <md-icon md-svg-src="/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <form id="Container_Form" ng-submit="ctrl.confirmOperation(formCalendario.$valid)" name="formCalendario" role="form" novalidate>
+        <md-dialog-content flex-gt-xs style="padding: 15px;">
+                <div layout-gt-xs="row">
+                        <!-- fecDesde -->
+
+                        <md-input-container flex="50">
+                            <md-datepicker id="fecDesde" name="fecDesde" type="date" md-placeholder="Fecha Desde:"
+                                           ng-model="calendario.fecDesde" required ng-change="changeFechaDesde()">
+                            </md-datepicker>
+                            <div class="validation-messages" ng-messages="formCalendario.fecDesde.$error">
+                                <div ng-message="required">El campo es requerido</div>
+                                <div ng-message="valid">La fecha ingresada no es válida.</div>
+                                <div ng-message="maxdate">La fecha desde debe ser menor que la fecha hasta.</div>
+                            </div>
+                        </md-input-container>
+
+
+                        <!-- fecHasta -->
+                        <md-input-container flex="50"  layout-xs="row" >
+                            <md-datepicker id="fecHasta" name="fecHasta" type="date" md-placeholder="Fecha Hasta:"
+                                           ng-model="calendario.fecHasta" required ng-change="changeFechaHasta()"
+                                           md-min-date="calendario.fecDesde">
+                            </md-datepicker>
+                                <div class="validation-messages" ng-messages="formCalendario.fecHasta.$error">
+                                <div ng-message="required">El campo es requerido</div>
+                                <div ng-message="valid">La fecha ingresada no es válida.</div>
+                                <div ng-message="mindate">La fecha desde debe ser menor que la fecha hasta.</div>
+                            </div>
+                        </md-input-container>
+                    </div>
+            <div layout-gt-xs="column">
+                <md-input-container>
+                    <label class="control-label col-sm-6" for="txtMargenPerdida">Margen de pérdida:</label>
+                    <input type="text" name="margenPerdida" required  ng-if="operac == 'Alta'" id="txtMargenPerdida"
+                           ng-model="calendario.margenPerdida"  role="margenPerdida">
+
+                    <input type="number" name="margenPerdida" required ng-if="operac != 'Alta'" id="txtMargenPerdida"
+                           ng-model="calendario.margenPerdida" min="1">
+
+                    <div class="validation-messages" ng-messages="formCalendario.margenPerdida.$error">
+                        <div ng-message="required">*</div>
+                        <div ng-message="number">Ingresar solo números</div>
+                        <div ng-message="min">El margen de pérdida debe ser mayor a 0</div>
+                    </div>
+
+                </md-input-container>
+            </div>
+
+
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <a href="javascript:void(0)" class="md-button md-ink-ripple" ng-click="ctrl.cancel()">Cancelar</a>
+            <md-button type="submit" class="md-raised md-primary md-button md-ink-ripple" data-dismiss="modal">
+                <span>Aceptar</span>
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

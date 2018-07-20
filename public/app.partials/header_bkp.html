@@ -1,0 +1,66 @@
+
+    <div>
+        <h1 id="logo">
+            <a href="javascript:void(0)">
+                <span class="snapico-logo"></span>
+            </a>
+        </h1>
+
+        <div class="menu" >
+            <div class="navbar-collapse collapse">
+
+                <ul class="nav navbar-nav"><li class="navbar-left"><h4 class="subtitle"> {{global.headers.subTitle}} </h4></li></ul>
+
+                <ul class="nav navbar-nav navbar-menu" ng-show= "global.isSignedIn()">
+                    <li ng-repeat="entry in global.headers.navbarEntries"><a href="/#!/{{entry.Link}}">{{entry.Titulo}}</a></li>
+
+
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <span class="glyphicon glyphicon-user"></span> {{global.currentUser.username}} <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/#"><span class="glyphicon glyphicon-user"></span> Perfil (consulta) </a></li>
+                            <li class="divider"></li>
+                            <li><a href="/signout"><span class="glyphicon glyphicon-off"></span> Cerrar sesión</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right"  ng-hide= "global.isSignedIn()" >
+                    <li> <a href="signup">Signup</a> </li>
+                    <li> <a href="signin">Signin</a> </li>
+                </ul>
+
+                <ul class="nav navbar-nav navbar-menu" ng-show= "global.isSignedIn()" data-ng-controller="IndexController">
+                    <li ng-repeat="entry in global.headers.navbarEntries"><a href="/#!/{{entry.Link}}">{{entry.Titulo}}</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown" data-toggle="dropdown">
+                            <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li ng-repeat="menu in global.Menu">
+                                <a href="javascript:void(0)" ng-click="mostrarSubMenu($index, $event)">
+                                    {{menu.Titulo}}
+                                </a>
+
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+

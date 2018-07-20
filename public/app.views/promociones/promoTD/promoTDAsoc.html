@@ -1,0 +1,166 @@
+<md-content>
+<div layout="row">
+
+        <md-card flex="50" style="height:100%; margin-right:0px !important">
+            <md-toolbar class="md-table-toolbar md-default">
+                <div class="md-toolbar-tools">
+                    <span>Archivos</span>
+                    <span flex></span>
+                </div>
+            </md-toolbar>
+
+
+            <md-card class="md-padding" layout-xs="column" layout="row" ng-if="archivos.count === 0">
+                No se encontraron datos para mostrar
+            </md-card>
+
+
+            <md-table-container ng-if="archivos.count > 0" >
+                <table data-md-table data-md-row-select ng-model="archivos.selected" md-progress="promiseArchivos">
+
+                    <thead md-head >
+                    <tr md-row>
+                        <th md-column><span>Base</span></th>
+                        <th md-column><span>Cantidad</span></th>
+                    </tr>
+                    </thead>
+
+                    <tbody md-body>
+                    <tr md-row md:select="row"
+                        data-md-on-select="true"
+                        md-on-deselect="false"
+                        ng-repeat="row in archivos.data">
+                        <td md-cell>{{row.NombreArchivo}}</td>
+                        <td md-cell>{{row.Cantidad}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </md-table-container>
+        </md-card>
+
+        <md-card  flex="50" style="height: 100%">
+            <md-toolbar class="md-table-toolbar md-default">
+                <div class="md-toolbar-tools">
+                    <span flex>Promociones a Asociar/Bajar</span>
+                    <div >
+                        <form name="myForm" flex-gt-xs>
+                            <md-input-container>
+                                <md-datepicker md-placeholder="Vigencia" class="form-control input-sm" md-min-date="minDate"
+                                               ng-model="fechaVigencia" name="fecha">
+                                </md-datepicker>
+                                <div ng-messages="myForm.fecha.$error">
+                                    <div ng-message="valid">El valor ingresado no es una fecha válida</div>
+                                    <div ng-message="mindate">La fecha tiene que ser mayor o igual a la fecha actual</div>
+                                </div>
+                            </md-input-container>
+                        </form>
+                    </div>
+                    <button class="md-fab md-button md-success md-ink-ripple" type="button" ng-click="add()">
+                        <md-tooltip md-autohide>Agregar</md-tooltip>
+                        <md-icon md-svg-src="img/icons/ic_add_white_24px.svg"> </md-icon>
+                    </button>
+                </div>
+
+            </md-toolbar>
+
+            <md-card class="md-padding" layout-xs="column" layout="row" ng-if="promocionesGrid.count === 0">
+                No se encontraron datos para mostrar
+            </md-card>
+
+            <md-table-container ng-if="promocionesGrid.count > 0">
+                <table data-md-table data-md-row-select ng-model="promocionesGrid.selected" md-progress="promisePromociones">
+                    <thead md-head>
+                    <tr md-row>
+                        <th md-column><span>Promo</span></th>
+                        <th md-column><span>Entidad</span></th>
+                        <th md-column><span>Descripción</span></th>
+                        <th md-column><span>Vigencia Hasta</span></th>
+                    </tr>
+                    </thead>
+                    <tbody md-body>
+                    <tr md-row md:select="row"
+                        data-md-on-select="true"
+                        md-on-deselect="false"
+                        md-row ng-repeat="row in promocionesGrid.data">
+                        <td md-cell>{{row.codigoPromo}}</td>
+                        <td md-cell>{{row.entidad}}</td>
+                        <td md-cell style="word-break: break-word">{{row.descripcion}}</td>
+                        <td md-cell>{{row.vigenciaHasta | date: 'dd/MM/yyyy' : 'UTC'}}</td>
+                    </tr>
+                    </tbody>
+                    <tfoot md-foot>
+                    </tfoot>
+                </table>
+            </md-table-container>
+        </md-card>
+
+</div>
+
+
+<div>
+    <md-card>
+        <md-toolbar class="md-table-toolbar md-default" ng-show="asociacionesGrid.selected.length === 0">
+            <div class="md-toolbar-tools">
+                <span>Asociaciones</span>
+                <span flex></span>
+                <md-button class="md-icon-button"
+                           aria-label="Generar txt"
+                           ng-click="confirmarGenerar()">
+                    <md-tooltip>Generar Archivo</md-tooltip>
+                    <md-icon md-svg-src="img/icons/ic_insert_drive_file_24px.svg"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+
+        <md-toolbar class="md-table-toolbar alternate md-hide" ng-show="asociacionesGrid.selected.length > 0">
+            <div class="md-toolbar-tools">
+                <span>{{asociacionesGrid.selected.length}} {{asociacionesGrid.selected.length > 1 ? 'items' : 'item'}} seleccionados</span>
+                <span flex></span>
+                <md-button class="md-icon-button"
+                           aria-label="Dar de baja"
+                           ng-click="confirmarEliminar()">
+                    <md-tooltip md-autohide>Baja</md-tooltip>
+                    <md-icon md-svg-src="img/icons/ic_delete_black_24px.svg"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+
+        <md-card class="md-padding" layout-xs="column" layout="row" ng-if="asociacionesGrid.count === 0">
+            No se encontraron datos para mostrar
+        </md-card>
+
+        <md-table-container ng-if="asociacionesGrid.count > 0">
+            <table data-md-table data-md-row-select  md-progress="promiseAsociaciones" ng-model="asociacionesGrid.selected" >
+
+                <thead md-head  md-on-reorder="onReorder">
+                <tr md-row>
+                    <th md-column><span>Archivo</span></th>
+                    <th md-column><span>Promo</span></th>
+                    <th md-column><span>Descripción</span></th>
+                    <th md-column><span>Promo Visa</span></th>
+                    <th md-column><span>Nombre Visa</span></th>
+                    <th md-column><span>Banca</span></th>
+                    <th md-column><span>Vigencia Hasta</span></th>
+                    <th md-column><span>Cantidad</span></th>
+                </tr>
+                </thead>
+                <tbody md-body>
+                <tr md-row md:select="row"
+                    data-md-on-select="true"
+                    md-on-deselect="false"
+                    data-ng-repeat="row in asociacionesGrid.data | orderBy: asociacionesGrid.query.order">
+                    <td md-cell>{{row.Archivo}}</td>
+                    <td md-cell>{{row.Promo}}</td>
+                    <td md-cell>{{row.Descripcion}}</td>
+                    <td md-cell>{{row.PromoVisa}}</td>
+                    <td md-cell>{{row.NombreVisa}}</td>
+                    <td md-cell>{{row.Banca}}</td>
+                    <td md-cell>{{row.VigenciaHasta | date: 'dd/MM/yyyy' : 'UTC'}}</td>
+                    <td md-cell>{{row.Cantidad}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </md-table-container>
+    </md-card>
+</div>
+</md-content>

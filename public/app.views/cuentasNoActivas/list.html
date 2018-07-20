@@ -1,0 +1,84 @@
+<div id="toastSelect">
+    <p></p>
+</div>
+
+<md-card>
+    <!--TOOLBAR PRINCIPAL-->
+    <md-toolbar class="md-table-toolbar md-default" ng-show="!controlData.buscarPeriodo">
+        <div class="md-toolbar-tools">
+            <span>Cuentas No Activas</span>
+            <span flex></span>
+            <md-button class="md-icon-button md-button md-ink-ripple"
+                       aria-label="filtrar"
+                       ng-click="controlData.buscarPeriodo = true">
+                <md-tooltip md-autohide>Filtrar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_filter_list_black_24px.svg"> </md-icon>
+            </md-button>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="exportarAExcel()">
+                <md-tooltip md-autohide>Exportar Excel</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_file_download_36px.svg"> </md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <!--TOOLBAR PARA SEARCH-->
+    <md-toolbar class="md-table-toolbar md-default ng-hide" ng-show="controlData.buscarPeriodo">
+        <div class="md-toolbar-tools">
+            <span>Cuentas No Activas</span>
+            <span flex></span>
+            <div flex="20" layout="row" layout-align="space-around center">
+                <md-input-container class="md-toolMaster">
+                    <label>Periodo</label>
+                    <md-select id="selectPeriodo" name="selectPeriodo"
+                               ng-change="selectPeriodo()"
+                               ng-model="cuentasNoActivas.query.periodo"
+                               aria-label="true">
+                        <md-option ng-value="periodo.val" ng-repeat="periodo in periodos">{{periodo.text}}</md-option>
+                    </md-select>
+                </md-input-container>
+                <md-input-container class="md-toolMaster">
+                    <label>Convenio</label>
+                    <md-select ng-model="cuentasNoActivas.query.convenio" ng-change="selectConvenio()" >
+                        <md-option ng-repeat="convenio in convenios" value="{{convenio}}">{{convenio}}</md-option>
+                    </md-select>
+                </md-input-container>
+            </div>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="removerFiltro()">
+                <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+            </button>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="exportarAExcel()">
+                <md-tooltip md-autohide>Exportar Excel</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_file_download_36px.svg"> </md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <md-table-container ng-show="cuentasNoActivas.count > 0" class="md-scrollX">
+        <table id="cuentas" data-md-table data-md-row-select="false" data-ng-model="cuentasNoActivas.selected" md-progress="promise">
+            <thead md-head >
+                <tr md-row>
+                    <th md-column ng-repeat="column in columnTitles"><span>{{column}}</span></th>
+                </tr>
+            </thead>
+            <tbody md-body >
+                <tr md-row ng-repeat="cuenta in filteredArray = (cuentasNoActivas.data | filter:filtroConvenio) | limitTo: cuentasNoActivas.query.limit : (cuentasNoActivas.query.page -1) * cuentasNoActivas.query.limit">
+                    <td md-cell>{{cuenta.nroBenef}}</td>
+                    <td md-cell>{{cuenta.CUIL}}</td>
+                    <td md-cell>{{cuenta.nroCajaAhorro}}</td>
+                    <td md-cell>{{cuenta.categoria}}</td>
+                    <td md-cell>{{cuenta.estadoCuenta}}</td>
+                    <td md-cell>{{cuenta.prodBancario}}</td>
+                    <td md-cell>{{cuenta.convenio}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+
+    <data-md-table-pagination md-limit="cuentasNoActivas.query.limit" md-page="cuentasNoActivas.query.page" md-total="{{filteredArray.length}}" md-on-paginate="onPaginate" md-page-select>
+    </data-md-table-pagination>
+
+</md-card>
+
+<!--<md-card class="md-padding" layout-xs="column" layout="row"  ng-show="cuentas.length === 0 && !loading"  >
+    No se encuentran cuentas no activas para el periodo actual o el seleccionado
+</md-card>-->

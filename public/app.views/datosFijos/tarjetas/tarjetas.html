@@ -1,0 +1,84 @@
+<md-card ng-controller="tarjeta">
+
+
+    <div>
+        <md-table-container>
+            <table data-md-table md-progress="promiseEventos" ng-model="tarjetasGrid.selected">
+
+                <thead md-head data-md-order="tarjetasGrid.query.order">
+                <tr md-row>
+                    <th md-column></th>
+                    <th md-column md:order:by="idEDPDatosFijosTarjetas" ><span>idEDPDatosFijosTarjetas</span></th>
+                    <th md-column data-md-order-by="entidad"><span>entidad</span></th>
+                    <th md-column data-md-order-by="codigoAltaTarjeta"><span>codigoAltaTarjeta</span></th>
+                    <th md-column data-md-order-by="tipoTarjeta"><span>tipoTarjeta</span></th>
+                    <th md-column data-md-order-by="vigencia"><span>vigencia</span></th>
+                    <th md-column data-md-order-by="porcBonificacion"><span>porcBonificacion</span></th>
+                    <th md-column data-md-order-by="tipoDocumento"><span>tipoDocumento</span></th>
+                    <th md-column data-md-order-by="nroDocumento"><span>nroDocumento</span></th>
+                    <th md-column data-md-order-by="nacionalidad"><span>nacionalidad</span></th>
+                    <th md-column data-md-order-by="sexo"><span>sexo</span></th>
+                    <th md-column data-md-order-by="estCivil"><span>estCivil</span></th>
+                    <th md-column data-md-order-by="fecNacimiento"><span>fecNacimiento</span></th>
+                    <th md-column data-md-order-by="ocupacion"><span>ocupacion</span></th>
+                    <th md-column data-md-order-by="habilitacion"><span>habilitacion</span></th>
+                    <th md-column data-md-order-by="cargo"><span>cargo</span></th>
+                    <th md-column data-md-order-by="porcLimLC"><span>porcLimLC</span></th>
+                    <th md-column data-md-order-by="porcLimLCC"><span>porcLimLCC</span></th>
+                    <th md-column data-md-order-by="porcLimADE"><span>porcLimADE</span></th>
+                    <th md-column data-md-order-by="distribucion"><span>distribucion</span></th>
+                    <th md-column data-md-order-by="creadoPor"><span>creadoPor</span></th>
+                    <th md-column data-md-order-by="fecCreacion"><span>fecCreacion</span></th>
+                    <th md-column data-md-order-by="modificadoPor"><span>modificadoPor</span></th>
+                    <th md-column data-md-order-by="fecModificacion"><span>fecModificacion</span></th>
+
+                </tr>
+
+                </thead>
+                <tbody md-body>
+                <tr md-row
+                    data-ng-repeat="row in tarjetasGrid.data | orderBy: tarjetasGrid.query.order | filter: filtering | limitTo: tarjetasGrid.query.limit : (tarjetasGrid.query.page - 1) * tarjetasGrid.query.limit">
+                    <td md-cell>
+                        <md-checkbox
+                                ng-model="row.selected"
+                                aria-label="check fila"
+                                ng-change="onSelectRow(row, $index)">
+                        </md-checkbox>
+                    </td>
+                    <td md-cell>{{ row.idEDPDatosFijosTarjetas }}</td>
+                    <td md-cell>{{ row.entidad }}</td>
+                    <td md-cell>{{ row.codigoAltaTarjeta }}</td>
+                    <td md-cell>{{ row.tipoTarjeta }}</td>
+                    <td md-cell>{{ row.vigencia }}</td>
+                    <td md-cell>{{ row.porcBonificacion }}</td>
+                    <td md-cell>{{ row.tipoDocumento }}</td>
+                    <td md-cell>{{ row.nroDocumento }}</td>
+                    <td md-cell>{{ row.nacionalidad }}</td>
+                    <td md-cell>{{ row.sexo }}</td>
+                    <td md-cell>{{ row.estCivil }}</td>
+                    <td md-cell>{{ row.fecNacimiento }}</td>
+                    <td md-cell>{{ row.ocupacion }}</td>
+                    <td md-cell>{{ row.habilitacion }}</td>
+                    <td md-cell>{{ row.cargo }}</td>
+                    <td md-cell>{{ row.porcLimLC }}</td>
+                    <td md-cell>{{ row.porcLimLCC }}</td>
+                    <td md-cell>{{ row.porcLimADE }}</td>
+                    <td md-cell>{{ row.distribucion }}</td>
+                    <td md-cell>{{ row.creadoPor }}</td>
+                    <td md-cell>{{ row.fecCreacion }}</td>
+                    <td md-cell>{{ row.modificadoPor }}</td>
+                    <td md-cell>{{ row.fecModificacion }}</td>
+
+                </tr>
+                </tbody>
+            </table>
+        </md-table-container>
+        <data-md-table-pagination ng-if="tarjetasGrid.data.length"
+                                  md-limit="tarjetasGrid.query.limit"
+                                  md-limit-options="[5, 10, 15]"
+                                  md-page="tarjetasGrid.query.page"
+                                  md-total="{{tarjetasGrid.data.length}}"
+                                  md-page-select>
+        </data-md-table-pagination>
+    </div>
+</md-card>

@@ -1,0 +1,65 @@
+<md-dialog aria-label="ABM Apoderados"  ng-cloak flex="50">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>{{operac}} de Sucursales</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="ctrl.cancel()">
+                <md-icon md-svg-src="/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="toastParent">
+        <form id="formSucursalDelete" ng-submit="ctrl.confirmOperation(formSucursalDelete.$error)" name="formSucursalDelete" role="form">
+            <div class="md-dialog-content mddc-thead">
+                <div layout-gt-xs="row">
+                    <md-datepicker id="fecBajaAll" name="fecBajaAll"
+                                   md-min-date="currentDate"
+                                   ng-model="fecBajaAll">
+                    </md-datepicker>
+                    <span class=".control-group.error .control-label" style="color:#880000;"  ng-if="errorForm == true" ng-show="formSucursalDelete.fecBajaAll.$error"></span>
+                </div>
+            </div>
+            <div class="md-dialog-content" style="padding-top: 0;">
+                <div class="modal-body">
+                    <md-table-container>
+                        <table data-md-table data-md-row-select="true" data-ng-model="sucursalDeleteGrilla.selected" md-progress="promise">
+
+                            <!--barra de titulos-->
+                            <thead ng-if="!hideHead" md-head data-md-order="sucursalDeleteGrilla.query.order" md-on-reorder="onReorder">
+                            <tr md-row>
+                                <th md-column md:order:by="codAgencia"><span>Agencia</span></th>
+                                <th md-column data-md-order-by="codSucursal"><span>Sucursal</span></th>
+                                <th md-column data-md-order-by="descripSucursal"><span>Descripción Sucursal</span></th>
+                                <th md-column data-md-order-by="fecBaja"><span>Fecha de Baja</span></th>
+                            </tr>
+                            </thead>
+                            <!--rows de datos-->
+                            <tbody md-body>
+                            <tr md-row data-ng-repeat="row in sucursalDeleteGrilla.data | orderBy: sucursalDeleteGrilla.query.order | limitTo: sucursalDeleteGrilla.query.limit : (sucursalDeleteGrilla.query.page -1) * sucursalDeleteGrilla.query.limit">
+                                <td md-cell>{{row.codAgencia}}</td>
+                                <td md-cell>{{row.codSucursal}}</td>
+                                <td md-cell>{{row.descripSucursal}}</td>
+                                <td md-cell>{{row.fecBaja | date:'dd/MM/yyyy'}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </md-table-container>
+
+                    <data-md-table-pagination md-limit="sucursalDeleteGrilla.query.limit" md-page="sucursalDeleteGrilla.query.page" md-total="{{sucursalDeleteGrilla.count}}" md-on-paginate="onPaginateSuc" md-page-select>
+                    </data-md-table-pagination>
+
+                    <input type="submit"
+                           style="position: absolute; left: -9999px; width: 1px; height: 1px;"
+                           tabindex="-1" />
+
+                </div>
+            </div>
+        </form>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <a href="javascript:void(0)" class= "md-button md-ink-ripple" ng-click="ctrl.cancel()">Cancelar</a>
+        <md-button type="button" class="md-raised md-primary md-button md-ink-ripple" ng-click="ctrl.confirmOperation(formSucursalDelete.$error)">
+            <span>Aceptar</span>
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

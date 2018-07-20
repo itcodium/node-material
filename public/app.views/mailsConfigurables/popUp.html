@@ -1,0 +1,96 @@
+<md-dialog aria-label="ABM Mails Configurables" ng-init="init()" ng-cloak flex="70">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>{{operac}} de Mails Configurables</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon md-svg-src="/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <form id="formMails" ng-submit="formMails.$invalid || save()" name="formMails" novalidate>
+        <md-dialog-content class="toastParent">
+            <div class="md-dialog-content">
+                <div class="modal-body">
+                    <div class="row altaPopUp">
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex="30">
+                                <label for="codigo">Código</label>
+                                <input type="text" name="codigo" id="codigo" ng-disabled
+                                        ="operac !== 'Alta'" maxlength="20"
+                                       ng-model="mail.codigo" required>
+                                <div ng-messages="formMails.codigo.$error">
+                                    <div ng-message="required">El campo código es obligatorio</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="40">
+                                <label for="descripcion">Descripcion</label>
+                                <input type="text" name="descripcion" id="descripcion" maxlength="100"
+                                       ng-model="mail.descripcion" required>
+                                <div ng-messages="formMails.descripcion.$error">
+                                    <div ng-message="required">El campo descripción es obligatorio</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="30">
+                                <md-select ng-model="mail.idProceso"
+                                           name="proceso" placeholder="Proceso">
+                                    <md-option ng-value="proceso.idProceso" ng-repeat="proceso in procesos">{{proceso.nombre}}</md-option>
+                                </md-select>
+                            </md-input-container>
+                        </div>
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex="50">
+                                <label for="de">De</label>
+                                <input type="text" name="de" id="de" maxlength="255"
+                                       ng-model="mail.de" disabled>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="50">
+                                <label for="para">Para</label>
+                                <input type="text" name="para" id="para" maxlength="500"
+                                       ng-model="mail.para" required>
+                                <div ng-messages="formMails.para.$error">
+                                    <div ng-message="required">El campo Para es obligatorio</div>
+                                </div>
+                            </md-input-container>
+                        </div>
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex="50">
+                                <label for="copia">Copia</label>
+                                <input type="text" name="copia" id="copia" maxlength="500"
+                                       ng-model="mail.copia">
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="50">
+                                <label for="copiaOculta">Copia Oculta</label>
+                                <input type="text" name="copiaOculta" id="copiaOculta" maxlength="500"
+                                       ng-model="mail.copiaOculta">
+                            </md-input-container>
+                        </div>
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex="80">
+                                <label for="asunto">Asunto</label>
+                                <input type="text" name="asunto" id="asunto" maxlength="255"
+                                       ng-model="mail.asunto">
+                            </md-input-container>
+
+                            <md-switch
+                                    ng-model="mail.llevaAdjuntos"
+                                    aria-label="Visible">
+                                Lleva archivos Adjuntos
+                            </md-switch>
+                        </div>
+                        <div layout-gt-sm="row">
+                            <ng-quill-editor ng-model="mail.cuerpo" placeholder="Cuerpo"></ng-quill-editor>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row">
+            <a href="javascript:void(0)" class="md-button md-ink-ripple" ng-click="cancel()">Cancelar</a>
+            <md-button type="submit" class="md-raised md-primary md-button md-ink-ripple" ng-keyup="$event.keyCode == 13" data-dismiss="modal">
+                <span>Aceptar</span>
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

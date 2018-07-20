@@ -1,0 +1,25 @@
+
+<div class="panel-heading">
+    <span class="panel-title">Acordeon</span>
+</div>
+
+<section id="main" data-ng-controller="acordeon.ctrl">
+    <div id="cssmenu" class="menu-menu_lateral_institucion-container">
+        <ul  id="menu-menu_lateral_institucion" class="menu" >
+            <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children has-sub open"
+                ng-repeat="menu in Menu">
+                <a href="/#!/{{menu.Link}}">
+                    <span class="glyphicon {{menu.Icon}}" aria-hidden="true" ></span>
+                    <span>{{menu.Titulo}}</span>
+                    <span class="holder" ng-click="mostrarSubMenu($index, $event)"></span>
+                </a>
+
+                <ul ng-show="ctrl.showMenu[$index]">
+                    <li class="menu-item menu-item-type-custom menu-item-object-custom" ng-repeat="smenu in menu.SubMenu">
+                        <a href="/#!/{{smenu.Link}}"><span>{{smenu.Titulo}}</span></a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</section>

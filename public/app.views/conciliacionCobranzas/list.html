@@ -1,0 +1,108 @@
+<md-card>
+    <toolbar data="toolbar_pesos"></toolbar>
+    <md-table-container class="md-scrollX" style="overflow: auto">
+        <grilla mostrar-paginacion="true" paginado-db="false" data="grillaPesos" ></grilla>
+    </md-table-container>
+</md-card>
+
+<md-card>
+    <toolbar data="toolbar_dolares"></toolbar>
+    <md-table-container class="md-scrollX" style="overflow: auto">
+        <grilla mostrar-paginacion="true" paginado-db="false" data="grillaDolares" ></grilla>
+    </md-table-container>
+</md-card>
+
+
+<script type="text/ng-template" id="entesExternosFilterForm.tmpl.html">
+    <form name="frmentesExternos" layout="row" layout-align="start start">
+        <md-input-container>
+            <md-select   id="cboEntes" name="cboEntes"  ng-model="toolbar.query.Entes" ng-init="toolbar.query.entes=toolbar.entes[0];" >
+                <md-option ng-value="itemEntes" ng-repeat="itemEntes in toolbar.entes">{{itemEntes.descripcion}}</md-option>
+            </md-select>
+        </md-input-container>
+        <md-input-container>
+            <md-select   id="cboConciliacion" name="cboConciliacion"   ng-model="toolbar.query.conciliacion">
+                <md-option ng-value="itemConciliacion" ng-repeat="itemConciliacion in toolbar.conciliaciones">{{itemConciliacion.descripcion}}</md-option>
+            </md-select>
+        </md-input-container>
+        <md-input-container>
+            <md-datepicker required="true" id="fechaDesde" name="fechaDesde"   md-placeholder="Fecha desde"
+                           type="date"
+                           md-max-date=   "toolbar.query.fechaHasta"
+                           ng-model="toolbar.query.fechaDesde"></md-datepicker>
+            <div  class="validation-messages" ng-messages="frmentesExternos.fechaDesde.$error">
+                <div ng-message="required">Ingresar fecha.</div>
+                <div ng-message="valid">El valor no es una fecha valida.</div>
+                <div ng-message="maxdate">El fecha debe ser menor que el valor seleccionado.</div>
+
+            </div>
+        </md-input-container>
+        <md-input-container>
+            <md-datepicker required="true" type="date" id="fechaHasta" name="fechaHasta"  md-placeholder="Fecha hasta"
+                           md-min-date="toolbar.query.fechaDesde"
+                           ng-model="toolbar.query.fechaHasta"></md-datepicker>
+            <div  class="validation-messages" ng-messages="frmentesExternos.fechaHasta.$error">
+                <div ng-message="valid">El valor no es una fecha valida.</div>
+                <div ng-message="required">Ingresar fecha.</div>
+                <div ng-message="mindate">El fecha debe ser menor que el valor seleccionado.</div>
+            </div>
+        </md-input-container>
+        <md-input-container>
+            <button class="md-icon-button md-button md-ink-ripple" type="submit" ng-click="toolbar.onFilter(frmentesExternos)">
+                <md-icon class="ready" ng-show="!toolbar.filtrado" md-svg-src="img/icons/playlist_play.svg"></md-icon>
+                <md-icon class="done" ng-show="toolbar.filtrado" md-svg-src="img/icons/playlist_check.svg"></md-icon>
+                <md-tooltip md-autohide> {{ !toolbar.filtrado ?  'Aplicar filtro' : 'Filtro Aplicado' }}</md-tooltip>
+            </button>
+        </md-input-container>
+    </form>
+</script>
+
+
+
+
+
+
+<script type="text/ng-template" id="entesExternosFilterForm2.tmpl.html">
+    <form name="frmentesExternos2" layout="row" layout-align="start start">
+        <md-input-container>
+            <md-select   id="cboEntes" name="cboEntes"  ng-model="toolbar.query.Entes" ng-init="toolbar.query.entes=toolbar.entes[0];" >
+                <md-option ng-value="itemEntes" ng-repeat="itemEntes in toolbar.entes">{{itemEntes.descripcion}}</md-option>
+            </md-select>
+        </md-input-container>
+        <md-input-container>
+            <md-select   id="cboConciliacion" name="cboConciliacion"   ng-model="toolbar.query.conciliacion">
+                <md-option ng-value="itemConciliacion" ng-repeat="itemConciliacion in toolbar.conciliaciones">{{itemConciliacion.descripcion}}</md-option>
+            </md-select>
+        </md-input-container>
+        <md-input-container>
+            <md-datepicker required="true" id="fechaDesde" name="fechaDesde"   md-placeholder="Fecha desde"
+                           type="date"
+                           md-max-date=   "toolbar.query.fechaHasta"
+                           ng-model="toolbar.query.fechaDesde"></md-datepicker>
+            <div  class="validation-messages" ng-messages="frmentesExternos2.fechaDesde.$error">
+                <div ng-message="required">Ingresar fecha.</div>
+                <div ng-message="valid">El valor no es una fecha valida.</div>
+                <div ng-message="maxdate">El fecha debe ser menor que el valor seleccionado.</div>
+
+            </div>
+        </md-input-container>
+        <md-input-container>
+            <md-datepicker required="true" type="date" id="fechaHasta" name="fechaHasta"  md-placeholder="Fecha hasta"
+                           md-min-date="toolbar.query.fechaDesde"
+                           ng-model="toolbar.query.fechaHasta"></md-datepicker>
+            <div  class="validation-messages" ng-messages="frmentesExternos2.fechaHasta.$error">
+                <div ng-message="valid">El valor no es una fecha valida.</div>
+                <div ng-message="required">Ingresar fecha.</div>
+                <div ng-message="mindate">El fecha debe ser menor que el valor seleccionado.</div>
+            </div>
+        </md-input-container>
+        <md-input-container>
+            <button class="md-icon-button md-button md-ink-ripple" type="submit" ng-click="toolbar.onFilter(frmentesExternos2)">
+                <md-icon class="ready" ng-show="!toolbar.filtrado" md-svg-src="img/icons/playlist_play.svg"></md-icon>
+                <md-icon class="done" ng-show="toolbar.filtrado" md-svg-src="img/icons/playlist_check.svg"></md-icon>
+                <md-tooltip md-autohide> {{ !toolbar.filtrado ?  'Aplicar filtro' : 'Filtro Aplicado' }}</md-tooltip>
+            </button>
+        </md-input-container>
+    </form>
+</script>
+

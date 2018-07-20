@@ -1,0 +1,24 @@
+<md-card>
+    <div class="md-toolbar-tools">
+        <span></span>
+        <span flex></span>
+        <md-input-container class="md-toolMaster">
+            <md-select ng-model="novedad" ng-change="cboNovedades_onChange()"
+                       ng-init="novedad=novedades[0];" >
+
+                <md-option ng-repeat="nov in novedades" ng-value="nov">{{nov.novedad}}</md-option>
+            </md-select>
+        </md-input-container>
+    </div>
+</md-card>
+
+<md-card ng-if="novedad.cod=='CUENTAS'" layout-padding style="overflow:auto">
+    <toolbar data="toolbarCuentas"></toolbar>
+    <grilla selected-grid="true"  multiple-select="false" mostrar-paginacion="true" paginado-db="false" data="grillaCuentas"></grilla>
+</md-card>
+
+<md-card ng-if="novedad.cod=='TARJETAS'" layout-padding style="overflow:auto">
+    <toolbar data="toolbarTarjetas"></toolbar>
+    <grilla selected-grid="true"  multiple-select="false" mostrar-paginacion="true" paginado-db="false" data="grillaTarjetas"></grilla>
+</md-card>
+

@@ -1,0 +1,41 @@
+<md-card>
+    <md-toolbar class="md-table-toolbar md-default" ng-show="cantSelected == 0 ">
+        <div class="md-toolbar-tools">
+            <span flex>{{ query.report }}</span>
+            <span flex></span>
+            <md-input-container class="md-toolMaster">
+                <md-select ng-model="query.report" ng-change="refresh()" aria-label="elije pantalla">
+                    <md-option ng-repeat="report in reports" value="{{report}}">{{report}}</md-option>
+                </md-select>
+            </md-input-container>
+            <button class="md-fab md-button md-success md-ink-ripple" type="button" ng-click="add()">
+                <md-tooltip md-autohide>Agregar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_add_white_24px.svg"> </md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <md-toolbar class="md-table-toolbar md-default alternate" ng-show="cantSelected > 0 ">
+        <div class="md-toolbar-tools">
+            <span>{{cantSelected}} {{cantSelected.length > 1 ? 'items seleccionados' : 'item seleccionado'}}</span>
+            <span flex></span>
+            <md-button ng-show="true" class="md-icon-button" aria-label="Modificar" ng-click="edit()" ng-if="cantSelected === 1">
+                <md-tooltip md-autohide>Modificar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_edit_black_24px.svg"></md-icon>
+            </md-button>
+            <md-button class="md-icon-button" aria-label="Dar de baja" ng-click="delConfirm()">
+                <md-tooltip md-autohide>Baja</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_delete_black_24px.svg"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <div ng-if="query.report === 'Cuentas'">
+        <div ng-include="'app.views/datosFijosVS/datosFijosVS.cuentas/datosFijosVS.cuentas.html'"></div>
+    </div>
+
+    <div ng-if="query.report === 'Tarjetas'">
+        <div ng-include="'app.views/datosFijosVS/datosFijosVS.tarjetas/datosFijosVS.tarjetas.html'"></div>
+    </div>
+
+</md-card>

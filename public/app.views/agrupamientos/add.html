@@ -1,0 +1,130 @@
+<md-dialog aria-label="ABM Agrupamientos" ng-init="init()" ng-cloak flex="30">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 ng-if="ParentScope.operac!='Modificar'">{{ParentScope.operac}} de Agrupamientos</h2>
+            <h2 ng-if="ParentScope.operac=='Modificar'">Modificación de Agrupamientos</h2>
+
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon md-svg-src="/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+
+    <!--<div class="modal-body">-->
+    <form id="formAgrupamientos" ng-submit="ParentScope.config.submit(this.formAgrupamientos,agrupamientos);" name="formAgrupamientos" novalidate>
+        <md-dialog-content class="toastParent">
+            <div class="md-dialog-content">
+                <div class="modal-body">
+                    <div class="row altaPopUp">
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex>
+                                <label for="codigo">Código</label>
+                                <input  required="true"
+                                        type="text"
+                                        name="codigo"
+                                        id="codigo"
+                                        ng-disabled="ParentScope.operac.toUpperCase() !== 'ALTA'"
+                                        maxlength="9"
+                                        ng-change="ParentScope.config.ValidarCodigo(agrupamientos)"
+                                        ng-model-options='{ debounce: 1000 }'
+                                        ng-model="agrupamientos.model.codMovimiento" required>
+                                <div ng-messages="formAgrupamientos.codigo.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                    <div ng-message="maxlength">Ingresar como maximo 9 caracteres.</div>
+                                </div>
+                                <div immediate-error class="md-caption" style="color:rgb(221,44,0)" ng-show="agrupamientos.codigoExistente">
+                                    El código {{agrupamientos.model.codMovimiento}} ya existe.
+                                </div>
+                                <div immediate-error class="md-caption" style="color:rgb(221,44,0)" ng-show="agrupamientos.codigoInvalido">
+                                    El valor debe ser numérico
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex>
+                                <label for="descripcion">Descripción</label>
+                                <textarea
+                                          md-no-resize
+                                          type="text" name="descripcion" id="descripcion"
+                                          ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA'"
+                                          maxlength="100"
+                                          ng-model="agrupamientos.model.descripcion">
+                                </textarea>
+                            </md-input-container>
+                        </div>
+                        <div layout-gt-sm="row">
+
+                                <md-autocomplete class="md-block" flex
+                                        ng-model="agrupamientos.model.descripcionAgrupador"
+                                        md-no-cache="noCache"
+                                        md-selected-item="selectedItem"
+                                        md-search-text-change="searchTextChange(searchText)"
+                                        md-search-text="searchText"
+                                        md-selected-item-change="selectedItemChange(item, agrupamientos, searchText)"
+                                        md-items="item in querySearch(searchText)"
+                                        md-item-text="item.descripcion"
+                                        md-min-length="1"
+                                        md-floating-label="Agrupador"
+                                        ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA'"
+                                        >
+                                    <md-item-template>
+                                        <span md-highlight-text="searchText" md-highlight-flags="^i">{{item.descripcion}}</span>
+                                    </md-item-template>
+                                    <!--
+                                    <md-not-found>
+                                        No existe el agrupador "{{searchText}}".
+                                    </md-not-found>
+                                    -->
+                                </md-autocomplete>
+                                <div immediate-error class="md-caption" style="color:rgb(221,44,0)" ng-show="agrupamientos.agrupadorInvalido">
+                                    No existe el agrupador ingresado.
+                                </div>
+
+
+                            <md-input-container class="md-block" flex>
+                                <label for="signoInventario">Signo</label>
+                                <textarea  md-no-resize
+                                        type="text"
+                                        name="signoInventario"
+                                        id="signoInventario"
+                                        ng-change="ParentScope.config.ValidarSigno(agrupamientos)"
+                                        ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA'"
+                                        ng-model="agrupamientos.model.signoInventario"
+                                        ng-change="ParentScope.config.ValidarSigno(agrupamientos.model.signoInventario)"
+                                >
+                                </textarea>
+                                <div immediate-error class="md-caption" style="color:rgb(221,44,0)" ng-show="agrupamientos.signoInvalido">
+                                    Los valores posibles son: -1, 0, 1 o vacío.
+                                </div>
+                            </md-input-container>
+                        </div>  <!-- fin de row -->
+                        <div layout-gt-sm="row" ng-if="ParentScope.operac.toUpperCase() == 'BAJA'">
+                            <md-datepicker id="fecBaja" name="fecBaja"   md-placeholder="Fecha baja:"
+                                           ng-model="agrupamientos.model.fecBaja" required
+                                           "config.test(agrupamientos.model.fecBaja)"
+                                           md-min-date="ParentScope.minFecBaja">
+                            </md-datepicker>
+                            <div class="validation-messages" ng-messages="formAgrupamientos.fecBaja.$error">
+                                <div ng-message="valid">La fecha ingresada no es valida.</div>
+                                <div ng-message="required">El campo es requerido</div>
+                                <div ng-message="mindate">La fecha de baja no puede ser menor al día en curso.</div>
+                            </div>
+                        </div>
+                    </div>
+</div>
+            </div>
+        </md-dialog-content>
+        <!--</div>--> <!-- modal body -->
+        <md-dialog-actions layout="row">
+            <a href="javascript:void(0)" class="md-button md-ink-ripple" ng-click="cancel()">Cancelar</a>
+            <md-button type="submit"  ng-disabled="formAgrupamientos.$valid==false"  class="md-raised md-primary md-button md-ink-ripple" ng-keyup="$event.keyCode == 13" data-dismiss="modal">
+                <span>Aceptar</span>
+            </md-button>
+        </md-dialog-actions>
+    </form>
+
+</md-dialog>
+
+
+
+

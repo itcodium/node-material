@@ -1,0 +1,709 @@
+<div  id="toastSelect">
+    <p></p>
+</div>
+
+<md-card>
+    <!--TOOLBAR PRINCIPAL-->
+    <md-toolbar class="md-table-toolbar md-default" ng-show="!procesoGrilla.selected.length && !procesoGrilla.filter.show">
+        <div class="md-toolbar-tools">
+            <span>Procesos</span>
+            <div flex layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+                <md-switch
+                        ng-model="showDadosBaja"
+                        ng-click="traerProcesos(!showDadosBaja)"
+                        aria-label="Visible"
+                        ng-change="vm.toggleActivation()">
+                </md-switch>
+                <p class="md-body-1">Incluir dados de baja</p>
+            </div>
+            <md-button class="md-icon-button md-button md-ink-ripple"
+                       aria-label="filtrar"
+                       ng-click="procesoGrilla.filter.show = true">
+                <md-tooltip md-autohide>Buscar</md-tooltip>
+                <md-icon md-svg-src="img/icons/search.svg"> </md-icon>
+            </md-button>
+            <button class="md-fab md-button md-success md-ink-ripple" type="button" ng-click="showAdvanced($event,'ALTA')">
+                <md-tooltip md-autohide>Agregar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_add_white_24px.svg"> </md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+    <!--TOOLBAR PARA SEARCH-->
+    <md-toolbar class="md-table-toolbar md-default ng-hide" ng-show="procesoGrilla.filter.show && !procesoGrilla.selected.length">
+        <div class="md-toolbar-tools">
+            <md-icon md-svg-src="img/icons/search.svg"></md-icon>
+            <form flex="" name="filter.form" class="ng-valid flex">
+                <input focus-search="procesoGrilla.filter.show" type="text" ng-model="procesoGrilla.query.filter" placeholder="Buscar proceso" >
+                <!--ng-model-options="filter.options"-->
+            </form>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="gdProceso.removeFilter()">
+                <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <!--TOOLBAR PARA EDICION-->
+    <md-toolbar class="md-table-toolbar alternate" ng-show="selected!=null">
+        <div class="md-toolbar-tools">
+            <span>{{procesoGrilla.selected.length}} {{procesoGrilla.selected.length > 1 ? 'items' : 'item'}} seleccionados</span>
+            <span flex></span>
+            <md-button ng-model="procesoReactivar" id="ProcesoReactivar" class="md-icon-button"
+                       ng-show="proceso.fecBaja != null"
+                       ng-click="reactivarProcesoConfirm($event)" class="md-primary md-body-1"
+                       aria-label="Switch de ejemplo">
+                <md-tooltip md-autohide>Reactivar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_settings_backup_restore_black_24px.svg"></md-icon>
+            </md-button>
+            <md-button ng-show="true" class="md-icon-button"
+                       aria-label="funcionalidad no especifica"
+                       ng-click="showAdvanced($event,'MODIFICACION')" >
+                <md-tooltip md-autohide>Modificar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_edit_black_24px.svg"></md-icon>
+            </md-button>
+            <md-button class="md-icon-button"
+                       aria-label="funcionalidad no especifica"
+                       ng-show="proceso.fecBaja == null"  ng-click="showAdvanced($event,'BAJA')">
+                <md-tooltip md-autohide>Baja</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_delete_black_24px.svg"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <md-table-container class="md-scrollX">
+        <table data-md-table data-ng-model="procesoGrilla.selected" id="grillaProceso">
+            <!--barra de titulos-->
+            <thead ng-if="!hideHead" md-head data-md-order="procesoGrilla.query.order" md-on-reorder="onReorder">
+            <tr md-row>
+                <th md-column></th>
+                <th md-column md:order:by="nombre" style="padding:0;"><span>Nombre</span></th>
+                <th md-column data-md-order-by="tipo" style="padding: 0;"><span>Tipo</span></th>
+                <th md-column data-md-order-by="frecuencia" style="padding: 0;"><span>Frec.</span></th>
+                <th md-column data-md-order-by="vencimiento" style="padding: 0;"><span>Venc.</span></th>
+                <th md-column data-md-order-by="usuarioResponsable" style="padding: 0;"><span>U. Responsable</span></th>
+                <th md-column data-md-order-by="dependeNombre" style="padding: 0 15px 0 0;"><span>Depende</span></th>
+                <th md-column data-md-order-by="visibleLabel" style="padding: 0;"><span>Visible</span></th>
+                <th md-column data-md-order-by="accionExito" style="padding: 0;"><span>A. Éxito</span></th>
+                <th md-column data-md-order-by="parametroExitoTexto" style="padding: 0;"><span>Ptro. Éxito</span></th>
+                <th md-column data-md-order-by="accionFracaso" style="padding: 0;"><span>A. Fracaso</span></th>
+                <th md-column data-md-order-by="parametroFracasoTexto" style="padding: 0;"><span>Ptro. Fracaso</span></th>
+            </tr>
+            </thead>
+
+            <!--rows de datos-->
+            <tbody md-body>
+            <tr md-row
+                data-ng-repeat="row in procesoGrilla.data | orderBy: procesoGrilla.query.order | limitTo: procesoGrilla.query.limit : (procesoGrilla.query.page -1) * procesoGrilla.query.limit">
+                <td md-cell>
+                    <md-checkbox ng-model="row.selected" aria-label="Check  Proceso" id="{{$index}}" ng-click="selectCheckbox($index, row)"></md-checkbox>
+                </td>
+                <td md-cell style="">{{row.nombre}}</td>
+                <td md-cell style="padding: 0;">{{row.tipo}}</td>
+                <td md-cell style="padding: 0;">{{row.frecuencia}}</td>
+                <td md-cell style="padding: 0;">{{row.vencimiento}}</td>
+                <td md-cell style="padding: 0;">{{row.usuarioResponsable}}</td>
+                <td md-cell style="padding: 0 15px 0 0;">{{row.dependeNombre}}</td>
+                <td md-cell style="padding: 0;">{{row.visible | filterYesNo}}</td>
+                <td md-cell style="padding: 0;">{{row.accionExito}}</td>
+                <td md-cell style="padding: 0;">{{row.parametroExitoTexto}}</td>
+                <td md-cell style="padding: 0;">{{row.accionFracaso}}</td>
+                <td md-cell style="padding: 0;">{{row.parametroFracasoTexto}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+    <data-md-table-pagination md-limit="procesoGrilla.query.limit" md-page="procesoGrilla.query.page" md-total="{{procesoGrilla.count}}" md-on-paginate="" md-page-select>
+    </data-md-table-pagination>
+</md-card>
+
+
+<!--2 table Pasos-->
+<md-card>
+    <md-toolbar class="md-table-toolbar md-default" ng-show="!procesoPasoGrilla.selected.length && !procesoPasoGrilla.filter.show && selected!=null"">
+    <div class="md-toolbar-tools">
+        <span>Pasos</span>
+        <span flex></span>
+        <md-button class="md-icon-button md-button md-ink-ripple"
+                   aria-label="filtrar"
+                   ng-click="procesoPasoGrilla.filter.show = true">
+            <md-tooltip md-autohide>Buscar</md-tooltip>
+            <md-icon md-svg-src="img/icons/search.svg"></md-icon>
+        </md-button>
+
+        <button class="md-fab md-button md-success md-ink-ripple" type="button"  ng-click="c.editarPaso($event,'ALTA')">
+            <md-tooltip md-autohide>Agregar</md-tooltip>
+            <md-icon md-svg-src="img/icons/ic_add_white_24px.svg"> </md-icon>
+        </button>
+    </div>
+    </md-toolbar>
+
+    <!--TOOLBAR PARA SEARCH-->
+    <md-toolbar class="md-table-toolbar md-default ng-hide" ng-show="procesoPasoGrilla.filter.show && !procesoPasoGrilla.selected.length ">
+        <div class="md-toolbar-tools">
+            <md-icon md-svg-src="img/icons/search.svg"></md-icon>
+            <form flex="" name="filter.form" class="ng-valid flex">
+                <input type="text" ng-model="procesoPasoGrilla.query.filter" placeholder="Buscar paso">
+                <!--ng-model-options="filter.options"-->
+            </form>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="gdProcesoPaso.removeFilter()">
+                <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+    <!-- Edicion -->
+    <md-toolbar class="md-table-toolbar alternate" ng-show="procesoPasoGrilla.selected.length>0 && selectedPaso!=null && selected!=null">
+        <div class="md-toolbar-tools">
+            <span>{{procesoPasoGrilla.selected.length}} {{procesoPasoGrilla.selected.length > 1 ? 'items' : 'item'}} seleccionados</span>
+            <span flex></span>
+            <md-button ng-show="true" class="md-icon-button"
+                       aria-label="funcionalidad no especifica"
+                       ng-click="c.editarPaso($event,'MODIFICACION')" >
+                <md-tooltip md-autohide>Modificar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_edit_black_24px.svg"></md-icon>
+            </md-button>
+            <md-button class="md-icon-button"
+                       aria-label="funcionalidad no especifica"
+                       ng-click="c.editarPaso($event,'BAJA')">
+                <md-tooltip md-autohide>Baja</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_delete_black_24px.svg"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <md-table-container ng-if="procesoPasoGrilla.data.length > 0" class="md-scrollX">
+        <table data-md-table data-ng-model="procesoPasoGrilla.selected" id="grillaPaso" md-progress="promisePaso">
+            <!--barra de titulos-->
+            <thead ng-if="!hideHead" md-head data-md-order="procesoPasoGrilla.query.order" md-on-reorder="onReorder">
+            <tr md-row>
+                <th md-column></th>
+                <th md-column md:order:by="paso"><span>Paso</span></th>
+                <th md-column data-md-order-by="descripcion"><span>Descripción</span></th>
+                <th md-column data-md-order-by="tipoProceso"><span>Tipo</span></th>
+                <th md-column data-md-order-by="proceso"><span>Proceso</span></th>
+                <th md-column data-md-order-by="pathEntrada"><span>Path Entrada</span></th>
+                <th md-column data-md-order-by="pathSalida"><span>Path Salida</span></th>
+            </tr>
+            </thead>
+
+            <!--rows de datos-->
+            <tbody md-body>
+            <tr md-row
+                data-ng-repeat="row in procesoPasoGrilla.data | orderBy: procesoPasoGrilla.query.order | limitTo: procesoPasoGrilla.query.limit : (procesoPasoGrilla.query.page -1) * procesoPasoGrilla.query.limit">
+                <td md-cell>
+                    <md-checkbox aria-label="Check Paso" id="paso{{$index}}" ng-click="selectCheckboxPaso($index, row)"></md-checkbox>
+                </td>
+                <td md-cell>{{row.paso}}</td>
+                <td md-cell>{{row.descripcion}}</td>
+                <td md-cell>{{row.tipoProceso}}</td>
+                <td md-cell>{{row.proceso}}</td>
+                <td md-cell>{{row.pathEntrada}}</td>
+                <td md-cell>{{row.pathSalida}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <data-md-table-pagination md-limit="procesoPasoGrilla.query.limit" md-page="procesoPasoGrilla.query.page" md-total="{{procesoPasoGrilla.count}}" md-on-paginate="onPaginate" md-page-select>
+        </data-md-table-pagination>
+    </md-table-container>
+</md-card>
+
+
+<!-- ---------------------- LIGHTBOX Procesos--------------------- -->
+<script type="text/ng-template" id="ProcesosAlta.html">
+
+    <md-dialog aria-label="" ng-cloak flex="50">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>{{ParentScope.frmProcesos.titulo}}</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon md-svg-src="/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <form name="frmProcesos" ng-submit="ParentScope.saveProceso(answer,$event)">
+        <md-dialog-content class="toastParent">
+            <div class="md-dialog-content">
+                <div class="modal-body">
+                        <div class="row altaPopUp">
+                            <div layout-gt-sm="row">
+                                <md-input-container class="md-block" flex-gt-xs>
+                                    <label>Nombre</label>
+                                    <input maxlength="200"
+                                           ng-disabled="ParentScope.operacion!='ALTA'" required name="nombre" id="nombre" ng-model="ParentScope.proceso.nombre" >
+                                    <div ng-messages="frmProcesos.nombre.$error" ng-if="!showHints">
+                                        <div ng-message="required">*</div>
+                                        <div ng-message="md-maxlength">El nombre debe tener 30 caracteres como maximo.</div>
+                                    </div>
+                                </md-input-container>
+                                <md-input-container class="md-block" flex-gt-xs>
+                                    <label>Descripción</label>
+                                    <input name="descripcion"
+                                           ng-disabled="ParentScope.operacion=='REACTIVAR' || ParentScope.operacion=='BAJA'"
+                                           ng-model="ParentScope.proceso.descripcion" maxlength="255" >
+                                    <div ng-messages="frmProcesos.descripcion.$error" ng-if="!showHints">
+                                        <div ng-message="md-maxlength">La descripción debe tener 255 caracteres como maximo.</div>
+                                    </div>
+                                </md-input-container>
+                            </div>
+                            <div layout-gt-sm="row">
+                                <md-input-container class="md-block" flex="20">
+                                    <label>Tipo proceso</label>
+                                    <md-select id="ProcesoTipo"
+                                               name="tipo" ng-model="ParentScope.proceso.tipo"
+                                               ng-disabled="ParentScope.operacion !='ALTA'" ng-required="true">
+                                        <md-option ng-repeat="tp in ParentScope.tipoProceso" value="{{tp.tipo}}">
+                                            {{tp.descripcion}}
+                                        </md-option>
+                                    </md-select>
+                                    <div ng-messages="frmProcesos.tipo.$error" ng-if="!showHints" >
+                                        <div ng-message="required">*</div>
+                                    </div>
+                                </md-input-container>
+                                <md-input-container ng-show="ParentScope.proceso.tipo=='A'" class="md-block" flex="20">
+                                    <label>Frecuencia</label>
+                                    <md-select name="frecuencia"
+                                               ng-disabled="ParentScope.operacion !='ALTA'"
+                                               ng-model="ParentScope.proceso.frecuencia" ng-required="ParentScope.proceso.tipo=='A'">
+                                        <md-option ng-repeat="f in ParentScope.frecuencia" value="{{f.tipo}}">
+                                            {{f.descripcion}}
+                                        </md-option>
+                                    </md-select>
+                                    <div ng-messages="frmProcesos.frecuencia.$error" ng-if="!showHints" >
+                                        <div ng-message="required">Seleccionar frecuencia</div>
+                                    </div>
+                                </md-input-container>
+                                <md-input-container ng-show="ParentScope.proceso.frecuencia=='D'"  class="md-block" flex="10">
+                                    <label>Intervalo</label>
+                                    <input name="intervalo" ng-disabled="ParentScope.operacion=='REACTIVAR' || ParentScope.operacion=='BAJA'"
+                                           type="number" min="1" ng-model="ParentScope.proceso.intervalo"
+                                           ng-required="ParentScope.proceso.frecuencia=='D'">
+                                    <div ng-messages="frmProcesos.intervalo.$error" ng-if="!showHints && ParentScope.proceso.frecuencia=='D'" >
+                                        <div ng-message="required">*</div>
+                                        <div ng-message="number">Ingresar solo números</div>
+                                        <div ng-message="min">Ingresar números mayores a cero.</div>
+                                        <div ng-message="pattern">Ingresar números enteros</div>
+                                    </div>
+                                </md-input-container>
+                                <md-input-container class="md-block" flex="10">
+                                    <label>Venc.</label>
+                                    <input name="vencimiento" ng-keypress="ParentScope.onKeyUp($event)"  ng-disabled="ParentScope.operacion=='REACTIVAR' || ParentScope.operacion=='BAJA'"
+                                           ng-model="ParentScope.proceso.vencimiento" type="number" min="1"  ng-pattern="/^[0-9]*$/" />
+                                    <div ng-messages="frmProcesos.vencimiento.$error" ng-if="!showHints">
+                                        <div ng-message="required">*</div>
+                                        <div ng-message="number">Ingresar solo números</div>
+                                        <div ng-message="min">Ingresar números mayores a cero.</div>
+                                        <div ng-message="pattern">Ingresar números enteros</div>
+                                    </div>
+                                </md-input-container>
+                                <md-autocomplete flex="40"
+                                                 ng-disabled="ParentScope.operacion =='BAJA'"
+                                                 ng-required="ParentScope.proceso.vencimiento!='' && ParentScope.proceso.vencimiento>0"
+                                                 md-no-cache="noCache"
+                                                 md-input-minlength="0"
+
+                                                 md-search-text="ParentScope.usuarioResponsableSearchText"
+                                                 md-search-text-change="ParentScope.usuarioResponsableSearchTextChange(usuarioResponsableSearchText)"
+
+                                                 md-selected-item="ParentScope.usuarioResponsableSelectedItem"
+                                                 md-selected-item-change="ParentScope.usuarioResponsableSelectedItemChange(usuarioResponsableItem)"
+
+                                                 md-items="usuarioResponsableItem in ParentScope.usuarioResponsableQuerySearch(ParentScope.usuarioResponsableSearchText)"
+                                                 md-item-text="usuarioResponsableItem.nombre"
+
+                                                 md-min-length="0"
+                                                 name="usuarioResponsable"
+                                                 ng-model="ParentScope.usuarioResponsableSelectedItem.nombre"
+                                                 md-floating-label="Usuario responsable">
+                                    <md-item-template>
+                                        <span md-highlight-text="ParentScope.usuarioResponsableSearchText" md-highlight-flags="^i">{{usuarioResponsableItem.nombre}}</span>
+                                    </md-item-template>
+                                    <md-not-found>
+                                    <span class="alert-autocompl">
+                                        No se encontraron usuarios con: {{ParentScope.usuarioResponsableSearchText}}
+                                    </span>
+                                    </md-not-found>
+                                    <div ng-messages="frmProcesos.usuarioResponsable.$error" ng-if="!showHints" >
+                                        <div ng-message="required">El campo es requerido.</div>
+                                    </div>
+                                </md-autocomplete>
+                            </div>
+                            <div layout="column" layout-wrap layout-gt-sm="row" >
+                                <div flex-xs flex="50">
+                                    <div layout-gt-sm="row">
+                                        <md-input-container flex="30">
+                                            <label>A. Éxito</label>
+                                            <md-select ng-change="itemChoosen()" ng-disabled="ParentScope.operacion=='REACTIVAR' || ParentScope.operacion=='BAJA'"
+                                                       ng-model="ParentScope.proceso.accionExito">
+                                                <md-option ng-repeat="ae in ParentScope.accionExito" value="{{ae.tipo}}">
+                                                    {{ae.descripcion}}
+                                                </md-option>
+                                            </md-select>
+                                        </md-input-container>
+
+                                        <md-input-container flex="25" ng-show="ParentScope.proceso.accionExito=='IR_A'">
+                                            <label>Paso</label>
+                                            <input name="paso" ng-keypress="ParentScope.onKeyUp($event)" ng-disabled="ParentScope.operacion=='REACTIVAR' || ParentScope.operacion=='BAJA'"
+                                                   type="number" min="0"  ng-pattern="/^[0-9]*$/" ng-model="ParentScope.proceso.parametroExito_ira" ng-required="ParentScope.proceso.accionExito=='IR_A'">
+                                        </md-input-container>
+                                        <md-autocomplete flex="25"
+                                                         ng-show="ParentScope.proceso.accionExito=='AVISO'"
+                                                         ng-disabled="ParentScope.operacion =='BAJA'"
+                                                         ng-required="ParentScope.proceso.accionExito=='AVISO'"
+                                                         md-input-name="autocompleteField"
+                                                         md-input-minlength="1"
+                                                         md-input-maxlength="18"
+                                                         md-no-cache="noCache"
+                                                         md-selected-item="ParentScope.accionExitoSelectedItem"
+                                                         md-search-text="ParentScope.accionExitoSearchText"
+                                                         md-items="accionExitoItem in ParentScope.accionExitoQuerySearch(ParentScope.accionExitoSearchText)"
+                                                         md-item-text="accionExitoItem.nombre"
+                                                         md-min-length="0"
+                                                         name="accionExitoUsuario"
+                                                         ng-model="ParentScope.accionExitoSelectedItem.nombre"
+                                                         md-floating-label="Usuario">
+                                            <md-item-template>
+                                                <span md-highlight-text="ParentScope.accionExitoSearchText" md-highlight-flags="^i">{{accionExitoItem.nombre}}</span>
+                                            </md-item-template>
+                                            <md-not-found>
+                                        <span class="alert-autocompl">
+                                            No se encontraron procesos con: {{ParentScope.accionExitoSearchText}}.
+                                        </span> <!-- Usuario Exito -->
+                                            </md-not-found>
+                                            <div ng-messages="frmProcesos.accionExitoUsuario.$error" ng-if="!showHints" >
+                                                <div ng-message="required">El campo es requerido.</div>
+                                            </div>
+                                        </md-autocomplete>
+                                    </div>
+                                </div>
+                                <div flex-xs flex="50">
+                                    <div layout-gt-sm="row">
+                                        <md-input-container flex="25">
+                                            <label>A. Fracaso</label>
+                                            <md-select ng-disabled="ParentScope.operacion=='REACTIVAR' || ParentScope.operacion=='BAJA'"
+                                                       ng-model="ParentScope.proceso.accionFracaso">
+                                                <md-option ng-repeat="af in ParentScope.accionFracaso" value="{{af.tipo}}">
+                                                    {{af.descripcion}}
+                                                </md-option>
+                                            </md-select>
+                                        </md-input-container>
+                                        <md-input-container flex="25" ng-if="ParentScope.proceso.accionFracaso=='REINTENTO'" ng-show="ParentScope.proceso.accionFracaso=='REINTENTO' "
+                                                >
+                                            <label>Reintentos</label>
+                                            <input name="accionFracaso"
+                                                   ng-disabled="(ParentScope.operacion=='REACTIVAR') || (ParentScope.operacion=='BAJA') || (ParentScope.proceso.accionFracaso=='REINTENTO' && ParentScope.proceso.tipo=='M')"
+                                                   ng-required="ParentScope.proceso.accionFracaso=='REINTENTO'"
+                                                   ng-show="ParentScope.proceso.accionFracaso=='REINTENTO'"
+                                                   ng-model="ParentScope.proceso.parametroFracaso_reintento"
+                                                   type="number" min="1" max="10" ng-pattern="/^[0-9]*$/"
+                                                   oninvalid="setCustomValidity('')"
+                                                   ng-keypress="ParentScope.onKeyUp($event)">
+
+                                            <div ng-messages="frmProcesos.accionFracaso.$error" ng-if="!showHints">
+                                                <div ng-message="required">*</div>
+                                                <div ng-message="number">Ingresar solo números</div>
+                                                <div ng-message="min">Ingresar valores mayores a cero</div>
+                                                <div ng-message="pattern">Ingresar números enteros</div>
+                                            </div>
+                                        </md-input-container>
+                                        <md-autocomplete flex="25"
+                                                         ng-show="ParentScope.proceso.accionFracaso=='AVISO'"
+                                                         md-floating-label="Usuario"
+
+                                                         ng-disabled="ParentScope.operacion=='REACTIVAR' || ParentScope.operacion=='BAJA'"
+                                                         ng-required="ParentScope.proceso.accionFracaso=='AVISO'"
+                                                         md-input-name="autocompleteField"
+                                                         md-input-minlength="0"
+                                                         md-input-maxlength="18"
+                                                         md-no-cache="noCache"
+                                                         md-selected-item="ParentScope.accionFracasoSelectedItem"
+                                                         md-search-text="ParentScope.accionFracasoSearchText"
+                                                         md-items="accionFracasoItem in ParentScope.accionFracasoQuerySearch(ParentScope.accionFracasoSearchText)"
+                                                         md-item-text="accionFracasoItem.nombre"
+                                                         md-min-length="0"
+                                                         maxlength="100"
+                                                         ng-value=""
+                                                         name="accionFracaso"
+                                                         ng-model="ParentScope.accionFracasoSelectedItem.nombre">
+                                            <md-item-template>
+
+                                                <span md-highlight-text="ParentScope.accionFracasoSearchText" md-highlight-flags="^i">{{accionFracasoItem.nombre}}</span>
+                                            </md-item-template>
+                                            <md-not-found>
+                                                <span class="custom-alert">
+                                                    No se encontraron usuarios con: {{ParentScope.accionFracasoSearchText}}.
+                                                </span><!-- Campo usuario -->
+                                            </md-not-found>
+                                            <div ng-messages="frmProcesos.accionFracaso.$error" ng-if="!showHints" >
+                                                <div ng-message="required">El campo es requerido.</div>
+                                            </div>
+                                        </md-autocomplete>
+                                    </div>
+                                </div>
+                            </div>
+                            <div layout-gt-sm="row">
+
+                                <md-autocomplete flex
+                                                 ng-disabled="ParentScope.operacion !='ALTA'"
+                                                 md-input-name="autocompleteField"
+                                                 md-no-cache="noCache"
+                                                 md-selected-item="ParentScope.dependeSelectedItem"
+                                                 md-search-text="ParentScope.dependeTextSearch"
+                                                 md-items="dependeItem in ParentScope.querySearch(ParentScope.dependeTextSearch)"
+                                                 md-item-text="dependeItem.nombre"
+                                                 md-min-length="1"
+                                                 ng-required="false"
+                                                 ng-model="ParentScope.dependeSelectedItem.nombre"
+                                                 name="depende"
+                                                 md-floating-label="Depende">
+                                    <md-item-template>
+                                        <span md-highlight-text="ParentScope.dependeTextSearch" md-highlight-flags="^i">{{dependeItem.nombre}}</span>
+                                    </md-item-template>
+                                    <md-not-found>
+                                    <span class="alert-autocompl">
+                                        No se encontraron procesos con: {{ParentScope.searchText}}
+                                    </span>
+                                    </md-not-found>
+                                </md-autocomplete>
+                                <md-input-container class="md-block" flex="30">
+                                    <label>Marca</label>
+                                    <md-select name="marca" ng-model="ParentScope.proceso.marca"
+                                               ng-disabled="ParentScope.operacion !='ALTA'">
+                                        <md-option ng-repeat="tp in ParentScope.marca" value="{{tp.tipo}}">
+                                            {{tp.descripcion}}
+                                        </md-option>
+                                    </md-select>
+                                </md-input-container>
+                            </div>
+                            <div layout-gt-sm="row">
+                                <md-datepicker name="fecInicio"
+                                               time="false"
+                                               ng-disabled="ParentScope.operacion !='ALTA'"
+                                               ng-model="ParentScope.proceso.fecInicio"
+                                               ng-class="{'disabledPicker':ParentScope.operacion != 'ALTA'}"
+                                               md-placeholder="Fecha de inicio:"
+                                               class="mclr"
+                                               required ng-change="changeFecha()">
+                                </md-datepicker>
+                                <div class="validation-messages" ng-messages="frmProcesos.fecInicio.$error" ng-if="!showHints" >
+                                    <div class="custom-alert" ng-message="required">El campo fecha es requerido.</div>
+                                    <div class="custom-alert" ng-message="valid">La fecha no es valida</div>
+                                </div>
+                                <md-checkbox ng-disabled="ParentScope.operacion=='MODIFICACION' || ParentScope.operacion=='REACTIVAR' || ParentScope.operacion=='BAJA'"
+                                             ng-model="ParentScope.proceso.visible"
+                                             aria-label="Visible" ng-true-value="true"
+                                             ng-false-value="false"
+                                             style="margin-top: 10px; margin-left: 10px;">
+                                      Visible
+                                </md-checkbox>
+                            </div>
+                        </div>
+                </div>
+            </div>
+            <div class="md-dialog-content mddct-thead" ng-show="ParentScope.operacion=='BAJA' || ParentScope.operacion=='REACTIVAR'">
+                <div layout-gt-xs="row">
+                    <md-datepicker name="fecBaja" required="operacion=='BAJA'"
+                                   time="false"
+                                   md-min-date="ParentScope.fecBajaMinDate"
+                                   ng-model="ParentScope.today"
+                                   md-placeholder="Fecha de baja">
+                    </md-datepicker>
+                    <div class="validation-messages"
+                         ng-show="ParentScope.operacion=='BAJA' || ParentScope.operacion=='REACTIVAR'"
+                         ng-messages="frmProcesos.fecBaja.$error" ng-if="!showHints" >
+                        <div class="custom-alert" ng-message="valid">La fecha no es  válida</div>
+                        <div class="custom-alert" ng-message="required">El campo fecha es requerido.</div>
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+            <!-- push -->
+        <md-dialog-actions layout="row">
+            <a href="javascript:void(0)" class="md-button md-ink-ripple" ng-click="answer('')">Cancelar</a>
+            <md-button type="submit" ng-disabled="1" class="md-raised md-primary md-button md-ink-ripple" ng-click="ParentScope.setError(frmProcesos.$error)">
+                <span>Aceptar</span>
+            </md-button>
+        </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>
+
+
+<!-- Baja procesos -->
+<script type="text/ng-template" id="ProcesosBaja.html">
+    <md-dialog aria-label="" flex="60" ng-cloak>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Procesos Baja</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon md-svg-src="/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <md-content layout-padding="1">
+                <div>
+                    <form id="frmProcesosBaja">
+                        <div layout="row">
+                            <label class="md-title">{{ParentScope.proceso.nombre}}</label>
+                        </div>
+                        <br>
+                        <div layout-gt-xl="row" >
+                            <md-datepicker required="true"
+                                           time="false"
+                                           name="fecBaja"
+                                           md-min-date="currentDate"
+                                           ng-model="ParentScope.proceso.fecBaja"
+                                           md-placeholder="Fecha de baja">
+                            </md-datepicker>
+                            <span class=".control-group.error .control-label" style="color:#880000;"  ng-if="errorForm == true" ng-show="frmProcesos.fecBaja.$error"></span>
+                        </div>
+                        <br>
+                        <div layout="row">
+                            <md-button ng-click="answer('')">Cancelar</md-button>
+                            <md-button type="submit" ng-click="ParentScope.eliminarProceso(answer)"  class="md-raised md-primary">Aceptar</md-button>
+                        </div>
+                    </form>
+                </div>
+            </md-content>
+        </md-dialog-content>
+    </md-dialog>
+</script>
+
+
+<!-- ---------------------- LIGHTBOX Pasos --------------------- -->
+<script type="text/ng-template" id="ProcesosPasos.html">
+
+    <md-dialog aria-label="" ng-cloak flex="50">
+        <md-toolbar>
+            <div class="md-toolbar-tools" >
+                <h2>{{ParentScope.frmProcesosPasos.titulo}}</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon md-svg-src="/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <form name="frmProcesosPasos" ng-submit="ParentScope.savePaso(answer,event)">
+        <md-dialog-content class="toastParent">
+            <div class="md-dialog-content">
+                <div class="modal-body">
+                    <!--frmProcesosPasos.$valid && -->
+
+                        <div layout-gt-xs="row">
+                            <md-input-container class="md-block" flex="10">
+                                <label>Paso</label>
+                                <input name="paso" ng-disabled="ParentScope.pasoOperacion !='ALTA'"
+                                       ng-model="ParentScope.paso.paso" type="number"
+                                       ng-keypress="ParentScope.onKeyUp($event)"
+                                       type="number" min="0"  ng-pattern="/^[0-9]*$/"
+                                       required>
+                                <div ng-messages="frmProcesosPasos.paso.$error" ng-if="!showHints">
+                                    <div ng-message="required">*</div>
+                                    <div ng-message="number">Ingresar solo números</div>
+                                    <div ng-message="min">Ingresar números positivos</div>
+                                    <div ng-message="pattern">Ingresar números enteros</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex-gt-xs>
+                                <label>Descripción</label>
+                                <input name="descripcion"
+                                       ng-disabled="ParentScope.pasoOperacion=='BAJA'"
+                                       ng-model="ParentScope.paso.descripcion"
+                                       maxlength="255" >
+                            </md-input-container>
+                        </div>
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex="25">
+                                <label>Tipo de proceso</label>
+                                <md-select id="ProcesoPasoTipo" name="tipoProceso" ng-disabled="ParentScope.pasoOperacion !='ALTA'" ng-model="ParentScope.paso.tipoProceso" required>
+                                    <md-option ng-repeat="ae in ParentScope.tipoProcesoPaso" value="{{ae.tipo}}">
+                                        {{ae.descripcion}}
+                                    </md-option>
+                                </md-select>
+                                <div ng-messages="frmProcesosPasos.tipoProceso.$error" ng-if="!showHints">
+                                    <div ng-message="required">*</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="20" ng-if="ParentScope.paso.tipoProceso == 'SERV'">
+                                <label>Método</label>
+                                <md-select id="metodoPaso" name="metodoProceso" ng-disabled="ParentScope.pasoOperacion !='ALTA'" ng-model="ParentScope.paso.metodo" required>
+                                    <md-option ng-repeat="ae in ParentScope.metodos" value="{{ae.metodo}}">
+                                        {{ae.metodo}}
+                                    </md-option>
+                                </md-select>
+                                <div ng-messages="frmProcesosPasos.metodoProceso.$error" ng-if="!showHints">
+                                    <div ng-message="required">*</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex-gt-sm>
+                                <label>Proceso</label>
+                                <input name="proceso" ng-disabled="ParentScope.pasoOperacion !='ALTA'" maxlength="255" ng-model="ParentScope.paso.proceso" required>
+                                <div ng-messages="frmProcesosPasos.proceso.$error" ng-if="!showHints">
+                                    <div ng-message="required">*</div>
+                                    <div ng-message="md-maxlength">El campo debe tener 255 caracteres como maximo</div>
+                                </div>
+                            </md-input-container>
+                        </div>
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex-gt-sm>
+                                <label>Path de entrada</label>
+                                <input name="pathEntrada" maxlength="255" ng-disabled="ParentScope.pasoOperacion=='BAJA'" ng-model="ParentScope.paso.pathEntrada">
+                                <div ng-messages="frmProcesosPasos.pathEntrada.$error" ng-if="!showHints">
+                                    <div ng-message="md-maxlength">El campo debe tener 255 caracteres como maximo</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex-gt-sm>
+                                <label>Path de salida</label>
+                                <input maxlength="255"  ng-disabled="ParentScope.pasoOperacion=='BAJA'" ng-model="ParentScope.paso.pathSalida">
+                                <div ng-messages="frmProcesosPasos.pathSalida.$error" ng-if="!showHints">
+                                    <div ng-message="md-maxlength">El campo debe tener 255 caracteres como maximo</div>
+                                </div>
+                            </md-input-container>
+                        </div>
+                </div>
+
+            </div>
+        </md-dialog-content>
+            <md-dialog-actions layout="row">
+                <a href="javascript:void(0)" class="md-button md-ink-ripple" ng-click="answer('')">Cancelar</a>
+                <!--
+                <md-button ng-show="!ParentScope.paso.disabled" type="submit" ng-click="ParentScope.c.guardarPaso(answer)"  class="md-raised md-primary">Enviar</md-button>
+                <md-button ng-show="ParentScope.paso.disabled" type="submit" ng-click="ParentScope.c.borrar(answer)"  class="md-raised md-primary">Baja</md-button>
+                ParentScope.c.guardarPaso(answer)
+                -->
+                <md-button ng-disabled="1" type="submit" class="md-raised md-primary md-button md-ink-ripple">
+                    <span>Aceptar</span>
+                </md-button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>
+
+<script type="text/ng-template" id="confirmarAgendaBaja.html">
+    <md-dialog aria-label="" flex="60" style="height:166px !important;"  ng-cloak>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Aviso</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon md-svg-src="/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content class="md-scroll-none">
+            <div layout-padding="1">
+                <form name="formAviso">
+                    <div layout="row">
+                        El proceso tiene {{agendasAsociadas}} agendas relacionadas que serán eliminadas. ¿Está seguro que desea continuar?
+                    </div>
+                </form>
+            </div>
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row">
+            <a href="javascript:void(0)" ng-click="answer('')" class="md-button md-ink-ripple">Cancelar</a>
+            <md-button type="button" ng-click="answer('SI')" class="md-primary md-raised">Aceptar</md-button>
+        </md-dialog-actions>
+    </md-dialog>
+</script>

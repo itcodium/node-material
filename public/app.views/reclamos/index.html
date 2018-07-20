@@ -1,0 +1,141 @@
+<md-card>
+    <md-toolbar class="md-table-toolbar md-default" ng-show="!grillaAccountNumber.filterShow">
+        <div class="md-toolbar-tools">
+            <form name="frmReclamos"  flex="100">
+                <md-datepicker name="fecCarga"
+                               id="fecCarga"
+                               time="false"
+                               ng-model-options="{ timezone: 'gmt' }"
+                               ng-model="ReclamosFecha.date"
+                               md-placeholder="Fecha de Carga"
+                               ng-change="refresh(frmReclamos.$valid)"
+                               focus-me="true"
+                               required="true">
+                </md-datepicker>
+
+                <div ng-messages="frmReclamos.fecCarga.$error" >
+                    <div class="custom-alert" ng-message="valid">La fecha no es  válida</div>
+                    <div class="custom-alert" ng-message="required">El campo fecha es requerido.</div>
+                </div>
+            </form>
+
+            <md-input-container class="md-toolMaster">
+                <md-select ng-model="page" ng-change="refresh()" aria-label="elije pantalla">
+                    <md-option ng-repeat="report in reports" ng-value="report">{{report.description}}</md-option>
+                </md-select>
+            </md-input-container>
+        </div>
+    </md-toolbar>
+</md-card>
+
+
+<style>
+    .mdcard{
+        background-color: #d4e3fc;
+        color: #36507c;
+        height: 200px;;
+    }
+</style>
+<md-content ng-show="page.page=='' || page==null"   ng-cloak>
+
+
+
+    <div layout-xs="column" layout="row" flex-xs flex-gt-xs="33 ng-show="ReclamosFecha.date">
+
+
+        <div flex-xs flex-gt-xs="33" layout="column" >
+            <div layout="row" ng-click="showPage(rReclamos);"  layout-wrap class="mdcard" layout-margin>
+                <div flex="100" layout="row">&nbsp;</div>
+                <div flex="100" layout="row" layout-align="center center" >
+                    <span class="md-headline">Reclamos </span>
+                </div>
+                <div flex="80">&nbsp;</div>
+                <div flex layout="row"       layout-align="end center" style="padding-right:10px; ">
+                        <span>({{totalReclamos}})</span>
+                </div>
+            </div>
+            <div layout="row" ng-click=";"  layout-wrap class="mdcard" layout-margin>
+                <div flex="100" layout="row">&nbsp;</div>
+                <div flex="100" layout="row" layout-align="center center" >
+                    <span class="md-headline">Acreditaciones</span>
+                </div>
+                <div flex="80">&nbsp;</div>
+                <div flex layout="row"       layout-align="end center" style="padding-right:10px; ">
+                    <span>(22)</span>
+                </div>
+            </div>
+        </div>
+
+        <div flex-xs flex-gt-xs="33" layout="column">
+            <div layout="row" ng-click="showPage(rResoluciones);"  layout-wrap class="mdcard" layout-margin>
+                <div flex="100" layout="row">&nbsp;</div>
+                <div flex="100" layout="row" layout-align="center center" >
+                    <span class="md-headline">Resoluciones</span>
+                </div>
+                <div flex="80">&nbsp;</div>
+                <div flex layout="row"       layout-align="end center" style="padding-right:10px; ">
+                    <span>(1)</span>
+                </div>
+            </div>
+
+            <div layout="row" ng-click=";"  layout-wrap class="mdcard" layout-margin>
+                <div flex="100" layout="row">&nbsp;</div>
+                <div flex="100" layout="row" layout-align="center center" >
+                    <span class="md-headline">Contabilidad</span>
+                </div>
+                <div flex="80">&nbsp;</div>
+                <div flex layout="row"       layout-align="end center" style="padding-right:10px; ">
+                    <span>(16)</span>
+                </div>
+            </div>
+        </div>
+        <div flex-xs flex-gt-xs="33" layout="column">
+            <div layout="row" ng-click=";"  layout-wrap class="mdcard" layout-margin>
+                <div flex="100" layout="row">&nbsp;</div>
+                <div flex="100" layout="row" layout-align="center center" >
+                    <span class="md-headline">Anticipaciones</span>
+                </div>
+                <div flex="80">&nbsp;</div>
+                <div flex layout="row"       layout-align="end center" style="padding-right:10px; ">
+                    <span>(8)</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</md-content>
+
+
+<md-content ng-show="ReclamosFecha.date">
+    <md-content ng-model="rReclamos"     ng-show="page.page=='RECLAMOS'"      ng-controller="reclamos.ctrl"   ng-include="'app.views/reclamos/Reclamos.html'"></md-content>
+    <md-content ng-model="rResoluciones" ng-show="page.page=='RESOLUCIONES'"  ng-controller="resoluciones.ctrl"   ng-include="'app.views/reclamos/Resoluciones.html'"></md-content>
+</md-content>
+
+<!--
+
+
+
+    https://material.angularjs.org/latest/demo/card
+     <div flex-xs flex-gt-xs="33" layout="column">
+            <md-card>
+                <md-card-title>
+                    <md-card-title-text>
+                        <span class="md-headline">In-card actions 3</span>
+                        <span class="md-subhead">Description</span>
+                    </md-card-title-text>
+                </md-card-title>
+            </md-card>
+            <md-card>
+                <md-card-title>
+                    <md-card-title-text>
+                        <span class="md-headline">In-card actions 1 </span>
+                        <span class="md-subhead">Description</span>
+                    </md-card-title-text>
+                </md-card-title>
+            </md-card>
+     </div>
+-->
+
+
+
+

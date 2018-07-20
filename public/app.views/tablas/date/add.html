@@ -1,0 +1,45 @@
+<h3>{{fecha}}</h3>
+<form name="formAviso">
+    <div layout-gt-xl="row" >
+    <md-content>
+        <md-datepicker required="true"
+                       name="fecha"
+                       ng-model="fecha"
+                       md-date-filter="onlyWeekendsPredicate"
+                       md-placeholder="Fecha de baja">
+        </md-datepicker>
+    </div>
+    </md-content>
+    <md-button type="button" ng-click="addItem()" class="md-primary md-raised">Aceptar</md-button>
+</form>
+
+<!--
+
+
+app.controller('test_date.ctrl', ['$mdDialog', '$$nutrition', '$scope','TestDate',
+    function ($mdDialog, $$nutrition, $scope,TestDate) {
+    'use strict';
+    $scope.fecha= new Date();
+
+    $scope.validDate= function(date) {
+        return true;
+    }
+
+    $scope.addItem = function () {
+        // fecha.getTimezoneOffset(): devuelve el resultado en minutos
+
+        var test= new TestDate({fecha: moment($scope.fecha).subtract($scope.fecha.getTimezoneOffset()/60, 'hours') });
+        test.$save(function(p, res) {
+                console.log("Res Save",p);
+            },function(error){
+                console.log(error.data.message);
+            });
+    };
+
+}]);
+
+
+
+-->
+
+

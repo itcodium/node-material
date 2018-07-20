@@ -1,0 +1,44 @@
+<md-dialog aria-label="Detalle de Diferencia" ng-init="init()" ng-cloak flex="45" style="overflow: hidden;">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Detalle de Diferencia</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cerrar()">
+                <md-icon md-svg-src="/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="toastParent" layout="row">
+        <div class="md-dialog-content">
+            <div class="modal-body">
+                <md-table-container>
+                    <table data-md-table md-progress="promiseDiferencias" >
+                        <thead md-head data-md-order="order" md-on-reorder="onReorder">
+                        <tr md-row>
+                            <th md-column md-order-by="fecAsiento"><span>Fecha Asiento</span></th>
+                            <th md-column md-order-by="asiento"><span>Asiento</span></th>
+                            <th md-column md-order-by="importeDebe"><span>Importe Debe</span></th>
+                            <th md-column md-order-by="importeHaber"><span>Importe Haber</span></th>
+                            <th md-column md-order-by="digitador"><span>Digitador</span></th>
+                        </tr>
+                        </thead>
+                        <tbody md-body>
+                        <tr md-row ng-repeat="diferencia in diferencias | orderBy: order">
+                            <td md-cell>{{diferencia.fecAsiento | date: 'dd/MM/yyyy' : 'UTC'}}</td>
+                            <td md-cell>{{diferencia.asiento}}</td>
+                            <td md-cell>{{diferencia.importeDebe}}</td>
+                            <td md-cell>{{diferencia.importeHaber}}</td>
+                            <td md-cell>{{diferencia.digitador}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </md-table-container>
+            </div>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button class="md-raised md-primary md-button md-ink-ripple" data-dismiss="modal" ng-click="cerrar()">
+            <span>Aceptar</span>
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

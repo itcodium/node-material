@@ -1,0 +1,47 @@
+<div id="toastSelect">
+<p></p>
+</div>
+
+<md-card ng-init="load()">
+    <!--TOOLBAR PRINCIPAL-->
+    <md-toolbar class="md-table-toolbar md-default">
+        <div class="md-toolbar-tools">
+            <span>Control de Sucursales</span>
+            <span flex></span>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="exportarExcel()">
+                <md-tooltip md-autohide>Exportar Excel</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_file_download_36px.svg"> </md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+
+    <!--GRILLA-->
+    <md-table-container>
+        <table data-md-table data-md-row-select="false" md-progress="promiseControlSucursal" id="controlSucursales">
+            <!--barra de titulos-->
+            <thead md-head data-md-order="controlSucursales.query.order" md-on-reorder="onReorder">
+                <tr md-row>
+                    <th md-column md:order:by="sucursal" ><span>Sucursal</span></th>
+                    <th md-column data-md-order-by="fecBaja" style="padding-left: 6px !important;padding-right: 0px !important;"><span>Fecha Baja</span></th>
+                    <th md-column data-md-order-by="entidadArchivo"><span>Entidad y Archivos</span></th>
+                </tr>
+            </thead>
+
+            <!--rows de datos-->
+            <tbody md-body>
+                <tr md-row data-ng-repeat="row in controlSucursales.data | orderBy: controlSucursales.query.order | limitTo: controlSucursales.query.limit : (controlSucursales.query.page -1) * controlSucursales.query.limit">
+                    <td md-cell>{{row.sucursal}}</td>
+                    <td md-cell>{{row.fecBaja | date: 'dd/MM/yyyy' : 'UTC'}}</td>
+                    <td md-cell>{{row.entidadArchivo}}</td>
+
+
+                </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+
+    <data-md-table-pagination md-limit="controlSucursales.query.limit" md-page="controlSucursales.query.page" md-total="{{controlSucursales.count}}" md-on-paginate="onPaginate" md-page-select>
+    </data-md-table-pagination>
+
+</md-card>

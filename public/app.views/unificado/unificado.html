@@ -1,0 +1,83 @@
+<md-card>
+    <md-toolbar class="md-table-toolbar md-default" ng-show="filterView">
+        <div class="md-toolbar-tools">
+            <form name="formFilter" flex class="ng-valid flex">
+                <div flex layout="row">
+
+                    <md-input-container class="md-toolMaster" style="width:190px">
+                        <md-datepicker required="true" type="date" name="fecProceso" md-placeholder="Fecha proceso" ng-model="filters.fecProceso"></md-datepicker>
+                        <div class="validation-messages" ng-messages="formFilter.fecProceso.$error">
+                            <div ng-message="valid">El valor no es una fecha valida.</div>
+                            <div ng-message="required">Ingresar fecha.</div>
+                        </div>
+                    </md-input-container>
+    
+                    <md-input-container class="md-toolMaster" style="width: 120px">
+                        <label>Nro.Cuenta</label>
+                        <input ng-model="filters.nroCuenta"
+                                type="number"/>
+                    </md-input-container>
+    
+                    <md-input-container class="md-toolMaster" style="width: 120px">
+                        <label>Nro.Tarjeta</label>
+                        <input ng-model="filters.nroTarjeta"
+                                type="number"/>
+                    </md-input-container>
+    
+                    <md-input-container class="md-toolMaster">
+                        <md-select ng-model="filters.tipoNovedad" name="tipoNovedad" placeholder="Tipo Novedad">
+                            <md-option ng-value="opt.value" ng-repeat="opt in tipoNovedades">{{opt.descripcion}}</md-option>
+                        </md-select>
+                    </md-input-container>
+    
+                    <md-input-container>
+                        <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="onFilter()">
+                            <md-icon class="ready" ng-show="!filters.filtered" md-svg-src="img/icons/playlist_play.svg"></md-icon>
+                            <md-icon class="done" ng-show="filters.filtered" md-svg-src="img/icons/playlist_check.svg"></md-icon>
+                            <md-tooltip md-autohide> {{ !filters.filtered ? 'Aplicar filtro' : 'Filtro Aplicado' }}</md-tooltip>
+                        </button>
+                    </md-input-container>
+                </div>
+            </form>
+            <span flex></span>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="filterView=false">
+                <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+                <md-tooltip md-autohide>Cerrar</md-tooltip>
+            </button>
+
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="exportarAExcel()">
+                <md-tooltip md-autohide>Exportar Excel</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_file_download_36px.svg"> </md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <md-toolbar class="md-table-toolbar md-default" ng-show="!filterView">
+        <div class="md-toolbar-tools">
+            <span flex>{{ query.report }}</span>
+            <span flex></span>
+            <md-input-container class="md-toolMaster">
+                <md-select ng-model="query.report" ng-change="refresh()" aria-label="elije pantalla">
+                    <md-option ng-repeat="report in reports" value="{{report}}">{{report}}</md-option>
+                </md-select>
+            </md-input-container>
+            <md-button class="md-icon-button md-button md-ink-ripple" aria-label="filtrar" ng-click="filterView = true">
+                <md-tooltip md-autohide>Filtrar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_filter_list_black_24px.svg"> </md-icon>
+            </md-button>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="exportarAExcel()">
+                <md-tooltip md-autohide>Exportar Excel</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_file_download_36px.svg"> </md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+
+    <div ng-if="query.report === 'Cuentas'">
+        <div ng-include="'app.views/unificado/unificado.cuentas/unificado.cuentas.html'"></div>
+    </div>
+    <div ng-if="query.report === 'Tarjetas'">
+        <div ng-include="'app.views/unificado/unificado.tarjetas/unificado.tarjetas.html'"></div>
+    </div>
+
+</md-card>

@@ -1,0 +1,242 @@
+<md-card layout-padding style="overflow:auto">
+    <md-toolbar class="md-table-toolbar md-default" ng-show="agrupamientos.filter.show && agrupamientos.selected.length == 0">
+        <div class="md-toolbar-tools">
+            <span>Agrupamientos</span>
+            <span flex></span>
+            <md-input-container class="md-toolMaster">
+                <md-select ng-model="seleccionado" ng-change="cboTipoConsulta_onChange()">
+                    <md-option ng-repeat="tipo in tipos" value="{{tipo.codigo}}">{{tipo.descripcion}}</md-option>
+                    <!--<md-option ng-repeat="tipo in tipos" value="{{tipo}}">{{tipo}}</md-option>-->
+                </md-select>
+            </md-input-container>
+            <div flex layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+                <md-switch
+                        ng-change="resetPage()"
+                        ng-model="grid.query.showDeleted"
+                        aria-label="Visible">
+                </md-switch>
+                <p class="md-body-1">Incluir dados de baja</p>
+            </div>
+            <md-button class="md-icon-button md-button md-ink-ripple"
+                       aria-label="filtrar"
+                       ng-click="agrupamientos.filter.show = false;">
+                <md-tooltip md-autohide>Filtrar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_filter_list_black_24px.svg"></md-icon>
+
+            </md-button>
+            <button class="md-fab md-button md-success md-ink-ripple" type="button" ng-show="seleccionado == 'CMP'" ng-click="config.openAddForm()">
+                <md-tooltip md-autohide>Agregar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_add_white_24px.svg"> </md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <!--TOOLBAR PARA SEARCH CMP-->
+    <md-toolbar class="md-table-toolbar md-default ng-hide" ng-show="!agrupamientos.filter.show && agrupamientos.selected.length ==0 && seleccionado == 'CMP'">
+        <div class="md-toolbar-tools">
+            <md-icon md-svg-src="img/icons/search.svg"></md-icon>
+            <form flex="" name="formFilter" class="ng-valid flex">
+                <input focus-search="!agrupamientos.filter.show" type="text" ng-model="agrupamientos.query.filter.value" placeholder="Buscar" >
+            </form>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="config.removeFilter()">
+                <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <!--TOOLBAR PARA SEARCH CFR-->
+    <md-toolbar class="md-table-toolbar md-default ng-hide" ng-show="!agrupamientos.filter.show && agrupamientos.selected.length ==0 && seleccionado != 'CMP'">
+        <div class="md-toolbar-tools">
+            <form flex="" name="formFilter" class="ng-valid flex">
+                <div layout-gt-sm="row">
+                    <md-input-container class="md-toolMaster" style="width: 100px" flex="25">
+                        <label for="cuenta">Cuenta</label>
+                        <input
+                                type="text"
+                                id="cuenta"
+                                ng-model-options='{ debounce: 1000 }'
+                                ng-model="agrupamientosCFR.query.filter.cuenta"
+                                maxlength="20"
+                        >
+                        <div immediate-error class="md-caption" style="color:rgb(221,44,0)" ng-show="MostrarAlerta">
+                            Debe ingresar al menos uno de los filtros.
+                        </div>
+                    </md-input-container>
+                    <md-input-container class="md-toolMaster" style="width: 100px" flex="25">
+                        <label for="descripcion">Descripción</label>
+                        <input
+
+                                type="text"
+                                id="descripcion"
+                                ng-model-options='{ debounce: 1000 }'
+                                ng-model="agrupamientosCFR.query.filter.descripcion"
+                                maxlength="100"
+
+                        >
+                        <div immediate-error class="md-caption" style="color:rgb(221,44,0)" ng-show="MostrarAlerta">
+                            Debe ingresar al menos uno de los filtros.
+                        </div>
+                    </md-input-container>
+                    <md-input-container class="md-toolMaster" style="width: 100px" flex="25">
+                        <label for="digitador">Digitador</label>
+                        <input
+                                type="text"
+                                id="digitador"
+                                ng-model-options='{ debounce: 1000 }'
+                                ng-model="agrupamientosCFR.query.filter.digitador"
+                                maxlength="50"
+                        >
+                        <div immediate-error class="md-caption" style="color:rgb(221,44,0)" ng-show="MostrarAlerta">
+                            Debe ingresar al menos uno de los filtros.
+                        </div>
+                    </md-input-container>
+                    <md-input-container class="md-toolMaster" style="width: 100px" flex="25">
+                        <label for="agrupador">Agrupador</label>
+                        <input
+                                type="text"
+                                id="agrupador"
+                                ng-model-options='{ debounce: 1000 }'
+                                ng-model="agrupamientosCFR.query.filter.agrupador"
+                                maxlength="100"
+                        >
+                        <div immediate-error class="md-caption" style="color:rgb(221,44,0)" ng-show="MostrarAlerta">
+                            Debe ingresar al menos uno de los filtros.
+                        </div>
+                    </md-input-container>
+                </div>
+            </form>
+            <button
+                    class="md-icon-button md-button md-ink-ripple"
+                    type="button"
+                    ng-click="BuscarCFR()"
+            >
+                <md-icon md-svg-src="img/icons/search.svg"></md-icon>
+            </button>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="config.removeFilter()">
+                <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <!-- CMP -->
+    <div ng-show="seleccionado == 'CMP'">
+        <md-toolbar class="md-table-toolbar md-default md-hide"   ng-show="agrupamientos.selected.length > 0">
+            <div class="md-toolbar-tools">
+                <span>{{agrupamientos.selected.length}} {{agrupamientos.selected.length > 1 ? 'items seleccionados' : 'item seleccionado'}}</span>
+                <span flex></span>
+                <md-button
+                    ng-show="true"
+                    class="md-icon-button"
+                    aria-label="Modificar"
+                    ng-click="config.openUpdateForm()"
+                    ng-if="agrupamientos.puedeModificar"
+                >
+                    <md-tooltip md-autohide>Modificar</md-tooltip>
+                    <md-icon md-svg-src="img/icons/ic_edit_black_24px.svg"></md-icon>
+                </md-button>
+                <md-button
+                    class="md-icon-button"
+                    aria-label="Dar de baja"
+                    ng-click="config.openDeleteForm()"
+                    ng-if="agrupamientos.puedeModificar"
+                >
+                    <md-tooltip md-autohide>Baja</md-tooltip>
+                    <md-icon md-svg-src="img/icons/ic_delete_black_24px.svg"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+
+        <md-table-container class="md-tableHeadLine md-scrollX" >
+            <table md-progress="promiseAgrupamientos" data-md-table ng-model="agrupamientos.selected" id="grillaAgrupamientos">
+
+                <thead data-md-order="agrupamientos.query.order" md-on-reorder="config.onReorder" md-head >
+                    <tr md-row>
+                        <th md-column></th>
+                        <th ng-show="column.show" md-column
+                            ng-repeat="column in agrupamientos.columns"
+                            data-md-numeric="column.filter == 'number'"
+                            data-md-order-by="{{column.field}}"
+                            ng-style="{'width': column.width}">
+                            <span ng-bind-html="column.name | html"></span>
+                            <md-tooltip ng-if="column.tip" md-autohide md-direction="top">{{column.tip}}</md-tooltip>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody md-body>
+                <tr md-row data-ng-repeat="row in filterResult =( agrupamientos.data  | filter:filtering |  filterFieldsStartBy: agrupamientos.query.filter.value:['tipo','codigo','descripcion','validacion']  | limitTo: agrupamientos.query.limit : (agrupamientos.query.page -1) * agrupamientos.query.limit)">
+                    <td md-cell>
+                        <md-checkbox
+                                ng-model="row.selected"
+                                aria-label="" id="{{$index}}"
+                                ng-change="config.selectCheckbox($index, row)"
+                        >
+                        </md-checkbox>
+                    </td>
+                    <td md-cell ng-repeat="column in agrupamientos.columns" ng-show="column.show"
+                        ng-click="config.editRow($event,row,column)"
+                        ng-style="{'width': column.width}" >
+                        {{ config.showVal(row[column.field], column.filter )}}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </md-table-container>
+        <data-md-table-pagination ng-if="agrupamientos.data.length"
+                                  md-limit="agrupamientos.query.limit"
+                                  md-page="agrupamientos.query.page"
+                                  md-total="{{agrupamientos.data.length}}"
+                                  md-on-paginate="onPaginate"
+                                  md-page-select>
+        </data-md-table-pagination>
+    </div>
+
+    <!-- CFR -->
+    <div ng-show="seleccionado != 'CMP'">
+<!--
+        <md-toolbar class="md-table-toolbar md-default md-hide"   ng-show="agrupamientosCFR.selected.length > 0">
+            <div class="md-toolbar-tools">
+                <span>{{agrupamientos.selectedCFR.length}} {{agrupamientos.selectedCFR.length > 1 ? 'items seleccionados' : 'item seleccionado'}}</span>
+                <span flex></span>
+            </div>
+        </md-toolbar>
+-->
+        <md-table-container class="md-tableHeadLine md-scrollX" >
+            <table md-progress="promiseAgrupamientosCFR" data-md-table ng-model="agrupamientosCFR.selected" id="CFR">
+
+                <thead data-md-order="agrupamientosCFR.query.order" md-on-reorder="config.onReorderCFR" md-head >
+                <tr md-row>
+                    <th ng-show="column.show" md-column
+                        ng-repeat="column in agrupamientosCFR.columns"
+                        data-md-numeric="column.filter == 'number'"
+                        data-md-order-by="{{column.field}}"
+                        ng-style="{'width': column.width}">
+                        <span ng-bind-html="column.name | html"></span>
+                        <md-tooltip ng-if="column.tip" md-autohide md-direction="top">{{column.tip}}</md-tooltip>
+                    </th>
+                </tr>
+                </thead>
+                <tbody md-body>
+                <tr md-row data-ng-repeat="row in filterResult =( agrupamientosCFR.data  | filter:filtering |  filterFieldsStartBy: agrupamientosCFR.query.filter.value:['tipo','codigo','descripcion','validacion']  | limitTo: agrupamientosCFR.query.limit : (agrupamientosCFR.query.page -1) * agrupamientosCFR.query.limit)">
+                    <td md-cell ng-repeat="column in agrupamientosCFR.columns" ng-show="column.show"
+                        ng-click="config.editRow($event,row,column)"
+                        ng-style="{'width': column.width}" >
+                        {{ config.showVal(row[column.field], column.filter )}}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </md-table-container>
+        <data-md-table-pagination ng-if="agrupamientosCFR.data.length"
+                                  md-limit="agrupamientosCFR.query.limit"
+                                  md-page="agrupamientosCFR.query.page"
+                                  md-total="{{agrupamientosCFR.data.length}}"
+                                  md-on-paginate="onPaginate"
+                                  md-page-select>
+        </data-md-table-pagination>
+    </div>
+
+</md-card>
+
+<md-card class="md-padding" layout-xs="column" layout="row" ng-if="(seleccionado == 'CMP' && agrupamientos.data.length === 0) || (seleccionado == 'CMP' && agrupamientos.data.length === 0)">
+    No se encontraron datos para mostrar
+</md-card>

@@ -1,0 +1,65 @@
+<md-card>
+    <toolbar data="toolbarReclamos"></toolbar>
+    <md-table-container class="md-scrollX" style="overflow: auto; height: 250px;">
+        <grilla mostrar-paginacion="false" paginado-db="true"  multiple-select="reclamosMultiSelect" selected-grid="true" data="grillaReclamos"></grilla>
+    </md-table-container>
+
+</md-card>
+
+<md-card ng-if="grillaReclamos.selectedItem && !(reclamosSelected.length>1)">
+    <toolbar data="toolbarCupones"></toolbar>
+    <md-table-container class="md-scrollX" style="overflow: auto; height: 250px;" ng-if="grillaReclamos.selectedItem">
+        <grilla mostrar-paginacion="false" paginado-db="true"  multiple-select="false" selected-grid="true" data="grillaCupones"></grilla>
+    </md-table-container>
+</md-card>
+
+<style>
+    .visaButton{color: #106CC8; text-transform: inherit; border-radius: 15px;padding: 0 20px 0 20px;
+    }
+
+
+</style>
+
+<script type="text/ng-template" id="reclamosBotones.tmpl.html">
+    <form name="frmReclamosBotones" layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+        <md-button class="md-raised visaButton" ng-click="toolbar.caratulaReclamos()" style="color: #106CC8;font-weight:bold;">Carátulas de Reclamos </md-button>
+        <md-button class="md-raised visaButton" ng-click="toolbar.generarFUT()" style="color: #106CC8;font-weight:bold;">Generar FUT</md-button>
+        <md-button class="md-raised visaButton" ng-click="toolbar.generarArchivoVisa()" style="color: #106CC8;font-weight:bold;">Generar archivo VISA</md-button>
+    </form>
+</script>
+
+<script type="text/ng-template" id="reclamosFilter.tmpl.html">
+    <form name="frmReclamosBotones" layout="row" layout-sm="column" layout-align="left center" layout-wrap>
+            <md-input-container class="md-block" flex="30">
+                <label>Filtro</label>
+                <!-- ng-keypress="ParentScope.onKeyUp($event)" -->
+                <input name="filter"  ng-keyup="toolbar.onKeyUp($event)"   ng-model="toolbar.ReclamosFecha.grilla.config.query.filter" required>
+                <div ng-messages="frmReclamosBotones.filter.$error" ng-if="!showHints">
+                    <div ng-message="required">*</div>
+                </div>
+            </md-input-container>
+            <button class="md-icon-button md-button md-ink-ripple" ng-click="frmReclamosBotones.$valid && toolbar.onKeyUp()" >
+                <md-icon class="ready" ng-show="!toolbar.filtrado" md-svg-src="img/icons/playlist_play.svg"></md-icon>
+                <md-icon class="done" ng-show="toolbar.filtrado" md-svg-src="img/icons/playlist_check.svg"></md-icon>
+                <md-tooltip md-autohide> {{ !toolbar.filtrado ? 'Aplicar filtro' : 'Filtro Aplicado' }}</md-tooltip>
+            </button>
+    </form>
+</script>
+
+<script type="text/ng-template" id="reclamosCuponesFilter.tmpl.html">
+    <form name="frmReclamosCupones" layout="row" layout-sm="column" layout-align="left center" layout-wrap>
+        <md-input-container class="md-block" flex="30">
+            <label>Filtro</label>
+            <input name="filter"  ng-keyup="toolbar.onKeyUp($event)"   ng-model="toolbar.grilla.config.query.filter" required>
+            <div ng-messages="frmReclamosCupones.filter.$error" ng-if="!showHints">
+                <div ng-message="required">*</div>
+            </div>
+        </md-input-container>
+        <button class="md-icon-button md-button md-ink-ripple" ng-click="toolbar.onKeyUp()" >
+            <!-- frmReclamosCupones.$valid && -->
+            <md-icon class="ready" ng-show="!toolbar.filtrado" md-svg-src="img/icons/playlist_play.svg"></md-icon>
+            <md-icon class="done" ng-show="toolbar.filtrado" md-svg-src="img/icons/playlist_check.svg"></md-icon>
+            <md-tooltip md-autohide> {{ !toolbar.filtrado ? 'Aplicar filtro' : 'Filtro Aplicado' }}</md-tooltip>
+        </button>
+    </form>
+</script>

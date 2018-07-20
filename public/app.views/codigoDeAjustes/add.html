@@ -1,0 +1,99 @@
+<md-dialog aria-label="ABM Código de ajustes" ng-init="init()" ng-cloak flex="30">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 ng-if="ParentScope.operac!='Modificar'">{{ParentScope.operac}} de Código de ajustes</h2>
+            <h2 ng-if="ParentScope.operac=='Modificar'">Modificación de Código de ajustes</h2>
+
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon md-svg-src="/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <form id="formCodigoAjustes" ng-submit="ParentScope.config.submit(this.formCodigoAjustes,CodigoAjustes);" name="formCodigoAjustes" novalidate>
+        <md-dialog-content class="toastParent">
+            <div class="md-dialog-content">
+                <div class="modal-body">
+                    <div class="row altaPopUp">
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex="50">
+                                <label for="entidad">Entidad</label>
+                                <md-select  required="true"
+                                           ng-disabled="ParentScope.operac.toUpperCase() !== 'ALTA'"
+                                           ng-model="CodigoAjustes.entidad"
+                                            id="entidad"
+                                            name="entidad" placeholder="Entidad"
+                                           ng-change="ParentScope.config.validTipoCodigo(CodigoAjustes)"
+                                        >
+                                    <md-option ng-value="entidadMR.value" ng-repeat="entidadMR in ParentScope.tiposCodigoAjustes">{{entidadMR.text}}</md-option>
+                                </md-select>
+                                <div ng-messages="formCodigoAjustes.entidad.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="50">
+                                <label for="codigo">Emisor</label>
+                                <input  required="true"
+                                        type="text" name="emisor" id="emisor"
+                                        ng-disabled="ParentScope.operac.toUpperCase() !== 'ALTA'"
+                                        maxlength="1"
+                                        ng-model-options='{ debounce: 1000 }'
+                                        ng-change="ParentScope.config.validTipoCodigo(CodigoAjustes)"
+                                        ng-model="CodigoAjustes.emisor" required>
+                                <div ng-messages="formCodigoAjustes.codigo.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                    <div ng-message="maxlength">Ingresar como maximo 1 caracter.</div>
+                                </div>
+                                <div immediate-error class="md-caption" style="color:rgb(221,44,0)" ng-show="CodigoAjustes.entidad_codigo>0">
+                                    Los valores {{CodigoAjustes.entidad}} - {{CodigoAjustes.codigo}} ya existen.
+                                </div>
+                            </md-input-container>
+                        </div>
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex="50">
+                                <label for="codigo">Código de Ajuste</label>
+                                <input  required="true"
+                                        type="text" name="codigo" id="codigo"
+                                        ng-disabled="ParentScope.operac.toUpperCase() !== 'ALTA'"
+                                        maxlength="4"
+                                        ng-model-options='{ debounce: 1000 }'
+                                        ng-change="ParentScope.config.validTipoCodigo(CodigoAjustes)"
+                                        ng-model="CodigoAjustes.codigo" required>
+                                <div ng-messages="formCodigoAjustes.codigo.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                    <div ng-message="maxlength">Ingresar como maximo 4 caracteres.</div>
+                                </div>
+                                <div immediate-error class="md-caption" style="color:rgb(221,44,0)" ng-show="CodigoAjustes.entidad_codigo>0">
+                                    Los valores {{CodigoAjustes.entidad}} - {{CodigoAjustes.codigo}} ya existen.
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="50">
+                                <label for="importe">Importe</label>
+                                <textarea
+                                        type="text" name="importe" id="importe"
+                                        ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA'"
+                                        maxlength="250"
+                                        ng-model="CodigoAjustes.importe">
+                                </textarea>
+                                <div ng-messages="formCodigoAjustes.validacion.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                    <div ng-message="maxlength">Ingresar como maximo 2 decimales.</div>
+                                </div>
+                            </md-input-container>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row">
+            <a href="javascript:void(0)" class="md-button md-ink-ripple" ng-click="cancel()">Cancelar</a>
+            <md-button type="submit"  ng-disabled="formCodigoAjustes.$valid==false"  class="md-raised md-primary md-button md-ink-ripple" ng-keyup="$event.keyCode == 13" data-dismiss="modal">
+                <span>Aceptar</span>
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

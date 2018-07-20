@@ -1,0 +1,73 @@
+<md-card>
+    <toolbar data="toolbarComisiones"></toolbar>
+    <grilla mostrar-paginacion="true" paginado-db="false" data="grillaEntExternos"></grilla>
+</md-card>
+
+<md-card>
+    <toolbar data="toolbarAjustes"></toolbar>
+    <grilla mostrar-paginacion="true" paginado-db="false" data="grillaAjustes"></grilla>
+</md-card>
+
+<div id="dialogEntes">
+
+</div>
+<script type="text/ng-template" id="entesExternosFilterForm.tmpl.html">
+    <form name="frmComisiones" layout="row" layout-align="start start">
+        <md-input-container>
+            <md-datepicker required="true" id="fechaDesde" name="fechaDesde" md-placeholder="Fecha desde" type="date" md-max-date="toolbar.query.fechaHasta"
+                ng-model="toolbar.query.fechaDesde"></md-datepicker>
+            <div class="validation-messages" ng-messages="frmComisiones.fechaDesde.$error">
+                <div ng-message="required">Ingresar fecha.</div>
+                <div ng-message="valid">El valor no es una fecha valida.</div>
+                <div ng-message="maxdate">La fecha desde debe ser menor que el valor de hasta</div>
+            </div>
+        </md-input-container>
+        <md-input-container>
+            <md-datepicker required="true" type="date" id="fechaHasta" name="fechaHasta" md-placeholder="Fecha hasta" md-min-date="toolbar.query.fechaDesde"
+                ng-model="toolbar.query.fechaHasta"></md-datepicker>
+            <div class="validation-messages" ng-messages="frmComisiones.fechaHasta.$error">
+                <div ng-message="valid">El valor no es una fecha valida.</div>
+                <div ng-message="required">Ingresar fecha.</div>
+                <div ng-message="mindate">La fecha hasta debe ser mayor que el valor de la fecha desde.</div>
+            </div>
+        </md-input-container>
+        <md-input-container>
+            <button class="md-icon-button md-button md-ink-ripple" type="submit" ng-click="frmComisiones.$valid && toolbar.onFilter(frmComisiones)">
+                <md-icon class="ready" ng-show="!toolbar.filtrado" md-svg-src="img/icons/playlist_play.svg"></md-icon>
+                <md-icon class="done" ng-show="toolbar.filtrado" md-svg-src="img/icons/playlist_check.svg"></md-icon>
+                <md-tooltip md-autohide> {{ !toolbar.filtrado ? 'Aplicar filtro' : 'Filtro Aplicado' }}</md-tooltip>
+            </button>
+        </md-input-container>
+    </form>
+</script>
+
+
+<script type="text/ng-template" id="entesExternosFilterForm2.tmpl.html">
+    <form name="frmAjustes" layout="row" layout-align="start start">
+        <md-input-container>
+            <md-datepicker required="true" id="fechaDesde" name="fechaDesde" md-placeholder="Fecha desde" type="date" md-max-date="toolbar.query.fechaHasta"
+                ng-model="toolbar.query.fechaDesde"></md-datepicker>
+            <div class="validation-messages" ng-messages="frmAjustes.fechaDesde.$error">
+                <div ng-message="required">Ingresar fecha.</div>
+                <div ng-message="valid">El valor no es una fecha valida.</div>
+                <div ng-message="maxdate">La fecha desde debe ser menor que el valor de hasta.</div>
+            </div>
+        </md-input-container>
+        <md-input-container>
+            <md-datepicker required="true" type="date" id="fechaHasta" name="fechaHasta" md-placeholder="Fecha hasta" md-min-date="toolbar.query.fechaDesde"
+                ng-model="toolbar.query.fechaHasta"></md-datepicker>
+            <div class="validation-messages" ng-messages="frmAjustes.fechaHasta.$error">
+                <div ng-message="valid">El valor no es una fecha valida.</div>
+                <div ng-message="required">Ingresar fecha.</div>
+                <div ng-message="mindate">La fecha hasta debe ser mayor que el valor de la fecha desde.</div>
+            </div>
+        </md-input-container>
+        <md-input-container>
+            <button class="md-icon-button md-button md-ink-ripple" type="submit" ng-click="frmAjustes.$valid && toolbar.onFilter(frmAjustes)">
+                <md-icon class="ready" ng-show="!toolbar.filtrado" md-svg-src="img/icons/playlist_play.svg"></md-icon>
+                <md-icon class="done" ng-show="toolbar.filtrado" md-svg-src="img/icons/playlist_check.svg"></md-icon>
+                <md-tooltip md-autohide> {{ !toolbar.filtrado ? 'Aplicar filtro' : 'Filtro Aplicado' }}</md-tooltip>
+            </button>
+        </md-input-container>
+    </form>
+</script>

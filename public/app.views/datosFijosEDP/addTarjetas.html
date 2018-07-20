@@ -1,0 +1,199 @@
+<md-dialog aria-label="ABM Mails Configurables" ng-init="init()" ng-cloak >
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 ng-if="ParentScope.operac!='Modificar'">{{ParentScope.operac}} Tarjetas</h2>
+            <h2 ng-if="ParentScope.operac=='Modificar'">Modificación de Tarjetas</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon md-svg-src="/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <form id="formDatosFijosEDPTarjeta" ng-submit="ParentScope.datosFijosEDPTarjetasCtrl.submit(this.formDatosFijosEDPTarjeta,modelTarjeta);" name="formDatosFijosEDPTarjeta" novalidate>
+        <md-dialog-content class="toastParent">
+            <div class="md-dialog-content">
+                <div class="modal-body">
+                    <div class="row altaPopUp">
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex="50">
+                                <label for="codigoAlta">Código de Alta</label>
+                                <input  required="true"
+                                        type="text" name="codigoAlta" id="codigoAlta"
+                                        ng-disabled="true"
+                                        ng-model="modelTarjeta.codigoAlta">
+                                <div ng-messages="formDatosFijosEDPTarjeta.codigoAltaCuenta.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="50">
+                                <label for="entidad">Entidad</label>
+                                <input  required="true"
+                                        disabled="true"
+                                        ng-change="ParentScope.datosFijosEDPTarjetasCtrl.validarCantidadCuentas(modelTarjeta)"
+                                        type="number" name="entidad" step="1"
+                                        ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA' || ParentScope.operac.toUpperCase() == 'MODIFICAR'"
+                                        ng-model="modelTarjeta.entidad"
+                                        ng-pattern="/^[0-9]{1,10}$/">
+                                <div ng-messages="formDatosFijosEDPTarjeta.entidad.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                    <div ng-message="pattern">Sólo números enteros</div>
+                                    <div ng-message="number">No es un número válido</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="50">
+                                <label for="tipo">Tipo Tarjeta</label>
+                                <md-select  required="true"
+                                            ng-disabled="ParentScope.operac.toUpperCase() !== 'ALTA'"
+                                            ng-model="modelTarjeta.tipoTarjeta"
+                                            ng-change="ParentScope.datosFijosEDPTarjetasCtrl.validarCantidadCuentas(modelTarjeta)"
+                                            name="tipoTarjeta" placeholder="Seleccionar">
+                                    <md-option ng-value="tipoCT.codigoTipoTarjeta" ng-repeat="tipoCT in ParentScope.tiposCtasTarjetas">
+                                        {{ tipoCT.codTarjeta +' '+ tipoCT.codigoTipoTarjeta + ' '+tipoCT.descTarjeta}}</md-option>
+                                </md-select>
+                                <div ng-messages="formDatosFijosEDPTarjeta.tipoTarjeta.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                </div>
+                                <div immediate-error class="md-caption" style="color:rgb(221,44,0)" ng-show="modelTarjeta.cantCuotasTarjetas_existe==0">
+                                    La combinación de los valores  {{modelTarjeta.entidad}} - {{modelTarjeta.codigoAlta}} - {{modelTarjeta.tipoTarjeta}} no se encuentra cargada en la pantalla Cantidad Cuentas Tarjetas.
+                                </div>
+
+                                <div immediate-error class="md-caption" style="color:rgb(221,44,0)" ng-show="modelTarjeta.datofijoTarjeta_existe">
+                                    Ya existe una cuenta para la combinacion: {{modelTarjeta.entidad}} - {{modelTarjeta.codigoAlta}} - {{modelTarjeta.tipoTarjeta}}
+                                </div>
+                            </md-input-container>
+                        </div>
+                        <!-- Linea 2 -->
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex="50">
+                                <label for="vigencia">vigencia</label>
+                                <input  type="text" name="vigencia" id="vigencia"
+                                        ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA'"
+                                        ng-model="modelTarjeta.vigencia">
+                                </input>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="50">
+                                <label for="porcBonificacion">porcBonificacion</label>
+                                <input  type="text" name="porcBonificacion" id="porcBonificacion"
+                                        ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA'"
+                                        ng-model="modelTarjeta.porcBonificacion">
+                                </input>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="50">
+                                <label for="tipoDocumento">tipoDocumento</label>
+                                <input  type="text" name="tipoDocumento" id="tipoDocumento"
+                                        ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA'"
+                                        ng-model="modelTarjeta.tipoDocumento">
+                                </input>
+                            </md-input-container>
+                        </div>
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex="50">
+                                <label for="nroDocumento">nroDocumento</label>
+                                <input  type="text" name="nroDocumento" id="nroDocumento"
+                                        ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA'"
+                                        ng-model="modelTarjeta.nroDocumento">
+                                </input>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="50">
+                                <label for="nacionalidad">nacionalidad</label>
+                                <input  type="text" name="nacionalidad" id="nacionalidad"
+                                        ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA'"
+                                        ng-model="modelTarjeta.nacionalidad">
+                                </input>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="50">
+                                <label for="sexo">sexo</label>
+                                <input  type="text" name="sexo" id="sexo"
+                                        ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA'"
+                                        ng-model="modelTarjeta.sexo">
+                                </input>
+                            </md-input-container>
+                        </div>
+                        <div layout-gt-sm="row">
+
+                            <md-input-container class="md-block" flex="50">
+                                <label for="estCivil">estCivil</label>
+                                <input  type="text" name="estCivil" id="estCivil"
+                                        ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA'"
+                                        ng-model="modelTarjeta.estCivil">
+                                </input>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="50">
+                                <label for="fecNacimiento">fecNacimiento</label>
+                                <input  type="text" name="fecNacimiento" id="fecNacimiento"
+                                        ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA'"
+                                        ng-model="modelTarjeta.fecNacimiento">
+                                </input>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="50">
+                                <label for="ocupacion">ocupacion</label>
+                                <input  type="text" name="ocupacion" id="ocupacion"
+                                        ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA'"
+                                        ng-model="modelTarjeta.ocupacion">
+                                </input>
+                            </md-input-container>
+                        </div>
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex="50">
+                                <label for="habilitacion">habilitacion</label>
+                                <input  type="text" name="habilitacion" id="habilitacion"
+                                        ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA'"
+                                        ng-model="modelTarjeta.habilitacion">
+                                </input>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="50">
+                                <label for="cargo">cargo</label>
+                                <input  type="text" name="cargo" id="cargo"
+                                        ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA'"
+                                        ng-model="modelTarjeta.cargo">
+                                </input>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="50">
+                                <label for="porcLimLC">porcLimLC</label>
+                                <input  type="text" name="porcLimLC" id="porcLimLC"
+                                        ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA'"
+                                        ng-model="modelTarjeta.porcLimLC">
+                                </input>
+                            </md-input-container>
+
+                        </div>
+                        <div layout-gt-sm="row">
+
+                            <md-input-container class="md-block" flex="50">
+                                <label for="porcLimLCC">porcLimLCC</label>
+                                <input  type="text" name="porcLimLCC" id="porcLimLCC"
+                                        ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA'"
+                                        ng-model="modelTarjeta.porcLimLCC">
+                                </input>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="50">
+                                <label for="porcLimADE">porcLimADE</label>
+                                <input  type="text" name="porcLimADE" id="porcLimADE"
+                                        ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA'"
+                                        ng-model="modelTarjeta.porcLimADE">
+                                </input>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="50">
+                                <label for="distribucion">distribucion</label>
+                                <input  type="text" name="distribucion" id="distribucion"
+                                        ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA'"
+                                        ng-model="modelTarjeta.distribucion">
+                                </input>
+                            </md-input-container>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row">
+            <a href="javascript:void(0)" class="md-button md-ink-ripple" ng-click="cancel()">Cancelar</a>
+            <md-button type="submit"  ng-disabled="formDatosFijosEDPTarjeta.$valid==false"  class="md-raised md-primary md-button md-ink-ripple" ng-keyup="$event.keyCode == 13" data-dismiss="modal">
+                <span>Aceptar</span>
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

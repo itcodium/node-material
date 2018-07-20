@@ -1,0 +1,185 @@
+<md-dialog aria-label="ABM Promociones" ng-cloak flex="70">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 ng-if="ParentScope.operac!='Modificar'">{{ParentScope.operac}} de Promociones</h2>
+            <h2 ng-if="ParentScope.operac=='Modificar'">Modificación de Promociones</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon md-svg-src="/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <form id="formPromociones" ng-submit="ParentScope.config.submit(this.formPromociones,promociones);" name="formPromociones" novalidate>
+        <md-dialog-content class="toastParent">
+            <div class="md-dialog-content">
+                <div class="modal-body">
+                    <div class="row altaPopUp">
+                        <div layout-gt-sm="row">
+                            <!--TIPO-->
+                            <md-input-container class="md-block" flex="50">
+                                <label for="tipo">Tipo</label>
+                                <md-select
+                                        required="true"
+                                        id="tipo"
+                                        name="tipo"
+                                        ng-disabled="ParentScope.operac.toUpperCase() !== 'ALTA'"
+                                        ng-model="promociones.model.tipo"
+                                        placeholder="Tipo Promoción"
+                                        ng-change="ParentScope.config.ValidarDuplicidad(promociones)"
+                                    >
+                                    <md-option ng-value="tipo.codigo" ng-repeat="tipo in tipos">{{tipo.descripcion}}</md-option>
+                                </md-select>
+                                <div ng-messages="formPromociones.tipo.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                </div>
+                                <div immediate-error ng-messages="formPromociones.tipo.$error" class="md-caption" style="color:rgb(221,44,0)" ng-show="promociones.codigoExistente">
+                                    La combinación Tipo - Código - Entidad ya existe.
+                                </div>
+                            </md-input-container>
+                            <!--CODIGO-->
+                            <md-input-container class="md-block" flex="50">
+                                <label for="codigoPromo">Código</label>
+                                <textarea
+                                        required="true"
+                                        type="text"
+                                        name="codigoPromo"
+                                        id="codigoPromo"
+                                        ng-disabled="ParentScope.operac.toUpperCase() !== 'ALTA'"
+                                        maxlength="3"
+                                        ng-model="promociones.model.codigoPromo"
+                                        ng-change="ParentScope.config.ValidarDuplicidad(promociones)"
+                                >
+                                </textarea>
+                                <div ng-messages="formPromociones.codigoPromo.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                </div>
+                            </md-input-container>
+                        </div>
+                        <div layout-gt-sm="row">
+                            <!--ENTIDAD-->
+                            <md-input-container class="md-block" flex>
+                                <label for="entidad">Entidad</label>
+                                <md-select
+                                        required="true"
+                                        id="entidad"
+                                        name="entidad"
+                                        ng-disabled="ParentScope.operac.toUpperCase() !== 'ALTA'"
+                                        ng-model="promociones.model.entidad"
+                                        ng-change="ParentScope.config.ValidarDuplicidad(promociones)"
+                                        placeholder="Entidad"
+                                >
+                                    <md-option ng-value="entidad.codigo" ng-repeat="entidad in entidades">{{entidad.descripcion}}</md-option>
+                                </md-select>
+                                <div ng-messages="formPromociones.entidad.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                </div>
+                            </md-input-container>
+                            <!--DESCRIPCION-->
+                            <md-input-container class="md-block" flex="50">
+                                <label for="descripcion">Descripción</label>
+                                <textarea
+                                        type="text"
+                                        name="descripcion"
+                                        id="descripcion"
+                                        maxlength="250"
+                                        ng-model="promociones.model.descripcion"
+                                >
+                                </textarea>
+                            </md-input-container>
+                        </div>
+                        <div layout-gt-sm="row">
+                            <!--BANCA-->
+                            <md-input-container class="md-block" flex ng-if="promociones.model.tipo=='TD'">
+                                <label for="banca">Banca</label>
+                                <md-select
+                                        required="true"
+                                        id="banca"
+                                        name="banca"
+                                        ng-model="promociones.model.banca"
+                                        placeholder="Banca"
+                                >
+                                    <md-option ng-value="banca.codigo" ng-repeat="banca in bancas">{{banca.descripcion}}</md-option>
+                                </md-select>
+                                <div ng-messages="formPromociones.banca.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                </div>
+                            </md-input-container>
+                            <!--SEGMENTO-->
+                            <md-input-container class="md-block" flex="50" ng-if="promociones.model.tipo=='TD'">
+                                <label for="segmento">Segmento</label>
+                                <textarea
+                                        required="true"
+                                        type="text"
+                                        name="segmento"
+                                        id="segmento"
+                                        maxlength="250"
+                                        ng-model="promociones.model.segmento"
+                                        ng-change="ParentScope.config.ValidarSegmento(promociones)"
+                                >
+                                </textarea>
+                                <div ng-messages="formPromociones.segmento.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                </div>
+                                <div immediate-error class="md-caption" style="color:rgb(221,44,0)" ng-show="promociones.segmentoInvalido">
+                                    El valor debe ser numérico
+                                </div>
+                            </md-input-container>
+                        </div>
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex>
+                                <label for="vigenciaDesde">Vigencia Desde</label>
+                                <md-datepicker
+                                        id="vigenciaDesde"
+                                        name="vigenciaDesde"
+                                        ng-disabled="ParentScope.operac.toUpperCase() !== 'ALTA'"
+                                        ng-model="promociones.model.vigenciaDesde"
+                                        required
+                                        style="margin-left:15px"
+                                        ng-change="ParentScope.config.ValidarVigenciaDesde(promociones)"
+                                        "config.test(promociones.model.vigenciaDesde)"
+                                >
+                                </md-datepicker>
+                                <div class="validation-messages" ng-messages="formPromociones.vigenciaDesde.$error">
+                                    <div ng-message="valid">La fecha ingresada no es valida.</div>
+                                    <div ng-message="required">El campo es requerido</div>
+                                </div>
+                                <div immediate-error class="md-caption" style="color:rgb(221,44,0)" ng-show="promociones.vigenciaDesdeMayor">
+                                    La fecha de vigencia Desde no puede ser mayor a la fecha Hasta
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex>
+                                <label for="vigenciaDesde">Vigencia Hasta</label>
+                                <md-datepicker
+                                        id="vigenciaHasta"
+                                        name="vigenciaHasta"
+                                        ng-model="promociones.model.vigenciaHasta"
+                                        required
+                                        style="margin-left:15px"
+                                        "config.test(promociones.model.vigenciaHasta)"
+                                        md-min-date="promociones.minVigenciaHasta">
+                                </md-datepicker>
+                                <div class="validation-messages" ng-messages="formPromociones.vigenciaHasta.$error">
+                                    <div ng-message="valid">La fecha ingresada no es valida.</div>
+                                    <div ng-message="required">El campo es requerido</div>
+                                    <div ng-message="mindate">La Vigencia Hasta no puede ser menor a la Vigencia Desde o del día de la fecha.</div>
+                                </div>
+                            </md-input-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row">
+            <a href="javascript:void(0)" class="md-button md-ink-ripple" ng-click="cancel()">Cancelar</a>
+            <md-button type="submit"  ng-disabled="formPromociones.$valid==false"  class="md-raised md-primary md-button md-ink-ripple" ng-keyup="$event.keyCode == 13" data-dismiss="modal">
+                <span>Aceptar</span>
+            </md-button>
+        </md-dialog-actions>
+    </form>
+
+</md-dialog>
+
+
+
+

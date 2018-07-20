@@ -1,0 +1,218 @@
+<md-content>
+    <div>
+        <md-card>
+            <!--TOOLBAR PRINCIPAL-->
+            <md-toolbar class="md-table-toolbar md-default" ng-show="!show.filter">
+                <div class="md-toolbar-tools">
+                    <span flex>Archivos Asignados con Promociones</span>
+                    <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="show.filter=true">
+                        <md-tooltip md-autohide>Filtros</md-tooltip>
+                        <md-icon md-svg-src="img/icons/ic_filter_list_24px.svg"> </md-icon>
+                    </button>
+                </div>
+            </md-toolbar>
+
+            <!--TOOLBAR FILTROS-->
+            <md-toolbar class="md-table-toolbar md-default" ng-show="show.filter">
+                <div class="md-toolbar-tools">
+                    <form flex="" name="formFilter" class="ng-valid flex">
+
+                        <md-input-container flex="50">
+                            <md-datepicker id="fecDesde"
+                                           name="fecDesde"
+                                           md-placeholder="Fecha Desde:"
+                                           ng-model="archivosAsignadosGrid.filter.fecDesde" >
+                            </md-datepicker>
+                        </md-input-container>
+
+                        <md-input-container flex="50">
+                            <md-datepicker id="fecHasta" name="fecHasta"   md-placeholder="Fecha Hasta"
+                                           ng-model="archivosAsignadosGrid.filter.fecHasta" >
+                            </md-datepicker>
+                            <div class="validation-messages" ng-messages="formFilter.fecHasta.$error">
+                                <div ng-message="valid">La fecha ingresada no es valida.</div>
+                            </div>
+                        </md-input-container>
+                        <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="formFilter.param.$error || onFilter()">
+                            <md-icon class="ready" ng-show="!archivosAsignadosGrid.filtered" md-svg-src="img/icons/playlist_play.svg"></md-icon>
+                            <md-icon class="done" ng-show="archivosAsignadosGrid.filtered" md-svg-src="img/icons/playlist_check.svg"></md-icon>
+                            <md-tooltip md-autohide> {{ !filtrado ?  'Aplicar filtro' : 'Filtro Aplicado' }}</md-tooltip>
+                        </button>
+                    </form>
+
+                    <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="show.filter=false">
+                        <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+                    </button>
+                </div>
+            </md-toolbar>
+
+            <md-card class="md-padding" layout-xs="column" layout="row" ng-if="archivosAsignadosGrid.count === 0">
+                No se encontraron datos para mostrar
+            </md-card>
+
+            <md-table-container ng-if="archivosAsignadosGrid.count > 0">
+                <table data-md-table md-progress="promiseArchivosAsignados">
+
+                    <thead md-head  md-on-reorder="onReorder">
+                    <tr md-row>
+                        <th md-column><span>Ent</span></th>
+                        <th md-column><span>Cod VIS</span></th>
+                        <th md-column><span>Descripcion</span></th>
+                        <th md-column><span>Respuesta</span></th>
+                        <th md-column><span>Segm</span></th>
+                        <th md-column><span>Banca</span></th>
+                        <th md-column><span>Fec.Vig.Hasta</span></th>
+                        <th md-column><span>Cant</span></th>
+                        <th md-column><span>FecProceso</span></th>
+                    </tr>
+                    </thead>
+                    <tbody md-body>
+                    <tr md-row data-md-on-select="false"
+                        data-ng-repeat="row in archivosAsignadosGrid.data | orderBy: archivosAsignadosGrid.query.order">
+                        <td md-cell>{{row.Entidad}}</td>
+                        <td md-cell>{{row.CodPromo}}</td>
+                        <td md-cell>{{row.Descripcion}}</td>
+                        <td md-cell>{{row.DescrErrorVisa}}</td>
+                        <td md-cell>{{row.Segmento}}</td>
+                        <td md-cell>{{row.banca}}</td>
+                        <td md-cell>{{row.VigenciaHasta | date: 'dd/MM/yyyy': 'UTC'}}</td>
+                        <td md-cell>{{row.Cant}}</td>
+                        <td md-cell>{{row.fecProceso | date: 'dd/MM/yyyy': 'UTC'}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </md-table-container>
+            <md-table-pagination md-limit= archivosAsignadosGrid.query.limit
+                                 md-page= archivosAsignadosGrid.query.page
+                                 md-total= {{archivosAsignadosGrid.count}}>
+            </md-table-pagination>
+        </md-card>
+    </div>
+    <div layout="column">
+        <md-card>
+            <md-toolbar class="md-table-toolbar md-default">
+                <div class="md-toolbar-tools">
+                    <form name="frmPromo" flex layout="row">
+                        <md-input-container flex="50" class="md-block"  layout="row">
+                            <label>Nro.Tarjeta</label>
+                            <input ng-model="nroTarjeta" ng-pattern="/^[0-9]{16}$/" md-maxlength="16" ng-change="onChange()">
+
+                            <div ng-messages="frmPromo.$error">
+                                <div ng-message="md-maxlength" >El campo debe ser completado con 16 numeros</div>
+                                <div ng-message="pattern" >No es un número de tarjeta valido</div>
+                            </div>
+                        </md-input-container>
+                        <md-input-container>
+                            <button flex class="md-icon-button md-button md-ink-ripple" type="button" ng-click="frmPromo.$valid && onSearch()">
+                                <md-icon class="ready" ng-show="!frmPromo.filtered" md-svg-src="img/icons/playlist_play.svg"></md-icon>
+                                <md-icon class="done" ng-show="frmPromo.filtered" md-svg-src="img/icons/playlist_check.svg"></md-icon>
+                                <md-tooltip md-autohide> {{ !frmPromo.filtered ?  'Aplicar filtro' : 'Filtro Aplicado' }}</md-tooltip>
+                            </button>
+                        </md-input-container>
+                    </form>
+                    <span flex></span>
+                    <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="exportarExcel()">
+                        <md-icon md-svg-src="img/icons/ic_file_download_36px.svg"></md-icon>
+                        <md-tooltip md-autohide> Exportar Excel</md-tooltip>
+                    </button>
+                </div>
+            </md-toolbar>
+            <div layout="row">
+                <md-card flex="50" style="height:100%; margin-right:0px !important">
+
+                    <!--TOOLBAR PRINCIPAL-->
+                    <md-toolbar class="md-table-toolbar md-default">
+                        <div class="md-toolbar-tools">
+                            <span flex>Promociones Banco MACRO</span>
+                        </div>
+                    </md-toolbar>
+
+
+
+                    <md-card class="md-padding" layout-xs="column" layout="row" ng-if="promoTarjetasGrid.count === 0">
+                        No se encontraron datos para mostrar
+                    </md-card>
+
+
+                    <md-table-container ng-if="promoTarjetasGrid.count > 0" >
+                        <table data-md-table md-progress="promisePromoTarjetas">
+
+                            <thead md-head >
+                            <tr md-row>
+                                <th md-column><span>Ent</span></th>
+                                <th md-column><span>Fec Proceso</span></th>
+                                <th md-column><span>Cod</span></th>
+                                <th md-column><span>Fec Desde</span></th>
+                                <th md-column><span>Fec Hasta</span></th>
+                                <th md-column><span>Error</span></th>
+                            </tr>
+                            </thead>
+
+                            <tbody md-body>
+                            <tr md-row
+                                md-on-deselect="false"
+                                ng-repeat="row in promoTarjetasGrid.data | limitTo: promoTarjetasGrid.query.limit : (promoTarjetasGrid.query.page - 1) * promoTarjetasGrid.query.limit">
+                                <td md-cell>{{row.Entidad}}</td>
+                                <td md-cell>{{row.FecProceso | date: 'dd/MM/yyyy': 'UTC'}}</td>
+                                <td md-cell>{{row.CodPromo}}</td>
+                                <td md-cell>{{row.VigenciaDesde | date: 'dd/MM/yyyy': 'UTC'}}</td>
+                                <td md-cell>{{row.VigenciaHasta | date: 'dd/MM/yyyy': 'UTC'}}</td>
+                                <td md-cell>{{row.DescrErrorVisa}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </md-table-container>
+                    <md-table-pagination md-limit= promoTarjetasGrid.query.limit
+                                         md-page= promoTarjetasGrid.query.page
+                                         md-total= {{promoTarjetasGrid.count}}>
+                    </md-table-pagination>
+                </md-card>
+
+                <md-card  flex="50" style="height: 100%">
+                    <md-toolbar class="md-table-toolbar md-default">
+                        <div class="md-toolbar-tools">
+                            <span flex>Promociones aceptadas en VISA</span>
+                        </div>
+
+                    </md-toolbar>
+
+                    <md-card class="md-padding" layout-xs="column" layout="row" ng-if="padronTDGrid.count === 0">
+                        No se encontraron datos para mostrar
+                    </md-card>
+
+                    <md-table-container ng-if="padronTDGrid.count > 0">
+                        <table data-md-table ng-model="padronTDGrid.selected" md-progress="promisePadronTD">
+                            <thead md-head>
+                            <tr md-row>
+                                <th md-column><span>Nro TD</span></th>
+                                <th md-column><span>Cod</span></th>
+                                <th md-column><span>Segm</span></th>
+                                <th md-column><span>Fec Desde</span></th>
+                                <th md-column><span>Fec Hasta</span></th>
+                            </tr>
+                            </thead>
+                            <tbody md-body>
+                            <tr md-row md-on-deselect="false"
+                                md-row ng-repeat="row in padronTDGrid.data">
+                                <td md-cell>{{row.NroTarjeta}}</td>
+                                <td md-cell>{{row.CodPromo}}</td>
+                                <td md-cell>{{row.Segmento}}</td>
+                                <td md-cell>{{row.FecVigenciaDesde | date: 'dd/MM/yyyy': 'UTC'}}</td>
+                                <td md-cell>{{row.FecVigenciaHasta | date: 'dd/MM/yyyy': 'UTC'}}</td>
+                            </tr>
+                            </tbody>
+                            <tfoot md-foot>
+                            </tfoot>
+                        </table>
+                    </md-table-container>
+
+                    <data-md-table-pagination md-limit="padronTDGrid.query.limit"
+                                              md-page="padronTDGrid.query.page"
+                                              md-total="{{padronTDGrid.count}}"
+                                              md-page-select>
+                    </data-md-table-pagination>
+                </md-card>
+            </div>
+        </md-card>
+    </div>
+</md-content>

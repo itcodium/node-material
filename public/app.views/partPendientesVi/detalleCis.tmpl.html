@@ -1,0 +1,74 @@
+<md-dialog>
+
+    <div layout="row">
+        <md-card style="height:100%;">
+
+            <!--TOOLBAR PRINCIPAL-->
+            <md-toolbar class="md-table-toolbar md-default">
+                <div class="md-toolbar-tools">
+                    <span>Fecha {{fecPago | date: 'dd/MM/yyyy'}}</span>
+                    <!--
+                    <div style="text-align: right;width: 60%;">
+                        <span style="padding-right: 50px;">Cant: {{detalleCisGrid.data[0].cant}}</span>
+                        <span>Importe: {{detalleCisGrid.data[0].total}}</span>
+                    </div>
+                    -->
+                </div>
+
+            </md-toolbar>
+
+
+
+            <md-card class="md-padding" layout-xs="column" layout="row" ng-if="detalleCisGrid.count === 0">
+                No se encontraron datos para mostrar
+            </md-card>
+
+
+            <md-table-container ng-if="detalleCisGrid.count > 0" >
+                <table data-md-table md-progress="promiseEstVISACO">
+
+                    <thead md-head >
+                    <tr md-row>
+                        <th md-column><span>CIE</span></th>
+                        <th md-column><span>Suc</span></th>
+                        <th md-column><span>Nro. Establecimiento</span></th>
+                        <th md-column><span>Denominacion</span></th>
+                        <th md-column><span>Nro Tarjeta</span></th>
+                        <th md-column><span>FecOrigen</span></th>
+                        <th md-column><span>Expediente</span></th>
+                        <th md-column><span>NroComprobante</span></th>
+                        <th md-column><span>Importe</span></th>
+                        <th md-column><span>Motivo</span></th>
+                    </tr>
+                    </thead>
+
+                    <tbody md-body>
+                    <tr md-row
+                        md-on-deselect="false"
+                        ng-repeat="row in detalleCisGrid.data | limitTo: detalleCisGrid.query.limit : (detalleCisGrid.query.page - 1) * detalleCisGrid.query.limit">
+                        <td md-cell style="text-align: right">{{row.nroCie}}</td>
+                        <td md-cell style="text-align: right">{{row.sucursal}}</td>
+                        <td md-cell style="text-align: right">{{row.nroComercio}}</td>
+                        <td md-cell>{{row.nombreComercio}}</td>
+                        <td md-cell>{{row.nroTarjeta}}</td>
+                        <td md-cell style="text-align: right">{{dateformat( row.fecOrigen )}}</td>
+                        <td md-cell>{{row.nroExpediente}}</td>
+                        <td md-cell style="text-align: right">{{row.nroCpte}}</td>
+                        <td md-cell style="text-align: right">{{showVal(row.importe, 'number')}}</td>
+                        <td md-cell>{{row.observaciones}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </md-table-container>
+
+
+            <md-table-pagination md-limit= detalleCisGrid.query.limit
+                                 md-page= detalleCisGrid.query.page
+                                 md-adc-info="{{detalleCisGrid.totales}}"
+                                 md-total= {{detalleCisGrid.count}}>
+            </md-table-pagination>
+        </md-card>
+    </div>
+
+
+</md-dialog>

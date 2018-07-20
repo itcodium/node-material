@@ -1,0 +1,71 @@
+<div id="toastSelect">
+    <p></p>
+</div>
+
+<div ng-if="query.report === 'Seleccione Reporte'">
+    <p></p>
+    <md-card>
+        <md-toolbar class="md-table-toolbar md-default" >
+            <div class="md-toolbar-tools">
+                <span></span>
+                <span flex></span>
+                <md-input-container class="md-toolMaster">
+                    <md-select ng-model="query.report" ng-change="load()">
+                        <md-option ng-repeat="report in reports" value="{{report}}">{{report}}</md-option>
+                    </md-select>
+                </md-input-container>
+            </div>
+        </md-toolbar>
+    </md-card>
+</div>
+
+<div ng-if="query.report === 'Padrones de Comercio'">
+    <md-card>
+        <md-toolbar class="md-table-toolbar md-default">
+            <div class="md-toolbar-tools">
+              <span>Padrones de Comercio</span>
+              <span flex></span>
+              <form name="frmPadronesComercio" novalidate>
+                <md-input-container class="md-toolMaster">
+                  <label>Sucursal</label>
+                  <input name="sucursal" ng-model="comercio_padrones.$scope.sucursalPadrones" type="number" max="999" maxlength="3" required ng-change="comercio_padrones.sucursalChange();"/>
+                  <div ng-messages="frmPadronesComercio.sucursal.$error" >
+                    <div ng-message="required">Ingresar la sucursal.</div>
+                  </div>
+                </md-input-container>
+                <md-input-container class="md-toolMaster">
+                  <button class="md-icon-button md-button md-ink-ripple" type="submit" ng-click="comercio_padrones.ObtenerPadrones()">
+                    <md-icon class="ready" ng-show="!filtrado" md-svg-src="img/icons/playlist_play.svg"></md-icon>
+                    <md-icon class="done" ng-show="filtrado" md-svg-src="img/icons/playlist_check.svg"></md-icon>
+                    <md-tooltip md-autohide> {{ !filtrado ?  'Aplicar filtro' : 'Filtro Aplicado' }}</md-tooltip>
+                  </button>
+                </md-input-container>
+              </form>
+              <md-input-container class="md-toolMaster">
+                <md-button ng-show="sucursalPadrones>0" class="md-icon-button md-button md-ink-ripple" ng-href="{{comercio_padrones.exportarAExcelPadrones()}}" target="_blank">
+                  <md-icon md-svg-src="img/icons/ic_file_download_36px.svg"></md-icon>
+                  <md-tooltip md-autohide>Exportar</md-tooltip>
+                </md-button>
+              </md-input-container>
+              <md-input-container class="md-toolMaster">
+                <md-select ng-model="query.report" ng-change="load()">
+                  <md-option ng-repeat="report in reports" value="{{report}}">{{report}}</md-option>
+                </md-select>
+              </md-input-container>
+            </div>
+        </md-toolbar>
+        <div>
+            <div ng-include="'app.views/reportes/procesoConvenio/PadronesComercio.html'"></div>
+        </div>
+    </md-card>
+</div>
+
+<div layout="row" id="procesoConvenio"
+     ng-if="query.report === 'Proceso Convenios'"
+     ng-include="'app.views/reportes/procesoConvenio/procesoConvenios.html'">
+</div>
+
+<div id="rechazosAcreditaciones"
+     ng-if="query.report === 'Rechazos y Acreditaciones'"
+     ng-include="'app.views/reportes/procesoConvenio/rechazosAcreditaciones.html'">
+</div>

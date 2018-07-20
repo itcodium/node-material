@@ -1,0 +1,148 @@
+<div id="toastSelect">
+    <p></p>
+</div>
+
+<md-card ng-init = "init()">
+
+    <!--TOOLBAR PRINCIPAL-->
+    <md-toolbar class="md-table-toolbar md-default"  ng-show="!show.filter">
+        <div class="md-toolbar-tools">
+            <span>Reporte Seguros de Vida</span>
+            <span flex></span>
+
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="show.filter=true">
+                <md-tooltip md-autohide>Filtros</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_filter_list_24px.svg"></md-icon>
+            </button>
+
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="exportarExcel()">
+                <md-tooltip md-autohide>Exportar CSV</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_file_download_36px.svg"></md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <!-- TOOLBAR PARA FILTROS -->
+
+    <md-toolbar class="md-table-toolbar md-default ng-hide" ng-show="show.filter">
+        <div class="md-toolbar-tools">
+            <form flex="" name="filterfrm" class="ng-valid flex">
+                <div flex layout="row" layout-align="space-around center">
+                    <md-input-container class="md-toolMaster" style="width: 100px">
+                        <label>Entidad </label>
+                        <md-select ng-model="filter_entidad" ng-change="changeLimit();">
+                            <md-option ng-value="itemEntidad" ng-repeat="itemEntidad in entidades"   >{{itemEntidad.entidad}}</md-option>
+                        </md-select>
+                    </md-input-container>
+                    <!-- -->
+                    <md-input-container class="md-toolMaster" style="width: 120px">
+                        <label>Nº de Cuenta</label>
+                        <input ng-model="grilla.query.filter.nroCuenta"
+                               type="number"
+                               limit-Digits="{{LimitNroCuentaEntidad}}";/>
+                    </md-input-container>
+
+                    <md-input-container class="md-toolMaster" style="width: 70px">
+                        <label>Sucursal</label>
+                        <input ng-model="grilla.query.filter.sucursal" type="number" maxlength="3"/>
+                    </md-input-container>
+
+                    <md-input-container class="md-toolMaster" ng-if="!grilla.query.filter.nroCuenta">
+                        <md-icon md-svg-src="img/icons/ic_today_black_24px.svg"></md-icon>
+                        <label>Período</label>
+                        <md-select ng-model="grilla.query.filter.fecha">
+                            <md-option ng-repeat="periodo in periodos" value="{{periodo}}">{{periodo}}</md-option>
+                        </md-select>
+                    </md-input-container>
+
+                    <md-input-container class="md-toolMaster" ng-if="!grilla.query.filter.nroCuenta">
+                        <label>Instancia</label>
+                        <md-select ng-model="grilla.query.filter.instancia">
+                            <md-option ng-repeat="instancia in instancias" value="{{instancia}}">
+                                {{instancia}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+
+                    <div style="float:left;" ng-if="grilla.query.filter.nroCuenta">
+                        <md-datepicker md-placeholder="Desde" class="form-control input-sm"
+                                       ng-model="grilla.query.filter.fecDesde">
+                        </md-datepicker>
+                    </div>
+
+                    <div style="float:left;" ng-if="grilla.query.filter.nroCuenta">
+                        <md-datepicker md-placeholder="Hasta" class="form-control input-sm"
+                                       md-min-date="grilla.query.filter.fecDesde"
+                                       ng-model="grilla.query.filter.fecHasta">
+                        </md-datepicker>
+                    </div>
+
+                    <md-switch ng-model="grilla.query.filter.sinSeguro"
+                               aria-label="Visible"
+                               tabindex="0" type="checkbox" role="checkbox"
+                               class="ng-valid ng-touched ng-dirty ng-valid-parse ng-empty"
+                               aria-checked="false" aria-invalid="false">
+                        <p class="md-toolMaster">Sin Seguro</p>
+                    </md-switch>
+                </div>
+            </form>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="filterfrm.$invalid || onFilter()">
+                <md-icon class="ready" ng-show="!filtrado" md-svg-src="img/icons/playlist_play.svg"></md-icon>
+                <md-icon class="done" ng-show="filtrado" md-svg-src="img/icons/playlist_check.svg"></md-icon>
+                <md-tooltip md-autohide> {{ !filtrado ?  'Aplicar filtro' : 'Filtro Aplicado' }}</md-tooltip>
+            </button>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="show.filter=false">
+                <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+                <md-tooltip md-autohide>Cerrar</md-tooltip>
+            </button>
+            <button class="md-icon-button md-button md-ink-ripple" type="button"
+                    ng-disable="grilla.data || grilla.data.length === 0"
+                    ng-click="exportarAExcel()">
+                <md-tooltip md-autohide>Exportar CSV</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_file_download_36px.svg"></md-icon>
+            </button>
+
+        </div>
+    </md-toolbar>
+
+
+    <!--GRILLA DATOS -->
+   <md-table-container ng-if="filterApplied || !loaded" class="md-scrollX">
+       <table data-md-table data-md-row-select="false" md-progress="promiseObj" id="grillaList">
+           <!--barra de titulos-->
+            <thead md-head data-md-order="grilla.query.order" md-on-reorder="onReorder">
+            <tr md-row>
+                <th ng-show="column.show" md-column
+                    ng-repeat="column in columns"
+                    data-md-numeric="column.filter == 'number'"
+                    data-md-order-by="{{column.field}}"
+                    ng-style="{'width': column.width}">
+                    <span ng-bind-html="column.name | html"></span>
+                    <md-tooltip ng-if="column.tip" md-autohide md-direction="top">{{column.tip}}</md-tooltip>
+                </th>
+            </tr>
+            </thead>
+
+            <!--rows de datos-->
+            <tbody md-body>
+            <!--orderBy: grilla.query.order |-->
+                <tr md-row data-ng-repeat="row in grilla.data | limitTo: reporteTC.query.limit : (reporteTC.query.page -1) * reporteTC.query.limit">
+                    <td md-cell ng-repeat="column in columns" ng-show="column.show"
+                        ng-style="{'width': column.width}">
+                        {{ showVal(row[column.field], column.filter )}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+    <data-md-table-pagination ng-if="filterApplied || !loaded"
+                              md-limit="grilla.query.limit"
+                              md-page="grilla.query.page"
+                              md-total="{{grilla.count}}"
+                              md-on-paginate="onPaginate"
+                              md-page-select>
+    </data-md-table-pagination>
+    <md-card class="md-padding" layout-xs="column" layout="row"  ng-if="!filterApplied && loaded"  >
+        Usted debe ingresar por lo menos un campo para acortar la busqueda
+    </md-card>
+</md-card>

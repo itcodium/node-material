@@ -1,0 +1,109 @@
+    <!-- TOOLBAR PRINCIPAL -->
+    <md-toolbar class="md-table-toolbar md-default" ng-show="!toolbar.showFilter">
+        <div class="md-toolbar-tools">
+            <span flex="80">{{toolbar.titulo}}
+                <div class="slide-animate" ng-include="toolbar.customButtons"></div>
+
+            </span>
+            <span flex></span>
+            <div flex="20" layout="row" layout-align="end center">
+                <md-button ng-if="toolbar.show_filter" class="md-icon-button md-button md-ink-ripple"
+                           aria-label="filtrar"
+                           ng-click="toolbar.showFilter = true">
+                    <md-tooltip md-autohide>Filtrar</md-tooltip>
+                    <md-icon md-svg-src="img/icons/ic_filter_list_black_24px.svg"> </md-icon>
+                </md-button>
+
+                <md-button  ng-if="toolbar.show_download" class="md-icon-button md-button md-ink-ripple" ng-href="{{toolbar.exportar()}}" target="_blank">
+                    <md-icon md-svg-src="img/icons/ic_file_download_36px.svg"></md-icon>
+                    <md-tooltip md-autohide>{{ (toolbar.show_download== true) ? "Exportar Excel": toolbar.show_download.tooltip}}</md-tooltip>
+                </md-button>
+
+                <md-button  ng-if="toolbar.show_caratula" class="md-icon-button md-button md-ink-ripple" 
+                        ng-click="toolbar.generarCaratula()" target="_blank">
+                    <md-icon md-svg-src="img/icons/ic_assignment_black_24px.svg"></md-icon>
+                    <md-tooltip md-autohide>Generar Carátula</md-tooltip>
+                </md-button>
+
+                <button  ng-if="toolbar.show_add" class="md-fab md-button md-success md-ink-ripple" type="button" ng-click="toolbar.add()">
+                    <md-tooltip md-autohide>Agregar</md-tooltip>
+                    <md-icon md-svg-src="img/icons/ic_add_white_24px.svg"> </md-icon>
+                </button>
+                <!-- 2017-11-15 INIT
+
+                <md-button ng-show="true" class="md-icon-button"
+                           aria-label="" ng-click="toolbar.update()" >
+                    <md-tooltip md-autohide>{{ (!toolbar.show_update.tooltip) ? "Modificar": toolbar.show_update.tooltip}}</md-tooltip>
+                    <md-icon md-svg-src="img/icons/ic_playlist_add_black_24px.svg"></md-icon>
+                </md-button>
+                 -->
+                <button ng-show="toolbar.show_insert.show"
+                        ng-click="toolbar.insert()"
+                        class="md-fab md-button md-success md-ink-ripple" type="button" >
+                    <md-tooltip md-autohide>{{ (!toolbar.show_insertar.tooltip) ? "Agregar": toolbar.show_insertar.tooltip}}</md-tooltip>
+                    <md-icon md-svg-src="img/icons/ic_add_white_24px.svg"> </md-icon>
+                </button>
+
+
+                <md-button ng-show="toolbar.show_update.show" class="md-icon-button"
+                           aria-label="" ng-click="toolbar.update()" >
+                    <md-tooltip md-autohide>{{ (!toolbar.show_update.tooltip) ? "Modificar": toolbar.show_update.tooltip}}</md-tooltip>
+                    <md-icon md-svg-src="img/icons/ic_edit_black_24px.svg"></md-icon>
+                </md-button>
+
+                <md-button class="md-icon-button"
+                           aria-label=""
+                           ng-show="toolbar.show_delete.show"  ng-click="toolbar.delete()">
+                    <md-tooltip md-autohide>{{ (!toolbar.show_delete.tooltip) ? "Borrar": toolbar.show_delete.tooltip}}</md-tooltip>
+                    <md-icon md-svg-src="img/icons/ic_delete_black_24px.svg"></md-icon>
+                </md-button>
+
+                <md-button class="md-icon-button"
+                           aria-label=""
+                           ng-show="toolbar.show_print.show"  ng-click="toolbar.print()">
+                    <md-tooltip md-autohide>{{ (!toolbar.show_print.tooltip) ? "Imprimir": toolbar.show_print.tooltip}}</md-tooltip>
+                    <md-icon md-svg-src="img/icons/ic_print_black_24px.svg"></md-icon>
+                </md-button>
+
+
+
+                <!-- 2017-11-15 FIN-->
+
+                <a ng-if="toolbar.show_asignar"  class="material-icons"   type="button" ng-click="toolbar.asignar()">
+                    <md-tooltip md-autohide>Asignar</md-tooltip>
+                    <md-icon class="md-secondary"   md-svg-src="img/icons/ic_playlist_add_black_24px.svg"> </md-icon>
+                </a>
+                <md-button ng-if="toolbar.show_mail" class="md-icon-button md-button md-ink-ripple" 
+                        ng-click="toolbar.mail_generar()" target="_blank">
+                    <md-tooltip md-autohide>{{toolbar.tooltipMail}}</md-tooltip>
+                    <md-icon md-svg-src="img/icons/ic_email_24px.svg"></md-icon>
+                    <md-tooltip md-autohide ng-bind="toolbar.mail_tooltip"></md-tooltip>
+                </md-button>
+            </div>
+        </div>
+    </md-toolbar>
+
+    <!--TOOLBAR PARA SEARCH-->
+    <md-toolbar class="md-table-toolbar md-default ng-hide" ng-show="toolbar.showFilter">
+        <div class="md-toolbar-tools">
+            <div flex="80" class="slide-animate" ng-include="toolbar.form"></div>
+            <span flex></span>
+            <div flex="20" layout="row" layout-align="end center">
+                <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="toolbar.showFilter = false;toolbar.filtrado = false;">
+                    <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+                </button>
+                <md-button ng-if="toolbar.show_download" class="md-icon-button md-button md-ink-ripple"  ng-href="{{toolbar.exportar()}}" target="_blank"
+                        >
+                    <md-icon md-svg-src="img/icons/ic_file_download_36px.svg"></md-icon>
+                    <md-tooltip md-autohide>Exportar Excel</md-tooltip>
+                </md-button>
+                <md-button ng-if="toolbar.show_mail" class="md-icon-button md-button md-ink-ripple" 
+                        ng-click="toolbar.mail_generar()" target="_blank">
+                    <md-icon md-svg-src="img/icons/ic_email_24px.svg"></md-icon>
+                    <md-tooltip md-autohide ng-bind="toolbar.mail_tooltip"></md-tooltip>
+                </md-button>
+            </div>
+        </div>
+    </md-toolbar>
+
+

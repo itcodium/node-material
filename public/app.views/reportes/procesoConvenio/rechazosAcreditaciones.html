@@ -1,0 +1,263 @@
+<div layout="row">
+    <md-card flex="50" style="height:100%; margin-right:0px !important">
+        <md-toolbar class="md-table-toolbar md-default">
+            <div class="md-toolbar-tools">
+                <span>Totales de Rechazos por Convenio</span>
+                <span flex></span>
+                <!--
+                <md-input-container class="md-toolMaster">
+                    <md-select ng-model="query.report" ng-change="load()">
+                        <md-option ng-repeat="report in reports" value="{{report}}">{{report}}</md-option>
+                    </md-select>
+                </md-input-container>
+                -->
+            </div>
+        </md-toolbar>
+
+        <md-card class="md-padding" layout-xs="column" layout="row" ng-if="rechazosGrid.count === 0">
+            No se encontraron datos para mostrar
+        </md-card>
+
+        <md-table-container ng-if="rechazosGrid.count > 0">
+            <table data-md-table data-md-row-select="false" md-progress="promiseTotalRechazos">
+
+                <thead md-head data-md-order="rechazosGrid.query.order">
+                <tr md-row>
+                    <th md-column data-md-order-by="convenio" ><span>Nro.Convenio</span></th>
+                    <th md-column data-md-order-by="cant" style="text-align: right;"><span>Cant</span></th>
+                    <th md-column data-md-order-by="total" style="text-align: right;"><span>Total</span></th>
+                </tr>
+                </thead>
+
+                <tbody md-body>
+                <tr md-row data-ng-repeat="row in rechazosGrid.data | orderBy: rechazosGrid.query.order">
+                    <td md-cell>{{row.convenio}}</td>
+                    <td md-cell style="text-align: right;">{{row.cant}}</td>
+                    <td md-cell style="text-align: right;">{{showVal(row.total, 'number')}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </md-table-container>
+
+        <data-md-table-pagination md-page-select="false"
+                                  md-limit="rechazosGrid.query.limit"
+                                  md-page="rechazosGrid.query.page"
+                                  md-total="{{rechazosGrid.count}}"
+                                  ng-disabled="true"
+                                  ng-if="rechazosGrid.count > 0">
+        </data-md-table-pagination>
+    </md-card>
+
+    <md-card  flex="50" style="height: 100%">
+        <md-toolbar class="md-table-toolbar md-default">
+            <div class="md-toolbar-tools">
+                <span>Totales de Liquidaciones por Marca</span>
+                <span flex></span>
+                <md-input-container class="md-toolMaster">
+                    <md-select ng-model="query.report" ng-change="load()">
+                        <md-option ng-repeat="report in reports" value="{{report}}">{{report}}</md-option>
+                    </md-select>
+                </md-input-container>
+            </div>
+
+        </md-toolbar>
+
+        <md-card class="md-padding" layout-xs="column" layout="row" ng-if="liquidacionesGrid.count === 0">
+            No se encontraron datos para mostrar
+        </md-card>
+
+        <md-table-container ng-if="liquidacionesGrid.count > 0">
+            <table data-md-table data-md-row-select="false" md-progress="promiseTotalLiquidaciones">
+
+                <thead md-head data-md-order="liquidacionesGrid.query.order">
+                <tr md-row>
+                    <th md-column data-md-order-by="marca"><span>Marca</span></th>
+                    <th md-column data-md-order-by="cant" style="text-align: right;"><span>Cant</span></th>
+                    <th md-column data-md-order-by="importe" style="text-align: right;"><span>Importe</span></th>
+                </tr>
+                </thead>
+                <tbody md-body>
+                <tr md-row
+                    data-ng-repeat="row in liquidacionesGrid.data | orderBy: liquidacionesGrid.query.order">
+                    <td md-cell>{{row.marca}}</td>
+                    <td md-cell style="text-align: right;">{{row.cant}}</td>
+                    <td md-cell style="text-align: right;">{{showVal(row.importe, 'number')}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </md-table-container>
+
+        <data-md-table-pagination md-page-select="false"
+                                  md-limit="liquidacionesGrid.query.limit"
+                                  md-page="liquidacionesGrid.query.page"
+                                  md-total="{{liquidacionesGrid.count}}"
+                                  ng-disabled="true"
+                                  ng-if="liquidacionesGrid.count > 0">
+        </data-md-table-pagination>
+    </md-card>
+</div>
+<div>
+    <md-card>
+        <md-toolbar class="md-table-toolbar md-default">
+            <div class="md-toolbar-tools">
+                <span>Totales Procesados y Rechazados por Convenio</span>
+                <span flex></span>
+                <button class="md-icon-button md-button md-ink-ripple" type="button"
+                        ng-disable="procesadosRechazadosGrid.data || procesadosRechazadosGrid.data.length === 0"
+                        ng-click="procesadosRechazadosGrid.query.exportarWord()">
+                    <md-tooltip md-autohide>Exportar Archivo</md-tooltip>
+                    <md-icon md-svg-src="img/icons/ic_file_download_36px.svg"></md-icon>
+                </button>
+            </div>
+        </md-toolbar>
+
+        <md-card class="md-padding" layout-xs="column" layout="row" ng-if="procesadosRechazadosGrid.count === 0">
+            No se encontraron datos para mostrar
+        </md-card>
+
+        <md-table-container ng-if="procesadosRechazadosGrid.count > 0">
+            <table data-md-table data-md-row-select="false" md-progress="promiseTotalProcesados">
+
+                <thead md-head data-md-order="procesadosRechazadosGrid.query.order">
+                <tr md-row>
+                    <th md-column data-md-order-by="nroConvenio"><span>Nro.Conv.</span></th>
+                    <th md-column data-md-order-by="empresa"><span>Empresa</span></th>
+                    <th md-column data-md-order-by="cantTot" style="text-align: right;"><span>Cant.Mov.</span></th>
+                    <th md-column data-md-order-by="impTot" style="text-align: right;"><span>Imp.Total Mov.</span></th>
+                    <th md-column data-md-order-by="cantNoAplic" style="text-align: right;"><span>Cant.NoApl.</span></th>
+                    <th md-column data-md-order-by="impNoAplic" style="text-align: right;"><span>Imp.No Apl.</span></th>
+                </tr>
+                </thead>
+                <tbody md-body>
+                <tr md-row
+                    data-ng-repeat="row in procesadosRechazadosGrid.data | orderBy: procesadosRechazadosGrid.query.order">
+                    <td md-cell>{{row.nroConvenio}}</td>
+                    <td md-cell>{{row.empresa}}</td>
+                    <td md-cell style="text-align: right;">{{row.cantTot}}</td>
+                    <td md-cell style="text-align: right;">{{showVal(row.impTot, 'number')}}</td>
+                    <td md-cell style="text-align: right;">{{row.cantNoAplic}}</td>
+                    <td md-cell style="text-align: right;">{{showVal(row.impNoAplic, 'number')}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </md-table-container>
+
+        <data-md-table-pagination md-page-select="false"
+                                  md-limit="procesadosRechazadosGrid.query.limit"
+                                  md-page="procesadosRechazadosGrid.query.page"
+                                  md-total="{{procesadosRechazadosGrid.count}}"
+                                  ng-disabled="true"
+                                  ng-if="procesadosRechazadosGrid.count > 0">
+        </data-md-table-pagination>
+    </md-card>
+
+
+    <md-card>
+        <md-toolbar class="md-table-toolbar md-default" ng-show="!show.filter">
+            <div class="md-toolbar-tools">
+                <span>Detalle</span>
+                <span flex></span>
+                <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="show.filter=true">
+                    <md-tooltip md-autohide>Filtros</md-tooltip>
+                    <md-icon md-svg-src="img/icons/ic_filter_list_24px.svg"></md-icon>
+                </button>
+                <button class="md-icon-button md-button md-ink-ripple" type="button"
+                        ng-disable="detalleRechazadosGrid.data || detalleRechazadosGrid.data.length === 0"
+                        ng-click="detalleRechazadosGrid.query.exportarExcel()">
+                    <md-tooltip md-autohide>Exportar Archivo</md-tooltip>
+                    <md-icon md-svg-src="img/icons/ic_file_download_36px.svg"></md-icon>
+                </button>
+            </div>
+        </md-toolbar>
+        <md-toolbar class="md-table-toolbar md-default ng-hide" ng-show="show.filter">
+            <div class="md-toolbar-tools">
+                <span>Detalle</span>
+                <span flex></span>
+                <md-input-container class="md-toolMaster" style="width: 100px">
+                    <label>Cuenta </label>
+                    <input ng-model="detalleRechazadosGrid.query.cuenta"
+                           type="number"/>
+                </md-input-container>
+
+                <div flex="20">
+                    <md-datepicker md-placeholder="Fecha de proceso" class="form-control input-sm"
+                                   ng-model="detalleRechazadosGrid.query.fecProceso">
+                    </md-datepicker>
+                </div>
+
+                <button class="md-icon-button md-button md-ink-ripple" type="button"
+                        ng-click="detalleRechazadosGrid.filter.apply()">
+                    <md-icon class="ready" ng-show="!filtrado" md-svg-src="img/icons/playlist_play.svg"></md-icon>
+                    <md-icon class="done" ng-show="filtrado" md-svg-src="img/icons/playlist_check.svg"></md-icon>
+                    <md-tooltip md-autohide> {{ !filtrado ?  'Aplicar filtro' : 'Filtro Aplicado' }}</md-tooltip>
+                </button>
+                <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="show.filter = false">
+                    <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+                    <md-tooltip md-autohide>Cerrar</md-tooltip>
+                </button>
+                <button class="md-icon-button md-button md-ink-ripple" type="button"
+                        ng-disable="detalleRechazadosGrid.data || detalleRechazadosGrid.data.length === 0"
+                        ng-click="detalleRechazadosGrid.query.exportarExcel()">
+                    <md-tooltip md-autohide>Exportar CSV</md-tooltip>
+                    <md-icon md-svg-src="img/icons/ic_file_download_36px.svg"></md-icon>
+                </button>
+            </div>
+        </md-toolbar>
+
+        <md-card class="md-padding" layout-xs="column" layout="row"
+                 ng-if="!detalleRechazadosGrid.filter.filterApplied && detalleRechazadosGrid.filter.loaded "  >
+            Usted debe ingresar por lo menos un campo para acortar la busqueda
+        </md-card>
+
+        <md-card class="md-padding" layout-xs="column" layout="row"
+                 ng-if="(detalleRechazadosGrid.filter.filterApplied || !detalleRechazadosGrid.filter.loaded) &&
+                        detalleRechazadosGrid.count === 0"  >
+            No se encontraron datos para mostrar
+        </md-card>
+
+        <md-table-container ng-if="(detalleRechazadosGrid.filter.filterApplied || !detalleRechazadosGrid.filter.loaded) &&
+                                    detalleRechazadosGrid.count > 0">
+            <table data-md-table data-md-row-select="false" md-progress="promiseRechDetalle">
+
+                <thead md-head data-md-order="procesadosRechazadosGrid.query.order"
+                       md-on-reorder="detalleRechazadosGrid.query.onReorder" >
+                <tr md-row>
+                    <th md-column data-md-order-by="suc"><span>Sucursal</span></th>
+                    <th md-column data-md-order-by="convenio"><span>Convenio</span></th>
+                    <th md-column data-md-order-by="comercio"><span>Comercio</span></th>
+                    <th md-column data-md-order-by="tCta"><span>TipoCuenta</span></th>
+                    <th md-column data-md-order-by="nroCuenta"><span>Cuenta</span></th>
+                    <th md-column data-md-order-by="denominacion"><span>Denominación</span></th>
+                    <th md-column data-md-order-by="debCre" ><span>D/C</span></th>
+                    <th md-column data-md-order-by="importe" style="text-align: right;"><span>Importe</span></th>
+                    <th md-column data-md-order-by="observaciones"><span>Observaciones</span></th>
+                </tr>
+                </thead>
+                <tbody md-body>
+                <tr md-row
+                    data-ng-repeat="row in detalleRechazadosGrid.data">
+                    <td md-cell>{{row.suc}}</td>
+                    <td md-cell>{{row.convenio}}</td>
+                    <td md-cell>{{row.comercio}}</td>
+                    <td md-cell>{{row.tCta}}</td>
+                    <td md-cell>{{row.nroCuenta}}</td>
+                    <td md-cell>{{row.denominacion}}</td>
+                    <td md-cell>{{row.debCre}}</td>
+                    <td md-cell style="text-align: right;">{{showVal(row.importe, 'number')}}</td>
+                    <td md-cell>{{row.observaciones}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </md-table-container>
+
+        <data-md-table-pagination md-page-select="false"
+                                  md-limit="detalleRechazadosGrid.query.limit"
+                                  md-page="detalleRechazadosGrid.query.page"
+                                  md-total="{{detalleRechazadosGrid.count}}"
+                                  md-on-paginate="detalleRechazadosGrid.query.onPaginate"
+                                  md-page-select
+                                  ng-if="(detalleRechazadosGrid.filter.filterApplied || !detalleRechazadosGrid.filter.loaded) &&
+                                    detalleRechazadosGrid.count > 0">
+        </data-md-table-pagination>
+    </md-card>
+</div>

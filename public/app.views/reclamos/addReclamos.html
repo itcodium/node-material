@@ -1,0 +1,299 @@
+<md-dialog aria-label="ABM Mails Configurables" ng-init="init()" ng-cloak >
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 ng-if="ParentScope.operac!='Modificar'">{{ParentScope.operac}} Reclamos</h2>
+            <h2 ng-if="ParentScope.operac=='Modificar'">Modificación de Cuentas</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon md-svg-src="/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <form id="formReclamos" ng-submit="ParentScope.recviCtrl.submit(this.formReclamos,model);" name="formReclamos" novalidate>
+        <md-dialog-content class="toastParent">
+            <div class="md-dialog-content">
+                <div class="modal-body">
+                    <div class="row altaPopUp">
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex="60">
+                                <md-datepicker name="fecContable"
+                                               id="fecContable"
+                                               time="true"
+                                               ng-model-options="{ timezone: 'gmt' }"
+                                               ng-model="model.fecContable"
+                                               md-placeholder="Fec. Contable"
+                                               ng-change="refresh(formReclamos.$valid)"
+                                               focus-me="true"
+                                               required="true">
+                                </md-datepicker>
+                                <div ng-messages="formReclamos.fecContable.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                </div>
+                            </md-input-container>
+
+
+
+                        </div>
+                        <!-- Linea 2     -->
+                        <div layout-gt-sm="row">
+                                <md-input-container class="md-block" flex="50">
+                                    <label for="nroReclamo">Nro. Reclamo</label>
+                                    <input  required
+                                            ng-change="ParentScope.recviCtrl.validarCantidadCuentas(model)"
+                                            type="text"
+                                            name="nroReclamo"
+                                            id="nroReclamo"
+                                            ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA' || ParentScope.operac.toUpperCase() == 'MODIFICAR'"
+                                            string-to-number
+                                            ng-model="model.nroReclamo"
+                                            ng-pattern="/^[0-9]*$/">
+                                    <div ng-messages="formReclamos.nroReclamo.$error">
+                                        <div ng-message="required">El campo es obligatorio</div>
+                                        <div ng-message="pattern">Ingresar sólo números enteros.</div>
+                                    </div>
+                                </md-input-container>
+                        </div>
+                        <!-- Linea 3     -->
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex="50">
+                                <label for="nroTarjeta">Nro. Tarjeta</label>
+                                <input  required
+                                        ng-blur="ParentScope.recviCtrl.getClientData(model)"
+                                        type="text"
+                                        name="nroTarjeta"
+                                        maxlength="16"
+                                        minlength="16"
+                                        md-maxlength="16"
+                                        ng-minlength="16"
+                                        ng-pattern="/^[0-9]*$/"
+                                        id="nroTarjeta"
+                                        md-placeholder="Fec. Contable"
+                                        ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA' || ParentScope.operac.toUpperCase() == 'MODIFICAR'"
+                                        ng-model="model.nroTarjeta">
+                                <div ng-messages="formReclamos.nroTarjeta.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                    <div ng-message="maxlength">La cantidad maxima de digitos es 16.</div>
+                                    <div ng-message="minlength">La cantidad minima de digitos es 16.</div>
+                                </div>
+
+                                <div  class="md-char-counter" style="color:red" ng-show="formReclamos.nroTarjeta.$error.pattern">
+                                    Sólo números enteros
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="50">
+                                <label for="cliente">Cliente</label>
+                                <input  type="text" name="codLC" id="cliente"
+                                        ng-disabled="true"
+                                        ng-model="model.cliente">
+                                </input>
+                            </md-input-container>
+                        </div>
+
+                        <!-- Linea 4     -->
+                        <div layout-gt-sm="row">
+
+
+                            <md-input-container class="md-block" flex="2">
+                                <md-select  required="true"
+                                            placeholder="Suc. Tarjeta"
+                                            ng-disabled="ParentScope.operac.toUpperCase() !== 'ALTA'"
+                                            ng-model="model.sucTarjeta"
+                                            ng-model-options='{ debounce: 500 }'
+                                            ng-change=""
+                                            id="sucTarjeta"
+                                            name="sucTarjeta"
+                                            placeholder="Seleccionar">
+                                    <md-option ng-value="sucTarj.nroCuenta" ng-repeat="sucTarj in ParentScope.nroCuentas">
+                                        {{sucTarj.oficina +' ' +sucTarj.nroCuenta}}</md-option>
+                                </md-select>
+                                <div ng-messages="formReclamo.sucTarjeta.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                </div>
+                                <div immediate-error class="md-caption" style="color:rgb(221,44,0)" ng-show="model.datofijocuenta_existe">
+                                    Ya existe una cuenta para la combinacion: {{model.entidad}} - {{model.codigoAlta}} - {{model.tipoCuenta}}
+                                </div>
+                            </md-input-container>
+
+                            <md-input-container class="md-block" flex="40">
+                                <md-select  placeholder="Nombre Suc. Tarjeta"
+                                            ng-disabled="ParentScope.operac.toUpperCase() !== 'ALTA'"
+                                            ng-model="model.idSucAgen"
+                                            ng-model-options='{ debounce: 500 }'
+                                            ng-change=""
+                                            required="true"
+                                            id="nombreSucTarjeta"
+                                            name="nombreSucTarjeta" placeholder="Seleccionar">
+
+                                    <md-option ng-value="nomTar.idSucAgen" ng-repeat="nomTar in ParentScope.sucTarjetas" ng-init="nomTar=ParentScope.sucTarjetas[0]">
+                                       {{nomTar.descripSucursal}}</md-option>
+                                </md-select>
+                                <div ng-messages="formReclamos.nombreSucTarjeta.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                </div>
+
+
+                            </md-input-container>
+                        </div>
+
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex="50" ng-if='ParentScope.nroCuentas.length>=1'>
+                                <md-select  required="true"
+                                            ng-if='ParentScope.nroCuentas.length>=1'
+                                            ng-disabled="ParentScope.operac.toUpperCase() !== 'ALTA'"
+                                            ng-model="model.nroCuenta"
+                                            ng-model-options='{ debounce: 500 }'
+                                            ng-change="ParentScope.recviCtrl.getSucursalPorCodigo(model)"
+                                            placeholder="Nro. cuenta"
+                                            id="nroCuenta"
+                                            name="nroCuenta">
+                                    <md-option ng-value="ncta.nroCuenta" ng-repeat="ncta in ParentScope.nroCuentas">
+                                        {{ ncta.nroCuenta + ' - '+ncta.oficina }}</md-option>
+                                </md-select>
+                                <div ng-messages="formReclamos.nroCuenta.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                    <div ng-message="md-maxlength">El campo debe superar 16 caracteres</div>
+
+                                </div>
+                            </md-input-container>
+
+                            <md-input-container class="md-block" flex="50" ng-if='ParentScope.nroCuentas.length==0'>
+
+                                <input   type="text" name="nroCuenta" id="nroCuenta2"
+                                         ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA'"
+                                         type="number"
+                                         maxlength="16"
+                                         placeholder="Nro. cuenta"
+                                         ng-model="model.nroCuenta">
+                                </input>
+
+                                <div ng-messages="formReclamos.nroCuenta.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                    <div ng-message="md-maxlength">El campo debe superar 16 caracteres</div>
+                                </div>
+                            </md-input-container>
+
+                            <md-input-container class="md-block" flex="50">
+                                <md-select  required="true"
+                                            ng-disabled="ParentScope.operac.toUpperCase() !== 'ALTA'"
+                                            ng-model="model.idMotivo"
+                                            ng-model-options='{ debounce: 500 }'
+                                            ng-change=""
+                                            placeholder="Motivo"
+                                            id="idMotivo"
+                                            name="idMotivo">
+                                    <md-option ng-value="xMotivo.idMotivoReclamo" ng-repeat="xMotivo in ParentScope.reclamosMotivos">
+                                        {{xMotivo.descripcion }}</md-option>
+                                </md-select>
+                                <div ng-messages="formReclamos.idMotivo.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                </div>
+                            </md-input-container>
+
+                            <md-input-container class="md-block" flex="50">
+                                <input type="number"  name="montoCompra" name="montoCompra" placeholder="Monto Compra"  ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01"
+                                       ng-model="model.montoCompra"
+                                       ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA'" />
+                                <div ng-messages="formReclamos.montoCompra.$error">
+                                    <div  ng-show="formReclamos.montoCompra.$error.pattern">Ingresar un nro decimal con 2 digitos.</div>
+                                </div>
+
+                            </md-input-container>
+                        </div>
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex="50">
+                                <label for="sucReclamo">Suc. Reclamo:</label>
+                                <input  type="text" name="sucReclamo" id="sucReclamo"
+                                        ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA'"
+                                        ng-model="model.sucReclamo"
+                                        ng-pattern="/^[0-9]{1,16}$/"
+                                        required="true"
+                                        ng-change="ParentScope.recviCtrl.checkSucursalPorCodigo(model)"
+                                        ng-model-options='{ debounce: 1000 }'>
+                                </input>
+                                <div ng-messages="formReclamos.sucReclamo.$error">
+                                    <div ng-message="required">El campo es obligatorio.</div>
+                                </div>
+                                <div  class="md-char-counter" style="color:red" ng-show="formReclamos.sucReclamo.$error.pattern">
+                                    Sólo números enteros
+                                </div>
+
+                                <div  class="md-char-counter" style="color:red" ng-show="model.sucReclamoNoExiste">
+                                    La sucursal ingresada no existe.
+                                </div>
+                            </md-input-container>
+
+                            <md-input-container class="md-block" flex="50">
+                                <label for="nombreSucReclamo">Nombre Suc. Reclamo</label>
+                                <input  type="text" name="nombreSucReclamo" id="nombreSucReclamo"
+                                        ng-disabled="true"
+                                        ng-model="model.nombreSucReclamo"
+                                        disabled="true">
+                                </input>
+                            </md-input-container>
+
+                        </div>
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex="100">
+                                <label for="observaciones">Observaciones</label>
+                                <input  type="text" name="observaciones" id="observaciones"
+                                        ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA'"
+                                        ng-model="model.observaciones"
+                                        maxlength="100"
+                                        md-maxlength="100"
+                                        >
+                                </input>
+                                <div ng-messages="formReclamos.observaciones.$error">
+                                    <div ng-message="maxlength">La cantidad maxima de digitos es 100.</div>
+                                </div>
+                            </md-input-container>
+                        </div>
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex="33">
+                                <label for="impTotal">Imp.Total</label>
+                                <input  type="number" name="impTotal" id="impTotal" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01"
+                                        ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA'"
+                                        ng-model="model.impTotal">
+                                </input>
+                                <div ng-messages="formReclamos.impTotal.$error">
+                                    <div  ng-show="formReclamos.impTotal.$error.pattern">Ingresar un nro decimal con 2 digitos.</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="33">
+                                <md-select  required="true"
+                                            ng-disabled="true"
+                                            ng-model="model.estado"
+                                            ng-model-options='{ debounce: 500 }'
+                                            placeholder="Estado"
+                                            id="estado"
+                                            name="estado">
+                                    <md-option ng-value="xEstado.estado" ng-repeat="xEstado in ParentScope.reclamoEstados">
+                                        {{xEstado.estado }}</md-option>
+                                </md-select>
+                                <div ng-messages="formReclamos.estado.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                </div>
+
+
+                            </md-input-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+
+
+
+
+
+        <md-dialog-actions layout="row">
+            <a href="javascript:void(0)" class="md-button md-ink-ripple" ng-click="cancel()">Cancelar</a>
+            <!-- ng-disabled="formReclamos.$valid==false" -->
+            <md-button type="submit"   class="md-raised md-primary md-button md-ink-ripple" ng-keyup="$event.keyCode == 13" data-dismiss="modal">
+                <span>Aceptar</span>
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>
+
+

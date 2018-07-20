@@ -1,0 +1,99 @@
+<md-card >
+
+    <!--TOOLBAR PRINCIPAL-->
+    <md-toolbar class="md-table-toolbar md-default" ng-show="porcentajeComisionGrid.selected.length === 0">
+        <div class="md-toolbar-tools">
+            <span>Porcentaje Comisión</span>
+            <span flex></span>
+            <md-button class="md-icon-button md-button md-ink-ripple"
+                       aria-label="filtrar"
+                       ng-click="ABMporcentajeComisionGrilla.filter.show = true">
+                <md-tooltip md-autohide>Buscar</md-tooltip>
+                <md-icon md-svg-src="img/icons/search.svg"> </md-icon>
+            </md-button>
+            <button class="md-fab md-button md-success md-ink-ripple" type="button" ng-click="openAddForm()">
+                <md-tooltip md-autohide>Agregar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_add_white_24px.svg"> </md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <!--TOOLBAR PARA SEARCH-->
+    <md-toolbar class="md-table-toolbar md-default ng-hide" ng-show="porcentajeComisionGrid.filter.show && !porcentajeComisionGrid.selected.length">
+        <div class="md-toolbar-tools">
+            <md-icon md-svg-src="img/icons/search.svg"></md-icon>
+            <form flex="" name="filter.form" class="ng-valid flex">
+                <input focus-search="porcentajeComisionGrid.filter.show" type="text" ng-model="porcentajeComisionGrid.query.filter" placeholder="Buscar ABMporcentajeComision" >
+                <!--ng-model-options="filter.options"-->
+            </form>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="gdABMporcentajeComision.removeFilter()">
+                <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <!--TOOLBAR PARA EDICION-->
+    <md-toolbar class="md-table-toolbar alternate" ng-show="porcentajeComisionGrid.selected.length > 0">
+        <div class="md-toolbar-tools">
+            <span>{{porcentajeComisionGrid.selected.length}} {{porcentajeComisionGrid.selected.length > 1 ? 'items' : 'item'}} seleccionado</span>
+            <span flex></span>
+            <md-button ng-show="porcentajeComisionGrid.selected.length < 2" class="md-icon-button"
+                       aria-label="funcionalidad no especifica"
+                       ng-click="edit()">
+                <md-tooltip md-autohide>Modificar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_edit_black_24px.svg"></md-icon>
+            </md-button>
+
+            <md-button class="md-icon-button"
+                       aria-label="funcionalidad no especifica"
+                       ng-click="delConfirm()">
+                <md-tooltip md-autohide>Eliminar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_delete_black_24px.svg"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <div>
+        <md-table-container>
+            <table data-md-table md-progress="promiseEventos" ng-model="porcentajeComisionGrid.selected">
+
+                <thead md-head data-md-order="porcentajeComisionGrid.query.order">
+                <tr md-row>
+                    <th md-column></th>
+                    <th md-column md:order:by="codEnte" ><span>Ente</span></th>
+                    <th md-column data-md-order-by="tipoPago" style="padding-left: 6px !important;padding-right: 0px !important;"><span>Tipo de pago</span></th>
+                    <th md-column data-md-order-by="porcentaje"><span>Porcentaje</span></th>
+                    <th md-column data-md-order-by="impMinimo"><span>Importe mínimo</span></th>
+                    <th md-column data-md-order-by="impMaximo"><span>Importe máximo</span></th>
+                    <th md-column data-md-order-by="IVA"><span>IVA</span></th>
+                </tr>
+                </thead>
+                <tbody md-body>
+                <tr md-row
+                    data-ng-repeat="row in porcentajeComisionGrid.data | orderBy: porcentajeComisionGrid.query.order | filter: filtering | limitTo: porcentajeComisionGrid.query.limit : (porcentajeComisionGrid.query.page - 1) * porcentajeComisionGrid.query.limit">
+                    <td md-cell>
+                        <md-checkbox
+                                ng-model="row.selected"
+                                aria-label="check fila"
+                                ng-change="onSelectRow(row, $index)">
+                        </md-checkbox>
+                    </td>
+                    <td md-cell>{{ row.codEnte }}</td>
+                    <td md-cell>{{ row.tipoPago }}</td>
+                    <td md-cell>{{ row.porcentaje }}</td>
+                    <td md-cell>{{ row.impMinimo }}</td>
+                    <td md-cell>{{ row.impMaximo }}</td>
+                    <td md-cell>{{ row.IVA }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </md-table-container>
+        <data-md-table-pagination ng-if="porcentajeComisionGrid.data.length"
+                                  md-limit="porcentajeComisionGrid.query.limit"
+                                  md-limit-options="[5, 10, 15]"
+                                  md-page="porcentajeComisionGrid.query.page"
+                                  md-total="{{porcentajeComisionGrid.data.length}}"
+                                  md-page-select>
+        </data-md-table-pagination>
+    </div>
+</md-card>

@@ -1,0 +1,163 @@
+<md-dialog aria-label="ABM cantidad cuentas tarjetas" flex="50">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>{{mode}} </h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon md-svg-src="/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <form name="formcuenta" ng-submit="submit()" role="form" novalidate>
+        <md-dialog-content class="toastParent">
+            <div class="md-dialog-content">
+                <div class="modal-body">
+                        <div class="row altaPopUp">
+                            <div layout-gt-sm="row">
+                                <md-input-container class="md-block" flex>
+                                    <label for="entidad">Entidad</label>
+                                    <input
+                                            md-no-resize
+                                            required="true"
+                                            type="number"
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                            name="entidad"
+                                            id="entidad"
+                                            step='any'
+                                            ng-model="cuenta.entidad"
+                                            ng-disabled="mode != 'Alta'"
+                                    >
+                                    <div ng-messages="formcuenta.entidad.$error">
+                                        <div ng-message="required">El campo es obligatorio</div>
+                                    </div>
+                                </md-input-container>
+                                <md-input-container class="md-block" flex ng-if="mode != 'Alta'">
+                                    <label for="sucursal" >Sucursal</label>
+                                    <input md-no-resize type="text" ng-model="cuenta.descSucursal" disabled>
+                                </md-input-container>
+                                <md-input-container class="md-block" flex ng-if="mode == 'Alta'">
+                                    <label for="sucursal" >Sucursal</label>
+                                    <md-select 
+                                            name="sucursal"
+                                            ng-model="cuenta.sucursal"
+                                            required="mode == 'Alta'"
+                                            ng-change="ValidarSucursal(cuenta, cuentas)"
+                                    >
+                                        <md-option value="{{ sucursal.codSucursal_int }}" ng-bind="sucursal.descripSucursal" ng-repeat="sucursal in sucursales"></md-option>
+                                    </md-select>
+                                    <div ng-messages="formcuenta.sucursal.$error">
+                                        <div ng-message="required">El campo es obligatorio</div>
+                                    </div>
+                                </md-input-container>
+                            </div>
+                            <div layout-gt-sm="row">
+                                <md-input-container class="md-block" flex>
+                                    <label for="codigoAltaCuenta">Código de Alta de Cuenta</label>
+                                    <input
+                                            md-no-resize
+                                            type="number"
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                            name="codigoAltaCuenta"
+                                            id="codigoAltaCuenta"
+                                            step='any'
+                                            ng-model="cuenta.codigoAltaCuenta"
+                                            ng-change="ValidarCodigoAltaCuenta(cuenta)"
+                                    >
+                                </md-input-container>
+                                <md-input-container class="md-block" flex ng-if="cuenta.codigoAltaCuenta">
+                                    <label for="nroSolicitudAltaCuenta"> Nro. Solicitud de Cuenta</label>
+                                    <input
+                                            md-no-resize
+                                            required="true"
+                                            type="number"
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                            name="nroSolicitudAltaCuenta"
+                                            id="nroSolicitudAltaCuenta"
+                                            step='any'
+                                            ng-model="cuenta.NroSolicitudAltaCuenta"
+                                    >
+                                    <div ng-messages="formcuenta.nroSolicitudAltaCuenta.$error">
+                                        <div ng-message="required">El campo es obligatorio si ingresó el Código de Alta de Cuenta</div>
+                                    </div>
+                                </md-input-container>
+                            </div>
+                            <div layout-gt-sm="row">
+                                <md-input-container class="md-block" flex>
+                                    <label for="codigoAltaTarjeta">Código de Alta de Tarjeta</label>
+                                    <input
+                                            md-no-resize
+                                            type="number"
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                            name="codigoAltaTarjeta"
+                                            id="codigoAltaTarjeta"
+                                            step='any'
+                                            ng-model="cuenta.codigoAltaTarjeta"
+                                            ng-change="ValidarCodigoAltaTarjeta(cuenta)"
+                                    >
+                                </md-input-container>
+                                <md-input-container class="md-block" flex ng-if="cuenta.codigoAltaTarjeta">
+                                    <label for="nroSolicitudAltaTarjeta">Nro. de Alta de Tarjeta</label>
+                                    <input
+                                            md-no-resize
+                                            required="true"
+                                            type="number"
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                            name="nroSolicitudAltaTarjeta"
+                                            id="nroSolicitudAltaTarjeta"
+                                            step='any'
+                                            ng-model="cuenta.NroSolicitudAltaTarjeta"
+                                    >
+                                    <div ng-messages="formcuenta.nroSolicitudAltaTarjeta.$error">
+                                        <div ng-message="required">El campo es obligatorio si ingreso el Código de Alta de Tarjeta</div>
+                                    </div>
+                                </md-input-container>
+                            </div>
+
+                            <div layout-gt-sm="row">
+                                <md-input-container class="md-block" flex>
+                                    <label for="tipoCuenta" >Tipo de cuenta</label>
+                                    <md-select
+                                            id="tipoCuenta"
+                                            name="tipoCuenta"
+                                            ng-model="cuenta.codigoTipoCuenta"
+                                            required
+                                            ng-disabled="mode != 'Alta'"
+                                    >
+                                        <md-option ng-value="tipoCuenta.codigoTipoCuenta" ng-repeat="tipoCuenta in tipoCuentas">
+                                            {{tipoCuenta.descCuenta + ' - ' + tipoCuenta.codigoTipoTarjeta + ' - ' + tipoCuenta.descTarjeta}}
+                                        </md-option>
+                                    </md-select>
+                                    <div ng-messages="formcuenta.tipoCuenta.$error">
+                                        <div ng-message="required">El campo es obligatorio</div>
+                                    </div>
+                                </md-input-container>
+                                <md-input-container class="md-block" flex>
+                                    <label for="cantidad">Cantidad</label>
+                                    <input
+                                            md-no-resize
+                                            required="true"
+                                            type="number"
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                            name="cantidad"
+                                            id="cantidad"
+                                            step='any'
+                                            ng-model="cuenta.cantidad"
+                                    >
+                                    <div ng-messages="formcuenta.cantidad.$error">
+                                        <div ng-message="required">El campo es obligatorio</div>
+                                    </div>
+                                </md-input-container>
+                            </div>
+
+                        </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <a href="javascript:void(0)" class="md-button md-ink-ripple" ng-click="cancel()">Cancelar</a>
+            <md-button type="submit" ng-disabled="formcuenta.$valid==false" class="md-raised md-primary md-button md-ink-ripple" ng-keyup="$event.keyCode == 13" data-dismiss="modal">
+                <span>Aceptar</span>
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

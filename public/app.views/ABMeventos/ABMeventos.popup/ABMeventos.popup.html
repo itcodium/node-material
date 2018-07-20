@@ -1,0 +1,71 @@
+<md-dialog aria-label="agregar/modificar evento" flex="40">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>{{mode}} de evento</h2>
+
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon md-svg-src="/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+
+
+    <form ng-submit="formEventos.$valid && submit()" name="formEventos" novalidate>
+        <md-dialog-content class="toastParent">
+            <div class="md-dialog-content">
+
+                    <div class="row altaPopUp">
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex>
+                                <label>Grupos</label>
+                                <md-select name="codEventoGrupos" ng-model="evento.codEventoGrupos" placeholder="Grupo" required ng-disabled="mode != 'Alta'">
+                                    <md-option ng-value="opt.codEventoGrupo" ng-repeat="opt in eventoGrupos">{{ opt.descripcion }}</md-option>
+                                </md-select>
+
+                                <div ng-messages="formEventos.codEventoGrupos.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex-gt-sm>
+                                <label>Código</label>
+                                <input name="codEvento" type="Number" ng-model="evento.codEvento" ng-disabled="mode != 'Alta'"
+                                       min="1" max="99999" ng-pattern="/^[0-9]{1,5}$/" required>
+
+                                <div ng-messages="formEventos.codEvento.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                    <div ng-message="min">El código debe ser mayor a 0</div>
+                                    <div ng-message="max">El número es mayor al maximo permitido</div>
+                                    <div ng-message="pattern">Solo se permiten numeros enteros</div>
+                                </div>
+                            </md-input-container>
+                        </div>
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex-gt-sm>
+                                <label>Descripción</label>
+                                <textarea name="descripcion" ng-model="evento.descripcion" required type="text" md-maxlength="100"></textarea>
+
+                                <div ng-messages="formEventos.descripcion.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                    <div ng-message="maxlength">Ingresar como maximo 5 caracteres.</div>
+                                </div>
+                            </md-input-container>
+                        </div>  <!-- fin de row -->
+                    </div>
+
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <a href="javascript:void(0)" class="md-button md-ink-ripple" ng-click="cancel()">Cancelar</a>
+            <md-button type="submit" class="md-raised md-primary md-button md-ink-ripple">
+                <span>Aceptar</span>
+            </md-button>
+        </md-dialog-actions>
+    </form>
+
+</md-dialog>
+
+
+
+

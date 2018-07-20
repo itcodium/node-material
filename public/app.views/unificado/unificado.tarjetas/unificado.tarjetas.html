@@ -1,0 +1,63 @@
+<div ng-controller="tarjetas.ctrl">
+    <md-card>
+        <md-table-container>
+            <table data-md-table md-progress="promiseTarjetas" ng-model="tarjetaGrid.selected">
+
+                <thead md-head data-md-order="tarjetaGrid.query.order">
+                    <tr md-row>
+                        <th md-column></th>
+                        <th md-column md:order:by="Entidad">
+                            <span>Entidad</span>
+                        </th>
+                        <th md-column data-md-order-by="Cuenta">
+                            <span>Cuenta</span>
+                        </th>
+                        <th md-column data-md-order-by="TS">
+                            <span>TS</span>
+                        </th>
+                        <th md-column data-md-order-by="DV">
+                            <span>DV</span>
+                        </th>
+                        <th md-column data-md-order-by="Suc">
+                            <span>Suc</span>
+                        </th>
+                        <th md-column data-md-order-by="NroTarjeta">
+                            <span>Nro Tarjeta</span>
+                        </th>
+                        <th md-column data-md-order-by="codHabilitacion">
+                            <span>CodHabilitacion</span>
+                        </th>
+                        <th md-column data-md-order-by="CodHabilitacion_Ant">
+                            <span>CodHabilitacion_Ant</span>
+                        </th>
+                        <th md-column data-md-order-by="Estado">
+                            <span>Estado</span>
+                        </th>
+                        <th md-column data-md-order-by="Motivo">
+                            <span>Motivo</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody md-body>
+                    <tr md-row data-ng-repeat="row in tarjetaGrid.data | orderBy: tarjetaGrid.query.order | filter: filtering | limitTo: tarjetaGrid.query.limit : (tarjetaGrid.query.page - 1) * tarjetaGrid.query.limit">
+                        <td md-cell>
+
+                        </td>
+                        <td md-cell>{{ row.Entidad }}</td>
+                        <td md-cell>{{ row.Cuenta }}</td>
+                        <td md-cell md-cell style="text-align:right">{{ row.TS }}</td>
+                        <td md-cell md-cell style="text-align:right">{{ row.DV }}</td>
+                        <td md-cell md-cell style="text-align:right">{{ row.Suc }}</td>
+                        <td md-cell>{{ row.NroTarjeta }}</td>
+                        <td md-cell md-cell style="text-align:right">{{ row.codHabilitacion }}</td>
+                        <td md-cell md-cell style="text-align:right">{{ row.CodHabilitacion_Ant }}</td>
+                        <td md-cell>{{ row.Estado }}</td>
+                        <td md-cell>{{ row.Motivo }}</td>
+                </tbody>
+            </table>
+        </md-table-container>
+        <data-md-table-pagination ng-if="tarjetaGrid.data.length" md-limit="tarjetaGrid.query.limit" md-limit-options="[5, 10, 15]"
+            md-page="tarjetaGrid.query.page" md-total="{{tarjetaGrid.count}}" md-page-select>
+        </data-md-table-pagination>
+    </md-card>
+</div>

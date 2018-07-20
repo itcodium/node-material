@@ -1,0 +1,99 @@
+<div id="toastSelect">
+    <p></p>
+</div>
+
+<md-card ng-init="initDocumentos()">
+    <!--TOOLBAR PRINCIPAL-->
+    <md-toolbar class="md-table-toolbar md-default" ng-show="!documentoGrilla.selected.length && !documentoGrilla.filter.show">
+        <div class="md-toolbar-tools">
+            <span>Consulta de Regiones</span>
+            <span flex></span>
+            <!-- Switch dado de baja-->
+            <div flex layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+                <md-switch
+                        ng-change="gdDocumento.resetPage()"
+                        ng-model="documentoGrilla.query.showDeleted"
+                        aria-label="Visible">
+                </md-switch>
+                <p class="md-body-1">Incluir dados de baja</p>
+            </div>
+            <!-- Buscador-->
+            <md-button class="md-icon-button md-button md-ink-ripple" aria-label="filtrar" ng-click="documentoGrilla.filter.show = true">
+                <md-tooltip md-autohide>Buscar</md-tooltip>
+                <md-icon md-svg-src="img/icons/search.svg"> </md-icon>
+            </md-button>
+            <button class="md-fab md-button md-success md-ink-ripple" type="button" ng-click="gdDocumento.add($event)">
+                <md-tooltip md-autohide>Agregar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_add_white_24px.svg"> </md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+
+    <!--TOOLBAR PARA SEARCH-->
+    <md-toolbar class="md-table-toolbar md-default ng-hide" ng-show="documentoGrilla.filter.show && !documentoGrilla.selected.length">
+        <div class="md-toolbar-tools">
+            <md-icon md-svg-src="img/icons/search.svg"></md-icon>
+            <form flex="" name="filter.form" class="ng-valid flex">
+                <input focus-search="documentoGrilla.filter.show" type="text" ng-model="documentoGrilla.query.filter" placeholder="Buscar División">
+                <!--ng-model-options="filter.options"-->
+            </form>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="gdDocumento.removeFilter()">
+                <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <!--TOOLBAR PARA EDICION-->
+    <md-toolbar class="md-table-toolbar alternate" ng-show="documentoGrilla.selected.length">
+        <div class="md-toolbar-tools">
+            <span>{{documentoGrilla.selected.length}} {{documentoGrilla.selected.length > 1 ? 'items' : 'item'}} seleccionados</span>
+            <span flex></span>
+            <md-button ng-show="documentoGrilla.selected.length < 2 && showEdit" class="md-icon-button" aria-label="funcionalidad no especifica"
+                ng-click="gdDocumento.edit($event)">
+                <md-tooltip md-autohide>Modificar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_edit_black_24px.svg"></md-icon>
+            </md-button>
+
+            <md-button class="md-icon-button" aria-label="funcionalidad no especifica" ng-click="gdDocumento.del($event)">
+                <md-tooltip md-autohide>Eliminar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_delete_black_24px.svg"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+
+    <!--GRILLA-->
+    <md-table-container>
+        <table data-md-table data-md-row-select="!hideCheckboxes" data-ng-model="documentoGrilla.selected" md-progress="promiseDocumento">
+            <!--barra de titulos-->
+            <thead ng-if="!hideHead" md-head data-md-order="documentoGrilla.query.order" md-on-reorder="onReorder">
+                <tr md-row>
+                    <th md-column md:order:by="codigo">
+                        <span>Código</span>
+                    </th>
+                    <th md-column data-md-order-by="descripcion">
+                        <span>Descripción</span>
+                    </th>
+                    <th md-column data-md-order-by="fecBaja">
+                        <span>Fecha de Baja </span>
+                    </th>
+                </tr>
+            </thead>
+
+            <!--rows de datos-->
+            <tbody md-body>
+                <tr md-row md:select="row" data-md-on-select="gdDocumento.log" md-on-deselect="gdDocumento.deselect" x-md-auto-select="!blah"
+                    data-ng-repeat="row in documentoGrilla.data | orderBy: documentoGrilla.query.order | limitTo: documentoGrilla.query.limit : (documentoGrilla.query.page -1) * documentoGrilla.query.limit">
+                    <td md-cell>{{row.codigo}}</td>
+                    <td md-cell>{{row.descripcion}}</td>
+                    <td md-cell>{{row.fecBaja | date: 'dd/MM/yyyy' : 'UTC'}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+
+    <data-md-table-pagination md-limit="documentoGrilla.query.limit" md-page="documentoGrilla.query.page" md-total="{{documentoGrilla.count}}"
+        md-on-paginate="onPaginate" md-page-select>
+    </data-md-table-pagination>
+</md-card>

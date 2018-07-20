@@ -1,0 +1,81 @@
+<div ng-controller="cuentas.ctrl"><md-card>
+
+        <md-table-container>
+            <table data-md-table md-progress="promiseEventos" ng-model="cuentaGrid.selected">
+
+                <thead md-head data-md-order="cuentaGrid.query.order">
+                <tr md-row>
+                    <th md-column></th>
+                    <th md-column md:order:by="codigoAltaCuenta" ><span>codigoAltaCuenta</span></th>
+                    <th md-column data-md-order-by="entidad" style="padding-left: 6px !important;padding-right: 0px !important;"><span>entidad</span></th>
+                    <th md-column data-md-order-by="tipoCuenta"><span>tipoCuenta</span></th>
+                    <th md-column data-md-order-by="LC"><span>LC</span></th>
+                    <th md-column data-md-order-by="PorcFinanciación"><span>PorcFinanciación</span></th>
+                    <th md-column data-md-order-by="ModLiq"><span>ModLiq</span></th>
+                    <th md-column data-md-order-by="formaPago"><span>formaPago</span></th>
+                    <th md-column data-md-order-by="cartera"><span>cartera</span></th>
+                    <th md-column data-md-order-by="fpSucursal"><span>fpSucursal</span></th>
+                    <th md-column data-md-order-by="fpTipoCta"><span>fpTipoCta</span></th>
+                    <th md-column data-md-order-by="formaPago"><span>formaPago</span></th>
+                    <th md-column data-md-order-by="tipoCuenta"><span>tipoCuenta</span></th>
+                    <th md-column data-md-order-by="catCajeroAutomatico"><span>catCajeroAutomatico</span></th>
+                    <th md-column data-md-order-by="gaf"><span>gaf</span></th>
+                    <th md-column data-md-order-by="tipoIva"><span>tipoIva</span></th>
+                    <th md-column data-md-order-by="cuit"><span>cuit</span></th>
+                    <th md-column data-md-order-by="codAGrupo"><span>codAGrupo</span></th>
+                    <th md-column data-md-order-by="PorcFinanciación"><span>PorcFinanciación</span></th>
+                    <th md-column data-md-order-by="ModLiq"><span>ModLiq</span></th>
+                    <th md-column data-md-order-by="formaPago"><span>formaPago</span></th>
+                </tr>
+                </thead>
+                <tbody md-body>
+                <tr md-row
+                    data-ng-repeat="row in cuentaGrid.data | orderBy: cuentaGrid.query.order | filter: filtering | limitTo: cuentaGrid.query.limit : (cuentaGrid.query.page - 1) * cuentaGrid.query.limit">
+                    <td md-cell>
+                        <md-checkbox
+                                ng-model="row.selected"
+                                aria-label="check fila"
+                                ng-change="onSelectRow(row, $index)">
+                        </md-checkbox>
+                    </td>
+                    <td md-cell>{{ row.codigoAltaCuenta }}</td>
+                    <td md-cell>{{ row.entidad }}</td>
+                    <td md-cell>{{ row.tipoCuenta }}</td>
+                    <td md-cell>{{ row.LC }}</td>
+                    <td md-cell>{{ row.PorcFinanciacion }}</td>
+                    <td md-cell>{{ row.ModLiq }}</td>
+                    <td md-cell>{{ row.formaPago }}</td>
+                    <td md-cell>{{ row.cartera }}</td>
+                    <td md-cell>{{ row.fpSucursal }}</td>
+                    <td md-cell>{{ row.fpTipoCta }}</td>
+                    <td md-cell>{{ row.formaPago }}</td>
+                    <td md-cell>{{ row.tipoCuenta }}</td>
+                    <td md-cell>{{ row.catCajeroAutomatico }}</td>
+                    <td md-cell>{{ row.gaf }}</td>
+                    <td md-cell>{{ row.tipoIva }}</td>
+                    <td md-cell>{{ row.cuit }}</td>
+                    <td md-cell>{{ row.codAGrupo }}</td>
+                    <td md-cell>{{ row.PorcFinanciación }}</td>
+                    <td md-cell>{{ row.ModLiq }}</td>
+                    <td md-cell>{{ row.formaPago }}</td>
+                    <td md-cell>{{ row.fpSucursal }}</td>
+                    <td md-cell>{{ row.fpTipoCta }}</td>
+                    <td md-cell>{{ row.formaPago }}</td>
+
+
+
+                </tr>
+                </tbody>
+            </table>
+        </md-table-container>
+        <data-md-table-pagination ng-if="cuentaGrid.data.length"
+                                  md-limit="cuentaGrid.query.limit"
+                                  md-limit-options="[5, 10, 15]"
+                                  md-page="cuentaGrid.query.page"
+                                  md-total="{{cuentaGrid.data.length}}"
+                                  md-page-select>
+        </data-md-table-pagination>
+
+</md-card>
+
+</div>

@@ -1,0 +1,144 @@
+<md-dialog  aria-label="ABM Categorias"   ng-init="initPopUp()" >
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>{{operac}} de Categorías Convenios</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="ctrl.cancel()">
+                <md-icon md-svg-src="/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-dialog-content  class="toastParent">
+        <form id="formCat" ng-submit="ctrl.confirmOperation(formCategoria.$error)" name="formCategoria" role="form">
+        <div class="md-dialog-content">
+            <div  class="modal-body">
+
+                    <div class="row altaPopUp">
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex="25">
+                                <label for="txtCode">Cod.</label>
+                                <input type="text" name="code" id="txtCode" maxlength="3"
+                                       ng-model="categoria.codigo" ng-disabled="operac != 'Alta'" required role="code">
+                                <span class=".control-group.error .control-label  md-error"  ng-if="errorForm == true" ng-show="formCategoria.code.$error.required">Ingrese Código.</span>
+                                <div ng-messages="formCategoria.code.$error">
+                                    <div ng-message="required">El campo es obligatorio.</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex>
+                                <label for="txtDescripcion">Descripción:</label>
+                                <input type="text" name="descripcionCat" maxlength="50" id="txtDescripcion"
+                                       ng-model="categoria.descripcion" required role="descripcionCat">
+                                <span class=".control-group.error .control-label md-error" ng-if="errorForm == true" ng-show="formCategoria.descripcionCat.$error.required">Ingrese Descripción.</span>
+                                <div ng-messages="formCategoria.descripcionCat.$error">
+                                    <div ng-message="required">El campo es obligatorio.</div>
+                                </div>
+                            </md-input-container>
+                        </div>
+                        <!-- Grilla convenios  -->
+                        <div class="md-toolbar-tools" style="margin-left: 0;">
+                            <span>Asociar convenios a la categoría</span>
+                        </div>
+
+                        <md-table-container>
+
+                            <table data-md-table  data-ng-model="convenioGrilla.selected" md-progress="promise" style="padding: 0;margin:0;">
+                                <thead ng-if="!hideHead" md-head data-md-order="convenioGrilla.query.order" md-on-reorder="onReorder">
+                                <tr md-row>
+                                    <th md-column style="width: 60px;padding: 0;margin: 0;">
+                                        <md-checkbox ng-model="data.checkConvenio" ng-change="checkAllConvenios();"></md-checkbox>
+                                    </th>
+                                    <th md-column md:order:by="convenio" style="width: 30px;"><span>Convenio</span></th>
+                                    <th md-column md:order:by="sistema" style="width: 30px;"><span>Sistema</span></th>
+                                    <th md-column data-md-order-by="prioridad" style="width: 100px;"><span>Prioridad</span></th>
+                                    <th md-column style="width: 150px;"><span> Prior. ya utilizadas</span></th>
+
+                                </tr>
+
+                                </thead>
+                                <tbody md-body>
+                                <tr md-row md:select="row"
+                                    data-ng-repeat="rowConvenio in convenioGrilla.data | filter: filter.search | orderBy: convenioGrilla.query.order | limitTo: convenioGrilla.query.limit : (convenioGrilla.query.page -1) * convenioGrilla.query.limit">
+                                    <td md-cell style="width: 60px;padding: 0;margin: 0;">
+                                        <md-checkbox style="padding: 0;margin: 0" ng-model="rowConvenio.selected" aria-label="Check  Proceso"></md-checkbox>
+                                        <md-button style="padding: 0;margin: 0" ng-show="rowConvenio.selected && rowConvenio.idCategoriaConvenio!=null"
+                                                    class="md-icon-button"
+                                                    aria-label="funcionalidad no especifica"
+                                                    ng-click="eliminarCategoria($event,rowConvenio)">
+                                            <md-tooltip md-autohide>Eliminar</md-tooltip>
+                                            <md-icon md-svg-src="img/icons/ic_delete_black_24px.svg"></md-icon>
+                                        </md-button>
+                                    </td>
+                                    <td md-cell><a href="#" ng-click="toggleRightNavCategoria(rowConvenio);"> {{rowConvenio.convenio}} </a>
+                                    </td>
+                                    <td md-cell>{{rowConvenio.sistema}} </td>
+                                    <td md-cell>
+                                        <md-input-container class="md-block" ng-show='rowConvenio.selected'>
+                                            <label ng-show="false" for="txtPrioridad">Prioridad</label>
+                                            <input type="text"   id="txtPrioridad" maxlength="2"
+                                                   ng-model="rowConvenio.prioridad" />
+                                            <span ng-show='rowConvenio.selected && (rowConvenio.prioridad==null || rowConvenio.prioridad.length==0) ' class=".control-group.error .control-label md-error">Ingresar prioridad
+                                            </span>
+                                            <span ng-show='rowConvenio.repetido' class=".control-group.error .control-label  md-error">Prioridad repetida</span>
+                                        </md-input-container>
+                                        <span style="padding-left: 10px;" ng-show='!rowConvenio.selected'>{{rowConvenio.prioridad}}</span>
+                                    </td>
+                                    <td md-cell ng-show="operac == 'Alta'">{{getPrioridadesConvenio(rowConvenio.sistema,rowConvenio.convenio).toString()}}</td>
+                                    <td md-cell ng-show="operac == 'Modificación'">
+                                        <span ng-show="operac == 'Modificación' && (data.prioridadesPorCategoriaFilter==false || (data.prioridadesPorCategoriaFilter==true && vPrioridad.categoria==categoria.codigo ) ) "
+                                              style="margin-right: 3px;padding: 2px;" ng-repeat="vPrioridad in getPrioridadesConvenioItems(rowConvenio.convenio,rowConvenio.sistema)">
+                                            <span ng-show="vPrioridad.editing!=true && vPrioridad.categoria==categoria.codigo">{{vPrioridad.prioridad}}</span>
+                                            <span ng-show="vPrioridad.editing!=true && vPrioridad.categoria!=categoria.codigo" style="color: #888">{{vPrioridad.prioridad}}</span>
+                                        </span>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </md-table-container>
+
+                        <!-- Fin grilla convenios -->
+                    </div>
+                    <md-dialog-actions layout="row">
+                        <a href="javascript:void(0)" class="md-button md-ink-ripple" ng-click="ctrl.cancel()">Cancelar</a>
+                        <md-button type="submit" class="md-raised md-primary md-button md-ink-ripple" >
+                            <span>Aceptar</span>
+                        </md-button>
+                    </md-dialog-actions>
+            </div>
+        </div>
+        </form>
+    </md-dialog-content>
+
+
+
+
+
+
+
+<!-- ----------------------SIDENAV PARA LOGS DE LOS PASOS--------------------- -->
+<md-sidenav class="md-sidenav-right md-whiteframe-z2 sidenavClass" md-component-id="rightNavAgenda">
+
+     <div class="md-toolbar-tools"><span>{{convenioSidenav}}</span></div>
+
+    <md-content class="contentSidenav" style="margin-top: 0">
+            <md-table-container class="log-detail">
+                <table data-md-table>
+                    <thead  md-head>
+                    <tr md-row>
+                        <th md-column data-md-order-by="prioridad" style="text-align: center"><span>Prioridad</span></th>
+                        <th md-column data-md-order-by="categoria" style="text-align: center"><span>Categoria</span></th>
+                    </tr>
+                    </thead>
+                    <tbody md-body>
+                        <tr md-row data-ng-repeat="(index, categoriaItem) in categorias | orderBy:''" >
+                            <td md-cell style="text-align: center">{{categoriaItem.prioridad}}</td>
+                            <td md-cell style="text-align: center">{{categoriaItem.categoria}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </md-table-container>
+    </md-content>
+</md-sidenav>
+
+<!-- ---------------------- FIN SIDENAV PARA LOGS DE LOS PASOS--------------------- -->
+
+</md-dialog>

@@ -1,0 +1,101 @@
+<!--
+
+Se quito: ng-if="grilla.data.length>0"
+Porque sino nunca se mostraba que la grilla se estaba cargando.
+ng-if="!(grilla.data.length==0 && grilla.config.showNoRegister==false)"
+-->
+
+<table ng-if="grilla.config.loading || grilla.data.length>0"  data-md-table data-md-row-select="false" md-progress="grilla.config.promise" id="">
+        <thead md-head data-md-order="grilla.config.query.order" md-on-reorder="grilla.onReorder">
+            <tr md-row>
+                <th ng-if="grilla.selectedGrid" grilla.selectedGrid  md-column></th>
+                <th ng-show="columns.show"
+                    ng-repeat="columns in grilla.config.columns"
+                    data-md-numeric="columns.filter == 'number' || columns.filter == 'int' || columns.filter == 'coef' || columns.filter == 'currency'"
+                    data-md-order-by="{{columns.field}}"
+                    ng-style="(columns.filter == 'number' || columns.filter == 'int' || columns.filter == 'coef' || columns.filter == 'currency') ? {'width': columns.width, 'text-align': 'right'} :  {'width': columns.width, 'text-align': columns.align}"
+                    md-column >
+                    <span ng-bind-html="columns.name | html" ng-style="(columns.width) ? {'width': columns.width-20} : {}" ></span>
+                    <md-tooltip ng-if="columns.tip" md-autohide md-direction="top" ng-style="{}" >{{columns.tip}}</md-tooltip>
+                </th>
+            </tr>
+        </thead>
+        <tbody md-body >
+
+            <tr ng-if="grilla.paginadoDb==false" md-row data-ng-repeat="row in grilla.data  | filter: grilla.filtering | orderBy: grilla.config.query.order | limitTo: grilla.config.query.limit : (grilla.config.query.page -1) * grilla.config.query.limit" >
+                <td md-cell ng-if="grilla.selectedGrid" style="width: 30px;">
+
+                    <md-checkbox ng-model="row.selected" aria-label=""  ng-change="grilla.onCheck($index,row)"></md-checkbox>
+                </td>
+
+                <td md-cell ng-repeat="column_data in grilla.config.columns "
+                    ng-show="column_data.show"
+                    ng-style="(column_data.filter == 'number' || column_data.filter == 'int' || column_data.filter == 'coef' || column_data.filter == 'currency') ? {'width': column_data.width, 'text-align': 'right'} :  {'width': column_data.width, 'text-align': column_data.align}"
+                >
+                    {{ grilla.showVal(row[column_data.field], column_data.filter )}}
+                </td>
+            </tr>
+            <tr ng-if="grilla.paginadoDb==true" md-row data-ng-repeat="row in grilla.data" >
+                <td md-cell ng-if="grilla.selectedGrid" style="width: 30px;">
+                    <md-checkbox ng-model="row.selected" aria-label=""  ng-change="grilla.onCheck($index,row)"></md-checkbox>
+                </td>
+                <td md-cell ng-repeat="column_data in grilla.config.columns "
+                    ng-show="column_data.show"
+                    ng-style="(column_data.filter == 'number' || column_data.filter == 'int' || column_data.filter == 'coef' || column_data.filter == 'currency') ? {'width': column_data.width, 'text-align': 'right' } :  {'width': column_data.width, 'text-align': column_data.align}"
+                    >
+                    {{ grilla.showVal(row[column_data.field], column_data.filter )}}
+                </td>
+            </tr>
+            <tfoot md-foot ng-if="grilla.footData.length>0">
+            <tr md-row data-ng-repeat="row in grilla.footData" ng-if="grilla.footData.length>0">
+
+                <td md-cell ng-repeat="column_data in grilla.config.columns "
+                    ng-show="column_data.show"
+                    ng-style="(column_data.filter == 'number' || column_data.filter == 'int' || column_data.filter == 'coef' || column_data.filter == 'currency') ? {'width': column_data.width, 'text-align': (column_data.align=='' )? 'right':column_data.align} :  {'width': column_data.width, 'text-align': column_data.align}"
+                >
+
+                    <strong>
+                        {{ grilla.showVal(row[column_data.field], column_data.filter )}}
+                    </strong>
+                </td>
+            </tr>
+            </tfoot>
+        </tbody>
+    </table>
+
+<!--
+
+<md-card ng-if="grilla.data.length==0 && grilla.config.showNoRegister">
+    No se encontraron datos para mostrar
+</md-card>
+
+    <div md-padding  layout-xs="column" layout="row" >
+
+    </div>
+-->
+
+<div   style="border: 0; padding: 15px;" ng-if="grilla.data.length==0 && grilla.config.showNoRegister==true">
+    No se encontraron datos para mostrar
+</div>
+
+
+
+    <data-md-table-pagination   md-limit="grilla.config.query.limit"
+                                md-hide-lineas-pagina="grilla.config.hideComboPagina"
+                                md-page="grilla.config.query.page"
+                                md-total="{{grilla.config.count}}"
+                                md-on-paginate="grilla.onPaginate"
+                                md-page-select
+                                ng-if="!grilla.data.length<=0 && mostrarPaginacion==true && grilla.paginadoDb==true">
+    </data-md-table-pagination>
+
+    <data-md-table-pagination ng-if="grilla.data.length && mostrarPaginacion==true  && grilla.paginadoDb==false"
+                              md-limit="grilla.config.query.limit"
+                              md-hide-lineas-pagina="grilla.config.hideComboPagina"
+                              md-page="grilla.config.query.page"
+                              md-total="{{grilla.data.length}}"
+                              md-on-paginate="grilla.onPaginate"
+                              md-page-select>
+    </data-md-table-pagination>
+
+

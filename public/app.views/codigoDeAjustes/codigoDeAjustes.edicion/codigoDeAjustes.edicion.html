@@ -1,0 +1,79 @@
+<md-dialog aria-label="ABM Código de ajustes" flex="30">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 >{{mode}} de Código de ajustes</h2>
+
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon md-svg-src="/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <form ng-submit="formCodigoAjustes.$valid && submit()" name="formCodigoAjustes" novalidate>
+        <md-dialog-content class="toastParent">
+            <div class="md-dialog-content">
+                <div class="modal-body">
+                    <div class="row altaPopUp">
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex="50">
+                                <label for="entidad">Entidad</label>
+                                <md-select required="true" ng-disabled="mode !== 'Alta'" ng-model="codigoAjustes.entidad" name="entidad" placeholder="Entidad">
+                                    <md-option ng-value="opt.entidad" ng-repeat="opt in entidades">{{opt.descripcion}}</md-option>
+                                </md-select>
+                                <div ng-messages="formCodigoAjustes.entidad.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="50">
+                                <label for="codigo">Código de Ajuste</label>
+                                <input  type="number" step="1" name="codigo" ng-model="codigoAjustes.codAjuste"
+                                            required ng-pattern="/^[0-9]{1,4}$/" min="0" ng-keypress="validateNumber($event)">
+
+                                <div ng-messages="formCodigoAjustes.codigo.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                    <div ng-message="pattern">Ingresar como maximo 4 caracteres numéricos.</div>
+                                    <div ng-message="min">El valor tiene que ser 0 o superior</div>
+                                    <div ng-message="number">Número inválido</div>
+                                </div>
+                            </md-input-container>
+                        </div>
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex="50">
+                                <label for="codigo">Emisor</label>
+                                <input type="number" name="emisor" ng-model="codigoAjustes.emisor" 
+                                min="0" ng-keypress="validateNumber($event)" required ng-pattern="/^[0-9]{1}$/">
+
+                                <div ng-messages="formCodigoAjustes.emisor.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                    <div ng-message="min">El valor tiene que ser 0 o superior</div>
+                                    <div ng-message="pattern">Ingresar como maximo 1 caracter.</div>
+                                    <div ng-message="number">Número inválido</div>
+                                </div>
+                            </md-input-container>
+
+                            <md-input-container class="md-block" flex="50">
+                                <label>Importe</label>
+                                <input type="number" name="importe" ng-model="codigoAjustes.ImpAjuste" required 
+                                    min="0" max="999999999999999999.99" ng-pattern="/^\s*-?\d+(\.\d{1,2})?\s*$/" ng-keypress="validateNumber($event)"/>
+                                <div ng-messages="formCodigoAjustes.importe.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                    <div ng-message="max">Superó el valor maximo permitido</div>
+                                    <div ng-message="pattern">Solo se permite 2 decimales</div>
+                                    <div ng-message="number">Número inválido</div>
+                                </div>
+                            </md-input-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row">
+            <a href="javascript:void(0)" class="md-button md-ink-ripple" ng-click="cancel()">Cancelar</a>
+            <md-button type="submit" class="md-raised md-primary md-button md-ink-ripple" data-dismiss="modal">
+                <span>Aceptar</span>
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

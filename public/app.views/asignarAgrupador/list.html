@@ -1,0 +1,125 @@
+<md-card>
+    <toolbar data="toolbar"></toolbar>
+    <md-table-container class="md-scrollX" style="overflow: auto">
+        <grilla mostrar-paginacion="true" paginado-db="false"
+                selected-grid="true"
+                data="grillaConciliaciones" ></grilla>
+    </md-table-container>
+</md-card>
+
+
+
+
+
+<!--
+<script type="text/ng-template" id="movimientosPresentadosFilterForm.tmpl.html">
+    <form name="frmMovimientosPresentados" layout="row" layout-align="start start">
+        <md-input-container>
+            <md-select   id="cboEntidad" name="cboEntidad"  ng-model="toolbar.query.entidad" ng-init="toolbar.query.entidad=toolbar.entidades[0];" >
+                <md-option ng-value="itemEntidad" ng-repeat="itemEntidad in toolbar.entidades">{{itemEntidad.descripcion}}</md-option>
+            </md-select>
+        </md-input-container>
+        <md-input-container>
+            <md-select   id="cboConciliacion" name="cboConciliacion"   ng-model="toolbar.query.conciliacion">
+                <md-option ng-value="itemConciliacion" ng-repeat="itemConciliacion in toolbar.conciliaciones">{{itemConciliacion.descripcion}}</md-option>
+            </md-select>
+        </md-input-container>
+        <md-input-container>
+            <md-datepicker required="true" id="fechaDesde" name="fechaDesde"   md-placeholder="Fecha desde"
+                           type="date"
+                           md-max-date="toolbar.query.fechaHasta"
+                           ng-model="toolbar.query.fechaDesde"></md-datepicker>
+            <div  class="validation-messages" ng-messages="frmMovimientosPresentados.fechaDesde.$error">
+                <div ng-message="required">Ingresar fecha.</div>
+                <div ng-message="valid">El valor no es una fecha valida.</div>
+                <div ng-message="maxdate">El fecha debe ser menor que el valor seleccionado.</div>
+
+            </div>
+        </md-input-container>
+        <md-input-container>
+            <md-datepicker required="true" type="date" id="fechaHasta" name="fechaHasta"  md-placeholder="Fecha hasta"
+                           md-min-date="toolbar.query.fechaDesde"
+                           ng-model="toolbar.query.fechaHasta"></md-datepicker>
+            <div  class="validation-messages" ng-messages="frmMovimientosPresentados.fechaHasta.$error">
+                <div ng-message="valid">El valor no es una fecha valida.</div>
+                <div ng-message="required">Ingresar fecha.</div>
+                <div ng-message="mindate">El fecha debe ser menor que el valor seleccionado.</div>
+            </div>
+        </md-input-container>
+        <md-input-container>
+            <button class="md-icon-button md-button md-ink-ripple" type="submit" ng-click="toolbar.onFilter(frmMovimientosPresentados)">
+                <md-icon class="ready" ng-show="!toolbar.filtrado" md-svg-src="img/icons/playlist_play.svg"></md-icon>
+                <md-icon class="done" ng-show="toolbar.filtrado" md-svg-src="img/icons/playlist_check.svg"></md-icon>
+                <md-tooltip md-autohide> {{ !toolbar.filtrado ?  'Aplicar filtro' : 'Filtro Aplicado' }}</md-tooltip>
+            </button>
+        </md-input-container>
+    </form>
+</script>
+
+
+
+
+<div id="toastSelect">
+    <p></p>
+</div>
+
+<md-card ng-init="load()">
+    <md-toolbar class="md-table-toolbar md-default" ng-show="grid.selected.length === 0">
+        <div class="md-toolbar-tools">
+            <span>Asignar Agrupador</span>
+            <span flex></span>
+            <button class="md-fab md-button md-success md-ink-ripple" type="button" ng-click="add()">
+                <md-tooltip md-autohide>Agregar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_add_white_24px.svg"> </md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+    <md-toolbar class="md-table-toolbar alternate md-hide" ng-show="grid.selected.length > 0">
+        <div class="md-toolbar-tools">
+            <span>{{grid.selected.length}} {{grid.selected.length > 1 ? 'items' : 'item'}} seleccionados</span>
+            <span flex></span>
+            <md-button ng-show="true" class="md-icon-button"
+                       aria-label="Modificar"
+                       ng-click="update()" >
+                <md-tooltip md-autohide>Modificar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_edit_black_24px.svg"></md-icon>
+            </md-button>
+            <md-button class="md-icon-button"
+                       aria-label="Dar de baja"
+                       ng-click="delete()">
+                <md-tooltip md-autohide>Baja</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_delete_black_24px.svg"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <md-table-container>
+        <table data-md-table data-md-row-select single-selection="true" md-progress="promise" ng-model="grid.selected" multiple="false">
+
+            <thead md-head data-md-order="grid.query.order" md-on-reorder="onReorder">
+            <tr md-row>
+                <th md-column md:order:by="codigo" ><span>Código Distribución</span></th>
+                <th md-column data-md-order-by="descripcion"><span>Descripción</span></th>
+                <th md-column data-md-order-by="codigoCampaña"><span>Código Campaña</span></th>
+            </tr>
+            </thead>
+
+
+            <tbody md-body>
+            <tr md-row md:select="row"
+                data-md-on-select="true"
+                md-on-deselect="false"
+                ng-repeat="row in grid.data | orderBy: grid.query.order | limitTo: grid.query.limit : (grid.query.page - 1) * grid.query.limit">
+                <td md-cell>{{row.codigo}}</td>
+                <td md-cell>{{row.descripcion}}</td>
+                <td md-cell>{{row.codigoCampania}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+
+    <data-md-table-pagination md-limit="grid.query.limit" md-page="grid.query.page" md-total="{{grid.count}}" md-on-paginate="onPaginate" md-page-select>
+    </data-md-table-pagination>
+</md-card>
+
+-->

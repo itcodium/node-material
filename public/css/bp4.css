@@ -1,0 +1,1080 @@
+/*
+
+
+
+
+
+
+
+
+
+
+        ACORDÁTE DE ESTO:
+         Usar [ctrl-alt-.]  en webStorm
+                        para nevagar entre los folding que son títulos para las agrupaciones
+                        dentro de este archivo.
+
+
+
+
+
+
+
+
+
+
+
+
+*/
+
+/**********      <editor-fold desc="main">   ************
+ *  lo más importante  CORE!
+ ************/
+html,
+body,
+md-content {
+  background-color: #EFEFEF !important;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* contenedor que queremos que enmarque los sectores de la pantalla principal */
+md-card {
+  -webkit-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  position: relative;
+  margin: 15px !important;
+}
+
+md-card.md-card-outlander {
+  margin-top: 0px !important;
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+  padding-top: 3px;
+}
+
+.site-content-toolbar {
+  background: #fff !important;
+  color: #202020 !important;
+  z-index: 45; /* 3 */
+}
+
+/* new caob 20160725 - por new material version */
+/*md-toolbar:not(.md-menu-toolbar) md-icon {*/
+/*color: rgba(63, 63, 63, 0.87);*/
+/*fill: #454545;*/
+/*}*/
+
+/*</editor-fold> */
+
+/**********      <editor-fold desc="material">   ************
+ * modificaciones a lo que viene de  MATERIAL
+ ************/
+
+md-checkbox {
+  /* added by CAOB 20160627
+          modifica material a nivel general,
+          despues nuestra grilla tiene CSS propio que lo pisa nuevamente            */
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+md-tooltip.multiline .md-content {
+  max-width: 11500px;
+  color: black;
+  background-color: white;
+  height: auto;
+  border-radius: 0 !important;
+
+}
+
+md-toast .md-toast-content {
+  background-color: #d27a77;
+}
+
+.toastParent md-toast {
+  position: fixed;
+  margin-top: 59px !important;
+}
+
+.toastSuccess .md-toast-content {
+  background-color: forestgreen !important;
+}
+
+#toastSelect .toastSuccess .md-toast-content {
+  background-color: forestgreen !important;
+}
+
+md-input-container:not(.md-input-has-value) input:not(:focus),
+md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-ampm-field,
+md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-day-field,
+md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-hour-field,
+md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-millisecond-field,
+md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-minute-field,
+md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-month-field,
+md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-second-field,
+md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-week-field,
+md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-year-field,
+md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-text {
+  color: black !important;
+}
+
+md-fab-speed-dial.md-fab-top-auto {
+  /*caob 20160304 - que el fab que esta en la toolbar principal herede posición*/
+  top: auto;
+  right: auto;
+  bottom: auto;
+  left: auto;
+  position: absolute;
+}
+
+.PENDIENTE,.Pendiente {
+  color: #ffffff;
+  background: #888888;
+  font-size: 11px;
+  text-align: center;
+  padding: 2px;
+/*Anterior diseño btn:
+  border:2px solid darkgrey !important;
+  color:darkgrey;
+  width:100px;
+  padding: 7px 2px;
+  border-radius: 4px;*/
+}
+
+.DESHABILITADO,.Deshabilitado {
+  color: #ffffff;
+  background-color: #FF9933;
+  font-size: 11px;
+  text-align: center;
+  padding: 2px;
+  width: 100px;
+  /*padding: 7px 2px;
+  border-radius: 4px;*/
+}
+
+.OK ,.ok {
+  color: #ffffff;
+  background-color: forestgreen;
+  font-size: 11px;
+  text-align: center;
+  padding: 2px;
+  width: 100px;
+  /*padding: 7px 2px;
+  border-radius: 4px;*/
+}
+
+.Curso,.CURSO {
+  width: 100px;
+  color: #ffffff;
+  background-color: #6495ED;
+  font-size: 11px;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 2px;
+  /*padding: 7px 2px;
+  border-radius: 4px;*/
+}
+
+.CURSO-boton,.curso-boton {
+  background-image: url('../img/icon/ic_play_arrow_green_24px.svg');
+  width: 24px;
+  font-size: 11px;
+}
+
+div.demo-content {
+  height: 400px;
+}
+
+div.demo-content-two {
+  height: 100%;
+  padding-bottom: 15px;
+}
+
+.demo-content-two md-content {
+  padding: 24px;
+}
+
+.ERROR {
+  color: #ffffff;
+
+  background-color: #F08080;
+  font-size: 11px;
+  text-align: center;
+  padding: 2px;
+  width: 100px;
+  /*padding: 7px 2px;
+  border-radius: 4px;*/
+}
+
+/*  SWITCH
+    colores del switch solo hay primary, warn y el default (rojo)
+--> vamos por el success (verde): */
+md-switch.md-checked.md-success .md-thumb {
+  background-color: green !important;
+}
+
+md-switch.md-checked.md-success .md-bar {
+  background-color: #5cb85c !important;
+}
+
+/**/
+
+/* botones check estilos */
+.md-button.md-fab {
+  line-height: 40px !important;
+  width: 40px !important;
+  height: 40px !important;
+}
+
+a.md-button.md-default-theme.md-fab.md-success,
+a.md-button.md-fab.md-success,
+.md-button.md-default-theme.md-fab.md-success,
+.md-button.md-fab.md-success {
+  background-color: #43a546 !important;
+}
+
+md-checkbox.md-default-theme.md-checked .md-icon,
+md-checkbox.md-checked .md-icon {
+  background-color: #4caf50;
+}
+
+md-input-container {
+  margin: 15px 5px; /* 18px 2px */
+}
+
+md-autocomplete[md-floating-label] md-input-container {
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+md-autocomplete[md-floating-label] {
+  margin-left: 5px;
+  margin-right: 5px;
+  padding-left: 2px;
+  padding-right: 2px;
+}  /* fix para modales con flex que no se alinean */
+
+
+
+.mddc-thead {
+  border-bottom: 1px rgba(0, 0, 0, 0.12) solid;
+}
+
+.mddct-thead {
+  border-top: 1px rgba(0, 0, 0, 0.2) solid;
+}
+
+.md-datepicker-input-container {
+  margin-left: 5px;
+}
+
+.md-button.md-icon-button {
+  margin: 0px;
+}
+
+.note {
+  margin: 0px;
+}
+.over-hidden  {
+  overflow: hidden;
+}
+
+md-input-container ng-message, md-input-container data-ng-message, md-input-container x-ng-message,
+md-input-container [ng-message], md-input-container [data-ng-message], md-input-container [x-ng-message],
+md-input-container [ng-message-exp], md-input-container [data-ng-message-exp], md-input-container [x-ng-message-exp],
+md-input-container .md-char-counter {
+  font-size: 10px !important;
+  line-height: 11px !important;
+}
+
+/* exception emergentes */
+md-sidenav md-content {
+  background-color: #fff !important;
+}
+
+md-dialog-content md-toolbar,
+md-dialog-content .md-toolbar-tools {
+  height: 40px;
+  min-height: 40px;
+}
+
+md-sidenav md-toolbar md-icon,
+md-dialog-content md-toolbar md-icon {
+  margin-right: 0;
+  margin-left: 0;
+}
+
+md-sidenav .md-toolbar-tools md-select {
+  font-size: 16px;
+}
+
+.layout-marg-0 {
+  margin: 0px !important;
+}
+
+.layout-marg-top {
+  margin-top: 0px !important;
+}
+
+.layout-padding-0 {
+  padding: 0px !important;
+}
+
+md-option {
+  height: 44px;
+}
+
+md-option .md-text {
+  font-size: 14px;
+}
+
+md-datepicker.mclr {
+  margin-right: 0 !important;
+}
+
+md-input-container .md-errors-spacer {
+  min-height: 1px; /* en ang css 24px */
+}
+
+md-autocomplete[md-floating-label] md-input-container {
+  padding-bottom: 16px;
+}
+
+/* added by CAOB 20160627 -- para TABs*/
+.md-tab-bp4-medium {
+  height: 350px;
+}
+
+/*</editor-fold> */
+
+/**********      <editor-fold desc="principal">   ************
+ * la parte del logo y la toolbar principal
+ ************/
+
+.docs-logo {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 0 0;
+  margin: 0 auto;
+}
+
+.docs-logo:focus {
+  outline: none;
+}
+
+.docs-logo > img.tcm {
+  height: 124px;
+  position: absolute;
+  top: -27px;
+}
+.docs-logo > img {
+  height: 64px;
+  width: auto;
+  display: block;
+  transform-origin: 50% 0;
+  transform: scale(1);
+  margin-right: 25px;
+}
+.nav-header.tcm {
+  height: 64px;
+  background-color: #fff;
+  /*border-bottom: 1px solid #1a538c;*/
+  flex-shrink: 0;
+  z-index: 2;
+}
+.nav-header {
+  background-color: #0193CF;
+  /*border-bottom: 1px solid #1a538c;*/
+  flex-shrink: 0;
+  z-index: 2;
+}
+a.docs-logo {
+  border-bottom: none;
+}
+
+.docs-logotype {
+  color: #a4c6dc;
+  text-align: center;
+  font-weight: 400;
+  font-size: 12px;
+  background-color: #0193CF;
+  margin: 0;
+  padding: 15px 0;
+}
+
+.docs-menu-separator-icon {
+  margin: 0;
+}
+
+.docs-menu-separator-icon img {
+  height: 16px;
+}
+
+.md-breadcrumb {
+  font-size: 24px !important;
+  font-weight: 400 !important;
+}
+
+.md-breadcrumb md-icon {
+  color: #666 !important;
+  fill: #666 !important;
+}
+
+.md-breadcrumb-page {
+  display: inline-block;
+  word-wrap: break-word;
+}
+
+.docs-toolbar-tools {
+  /*max-width: 864px;*/ /*?*/
+  padding: 0;
+  margin: 0 24px;
+  width: auto;
+}
+
+.docs-tools .md-button {
+  padding: 0;
+  margin: 0 0 0 8px;
+}
+
+.docs-tools .md-button,
+.docs-tools .md-button md-icon,
+.docs-toolbar-tools .md-button md-icon {
+  color: #666 !important;
+  fill: #666; /*caob new 20160725*/
+}
+
+@media (max-width: 400px) {
+  .docs-tools {
+    display: none;
+  }
+}
+
+/*</editor-fold>  PRINCIPAL*/
+
+/**********      <editor-fold desc="menu">   ************
+ *  el sidenav izquierdo con el menu y el login al pie
+ ************/
+
+.site-sidenav {
+  background: #106CC8;
+}
+
+.site-sidenav md-content {
+  /* agregado important para que no sea pisado con background gris el fondo del menú */
+  background: transparent !important;
+}
+
+.site-sidenav,
+.site-sidenav.md-locked-open-add-active,
+.site-sidenav.md-locked-open {
+  width: 242px; /*272px*/
+  min-width: 242px; /*272px*/
+  max-width: 242px; /*272px*/
+}
+
+.site-sidenav > * {
+  min-width: 218px;
+}
+
+.login-sidenav,
+.pagin-sidenav {
+  border-top: 1px solid rgba(0, 0, 0, 0.18);
+  background: #106CC8;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  z-index: 200;
+}
+
+.pagin-sidenav {
+  background: #fff;
+}
+
+/* variables del pie de login CAOB 20160726 */
+.login-sidenav md-list-item {
+  height: 45px;
+  min-height: 0;
+}
+
+.login-sidenav img {
+  margin: auto 5px;
+}
+
+.login-sidenav h5 {
+  flex: 1 1 auto;
+  margin: auto;
+  color: #fff;
+}
+
+.login-sidenav md-icon {
+  cursor: pointer;
+}
+
+.docs-menu,
+.docs-menu ul {
+  list-style: none;
+  padding: 0;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.docs-menu li {
+  margin: 0;
+}
+
+.docs-menu > li:nth-child(1) {
+  border-top: none;
+}
+
+.md-whiteframe-glow-z1 {
+  box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.14),
+  0px 0px 2px 2px rgba(0, 0, 0, 0.098),
+  0px 0px 5px 1px rgba(0, 0, 0, 0.084);
+}
+
+.docs-menu > li {
+  border-bottom: 1px solid #267ED5;
+}
+
+.docs-menu .md-button {
+  border-radius: 0;
+  color: white;
+  cursor: pointer;
+  display: block;
+  align-items: inherit;
+  line-height: 40px;
+  margin: 0;
+  max-height: 40px;
+  overflow: hidden;
+  padding: 0px 16px;
+  text-align: left;
+  text-decoration: none;
+  white-space: normal;
+  width: 100%;
+}
+
+.docs-menu .md-button:hover,
+.docs-menu .md-button:focus {
+  background: #267ED5 !important;
+}
+
+.docs-menu .md-button md-icon {
+  color: white;
+}
+
+.docs-menu md-select {
+
+  /* Override md-select margins.  With margins the menu will look incorrect and causes mobile list
+     to not be scrollable.
+   */
+  margin: 0;
+  width: 100%;
+}
+
+.docs-menu md-select md-select-label {
+  justify-content: flex-end;
+  padding-top: 10px;
+}
+
+.docs-menu md-select md-select-label span {
+  margin-right: auto;
+  padding-left: 13px;
+}
+
+.docs-menu md-select .md-select-icon {
+  margin-right: 28px;
+}
+
+.docs-menu button.md-button::-moz-focus-inner {
+  padding: 0;
+}
+
+.docs-menu .md-button.active {
+  background: #fc8624; /*267ED5*/
+}
+
+.menu-heading {
+  display: block;
+  margin: 0;
+  padding: 8px 0 0 16px;
+  text-align: left;
+  width: 93%;
+  color: rgba(255, 255, 255, 0.54)
+}
+
+.docs-menu li.parentActive,
+.docs-menu li.parentActive .menu-toggle-list {
+  /*background-color: #2C80D2 !important;*/
+}
+
+.menu-toggle-list {
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+  -webkit-transition: 0.75s cubic-bezier(0.35, 0, 0.25, 1);
+  -webkit-transition-property: height;
+  -moz-transition: 0.75s cubic-bezier(0.35, 0, 0.25, 1);
+  -moz-transition-property: height;
+  transition: 0.75s cubic-bezier(0.35, 0, 0.25, 1);
+  transition-property: height;
+}
+
+.docs-menu .menu-toggle-list a.md-button {
+  display: block;
+  padding: 0 16px 0 32px;
+  text-transform: none;
+  text-rendering: optimizeLegibility;
+  font-weight: 500;
+}
+
+.docs-menu .menu-nested-list li.childActive {
+  background: #0d56a0;
+}
+
+.parent-list-item:last-child {
+  margin-bottom: 20px;
+
+  /* Prevent the hidden License link from causing a double bottom-border */
+  border-bottom: none;
+}
+
+.md-subhead {
+  font-size: 12px;
+  line-height: 24px;
+}
+
+.md-button-toggle .md-toggle-icon {
+  display: block;
+  margin-left: auto;
+  speak: none;
+  vertical-align: middle;
+  transform: rotate(180deg);
+  -webkit-transform: rotate(180deg);
+  transition: transform 0.3s ease-in-out;
+  -webkit-transition: -webkit-transform 0.3s ease-in-out;
+}
+
+.md-button-toggle .md-toggle-icon.toggled {
+  transform: rotate(0deg);
+  -webkit-transform: rotate(0deg);
+}
+
+/*</editor-fold> */
+
+/**********      <editor-fold desc="utilitarios">   ************
+ * funcionalidad variada
+ ************/
+ul.skip-links li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+ul.skip-links li a {
+  background-color: #fff;
+  display: block;
+  margin: 0.5em 0 0.5em 0.5em;
+  opacity: 0;
+  left: 0;
+  position: absolute;
+  text-decoration: none;
+  top: 0;
+  width: 92%;
+  -webkit-transition: opacity 0.15s linear;
+  -moz-transition: opacity 0.15s linear;
+  transition: opacity 0.15s linear;
+}
+
+ul.skip-links li a:focus {
+  background-color: #fff !important;
+  opacity: 1;
+  z-index: 2;
+}
+
+.loadingCircular { /* todo caob - revisar el que trae material y aplicar ese */
+  opacity: 0.6;
+  background: #CCC;
+  position: fixed;
+  color: white;
+  top: 50%;
+  left: 50%;
+  z-index: 1000;
+  opacity: 1;
+}
+
+/*</editor-fold> */
+
+/**********      <editor-fold desc="LOGS - e HISTORICO">   ************
+* Aparentemente aca esta lo de los logs, esta desornedado no tiene nombre con prefijo,
+    empiezo a ordenarlo (CAOB) de a poco
+    primero le pongo título
+    todo CAOB
+************/
+.periodoSpan {
+  padding: 15px 15px;
+  font-size: 11px;
+  color: grey;
+  border-bottom: 1px solid #b3b3b3;
+}
+
+.log-detail {
+  width: 100%;
+}
+
+.instanciaDescripcion {
+  padding: 25px 15px 0px;
+  font-size: 14px;
+  border-bottom: 1px solid #b3b3b3;
+}
+
+.logs {
+  padding: 25px 9px;
+  font-size: 11px;
+  color: grey;
+  border-bottom: 1px solid #b3b3b3;
+}
+
+.logsXl {
+  padding: 25px 15px;
+  font-size: 12px;
+  line-height: 20px;
+}
+
+.titlabel {
+  opacity: 0.54;
+  font-size: 11px;
+  margin-bottom: 8px;
+}
+
+.contentSidenav {
+  background-color: white !important;
+}
+
+.contentSidenav span {
+  margin-left: 4px;
+}
+
+.sidenavClass {
+  width: 350px !important;
+}
+
+.sidenavXl {
+  max-width: 700px;
+  width: 700px !important;
+}
+
+.pasoGrid {
+  background-color: #9b9b9b;
+  border-radius: 11px;
+  font-size: 17px !important;
+  color: #ffffff;
+  width: 26px !important;
+  text-align: center;
+  margin-left: 5px;
+  padding: 0 3px;
+}
+
+.firstPasoGrid {
+  background-color: #3f3f3f;
+}
+
+.pasoCell {
+  width: 53px;
+}
+
+/*</editor-fold> */
+
+/* esto de aca abajo esta desordenado, no se sabe para que se usa y no forma parte de ninguna agrupación
+    todo caob: averiguar
+*/
+.lineDiv {
+  width: 100px;
+  height: 23px;
+  position: absolute;
+}
+
+.lineDivChild {
+  width: 2px;
+  background-color: #B8B8B8;
+  height: 25px;
+  margin-left: 20px;
+  margin-top: 1px;
+}
+
+.lastIndexLine {
+  width: 0px !important;
+}
+
+.letterGrid {
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.inputLocalidad {
+  position: absolute;
+  float: left !important;
+  margin-left: -260px;
+  margin-top: 10px;
+  width: 264px;
+}
+
+md-autocomplete-wrap {
+  box-shadow: none !important;
+  background-color: #fff !important; /* #f5f5f5 */
+}
+
+#txtLocalidad md-autocomplete-wrap {
+  background-color: white !important;
+  height: 0px !important;
+}
+
+/**********      <editor-fold desc="lightbox">   ************
+ * lightbox emergentes
+ ************/
+
+.md-dialog-container md-toolbar {
+  background-color: #0D56A0;
+  color: rgba(255, 255, 255, 1);
+}
+
+.md-dialog-container .md-toolbar-tools h1,
+.md-dialog-container .md-toolbar-tools h2,
+.md-dialog-container .md-toolbar-tools h3 {
+  font-size: 17px;
+}
+
+.md-dialog-container md-dialog-actions {
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+md-dialog .md-actions, md-dialog md-dialog-actions {
+  padding: 8px 16px;
+}
+
+/*</editor-fold> */
+
+/**********      <editor-fold desc="botones">   ************
+ * botones
+ ************/
+
+a.md-button.md-default-theme.md-primary.md-raised:not([disabled]):hover,
+a.md-button.md-primary.md-raised:not([disabled]):hover,
+a.md-button.md-default-theme.md-primary.md-fab:not([disabled]):hover,
+a.md-button.md-primary.md-fab:not([disabled]):hover,
+.md-button.md-default-theme.md-primary.md-raised:not([disabled]):hover,
+.md-button.md-primary.md-raised:not([disabled]):hover,
+.md-button.md-default-theme.md-primary.md-fab:not([disabled]):hover,
+.md-button.md-primary.md-fab:not([disabled]):hover {
+  background-color: rgb(1, 89, 162);
+}
+
+/*</editor-fold> */
+
+/**********      <editor-fold desc="DESCONOCIDO QUIEN FUE">   ************
+ * Agregados inciertos  -- sin nombre apropiados   todo caob ordenar
+ ************/
+
+.custom-alert {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 12px;
+  color: #dd2c00;
+  margin: 10px 0 0 25px;
+  cursor: none;
+}
+
+.alert-autocompl {
+  font-size: 11px !important;
+  color: #dd2c00 !important;
+}
+
+.primary-column {
+  font-weight: bolder;
+}
+
+.md-dialog-content .validation-messages {
+  font-size: 12px;
+  color: #dd2c00;
+}
+
+.datepicker-message {
+  padding-left: 45px;
+}
+
+.coNarj {
+  background-color: #fc8624;
+  color: #fff !important;
+  font-weight: bold;
+  text-align: center !important;
+  border-top: 2px solid #E46800 !important;
+}
+
+.icoApa {
+  height: 19px;
+  opacity: 0.2;
+}
+
+.content-table {
+  background: #ffffff !important;
+  border-top: 1px solid rgba(0, 0, 0, 0.117647) !important;
+}
+
+.input-select {
+  display: flex;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 2px 2px 1px;
+  border: none;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: rgba(0, 0, 0, 0.12);
+  background-color: transparent;
+  position: relative;
+  box-sizing: content-box;
+  min-width: 64px;
+  min-height: 26px;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+}
+
+.running-update-agenda {
+  opacity: 0.5;
+}
+
+.agenda-play:hover {
+  background-color: #dadada;
+  color: white;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+[ng-quill-editor] {
+  display: block;
+}
+
+/*</editor-fold> */
+
+.txt-cnt {
+  text-align: center !important;
+}
+
+.icon-xs  {
+  min-width: 18px;
+  min-height: 18px;
+  height: 18px;
+  width: 18px;
+}
+
+.more-btn{
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin-top: 30px;
+  min-width: 85px;
+  min-height: 28px;
+  line-height: normal;
+  border: 1px rgba(0, 0, 0, 0.12) solid;
+  border-radius: 20px;
+}
+.more-btn span{
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.md-table-outlander.md-historico.bb {
+  border-bottom: 1px rgba(0, 0, 0, 0.12) solid;
+}
+
+.curso-btn  {
+  min-width: 70px;
+  min-height: 25px;
+  height: 25px;
+  border-radius: 10px;
+  color: #ffffff;
+  background-color: #6495ED;
+  font-size: 9px;
+  text-align: center;
+  padding: 2px;
+  line-height: normal;
+  float: right;
+}
+
+.error-btn  {
+  min-width: 70px;
+  min-height: 25px;
+  height: 25px;
+  border-radius: 10px;
+  color: #ffffff;
+  background-color: #F08080;
+  font-size: 9px;
+  text-align: center;
+  padding: 2px;
+  line-height: normal;
+  float: right;
+}
+.error-btn:hover  {
+  background: #ea4d4d !important;
+}
+
+.warning-btn  {
+  min-width: 70px;
+  min-height: 25px;
+  height: 25px;
+  border-radius: 10px;
+  color: #ffffff;
+  background-color: #fca553;
+  font-size: 9px;
+  text-align: center;
+  padding: 2px;
+  line-height: normal;
+  float: right;
+}
+.warning-btn:hover  {
+  background: #FF9933 !important;
+}
+
+.ok-btn {
+  min-width: 40px;
+  min-height: 21px;
+  height: 20px;
+  border-radius: 15px;
+  color: #ffffff;
+  background-color: #5CB85C;
+  font-size: 9px;
+  text-align: center;
+  padding: 2px;
+  line-height: normal;
+  float: right;
+}
+.ok-btn:hover {
+  background: #228B22 !important;
+}
+
+.log-detail pre {
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+.menu-login {
+  width: 100%;
+  display: inline-flex;
+}
+.menu-login img {
+  padding: 0 5px 0 16px;
+}
+.menu-login h5  {
+  color: #fff;
+}
+.menu-login md-icon {
+  padding-left: 55px;
+}
+.padder-30  {
+  padding-right: 25px;
+  padding-left: 25px;
+}

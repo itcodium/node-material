@@ -1,0 +1,66 @@
+<md-dialog aria-label="ABM Usuarios"  ng-init="initPopUp()" ng-cloak flex="50">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Modificación de Usuarios</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="ctrl.cancel()">
+                <md-icon md-svg-src="/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <form class="form-horizontal" name="frmCreacionUsuarios" ng-submit="enviarDatos()"   method="post" onsubmit="">
+        <md-dialog-content class="toastParent">
+            <div class="md-dialog-content" >
+                <div class="modal-body">
+                    <div layout-gt-sm="row">
+                        <md-input-container class="md-block" flex-gt-xs>
+                            <label>Nombre y apellido</label>
+                            <input id="nombreApellido" required=true autofocus =true ng-model="usuario.nombre" maxlength="255"
+                                   type='text' value="" name="nombreApellido"  placeholder='Ingresar nombre y apellido'>
+                            <div ng-messages="frmCreacionUsuarios.nombreApellido.$error">
+                                <div ng-message="required" ng-if="true">*</div>
+                            </div>
+                        </md-input-container>
+                        <md-input-container class="md-block" flex-gt-xs>
+                            <label>Usuario</label>
+                            <input disabled id="usuario" required=false type='text' ng-model="usuario.usuario"  name="usuario" placeholder='Ingresar usuario'/>
+                            <div ng-messages="frmCreacionUsuarios.usuario.$error">
+                                <div ng-message="required" ng-if="true">*</div>
+                            </div>
+                        </md-input-container>
+                    </div>
+
+                    <div layout-gt-sm="row">
+                        <md-input-container class="md-block" flex-gt-xs>
+                            <label>Perfil</label>
+                            <md-select name="perfil" ng-model="perfilSelecionado">
+                                <md-option ng-value="perfil.idPerfil" ng-repeat="perfil in perfiles">
+                                    {{perfil.perfil}}
+                                </md-option>
+                            </md-select>
+                            <div ng-messages="frmCreacionUsuarios.perfil.$error">
+                                <div ng-message="required" ng-if="true">*</div>
+                            </div>
+                        </md-input-container>
+
+                        <md-input-container class="md-block" flex-gt-xs>
+                            <label>Email</label>
+                            <input id="email" required=true type='email' maxlength="29" ng-model="usuario.email" name="email"
+                                   placeholder='Email'/>
+                            <div ng-messages="frmCreacionUsuarios.email.$error">
+                                <div ng-message="required" ng-if="true">*</div>
+                            </div>
+                        </md-input-container>
+                    </div>
+
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <a href="javascript:void(0)" class="md-button md-ink-ripple" ng-click="ctrl.cancel()">Cancelar</a>
+            <md-button type="submit" class="md-raised md-primary md-button md-ink-ripple">
+                <span>Aceptar</span>
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

@@ -1,0 +1,96 @@
+<div id="toastSelect">
+    <p></p>
+</div>
+
+<md-card ng-init="initUsuarios()">
+    <!--TOOLBAR PRINCIPAL-->
+    <md-toolbar class="md-table-toolbar md-default" ng-show="!usuariosGrilla.selected.length && !usuariosGrilla.filter.show">
+        <div class="md-toolbar-tools">
+            <span>Usuarios</span>
+            <span flex></span>
+            <md-button class="md-icon-button md-button md-ink-ripple"
+                       aria-label="filtrar"
+                       ng-click="usuariosGrilla.filter.show = true">
+                <md-tooltip md-autohide>Filtrar</md-tooltip>
+                <md-icon md-svg-src="img/icons/search.svg"> </md-icon>
+            </md-button>
+
+            <button class="md-fab md-button md-success md-ink-ripple" type="button"  ng-click="gdUsuario.add($event)">
+                <md-tooltip md-autohide>Agregar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_add_white_24px.svg"> </md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+
+    <!--TOOLBAR PARA SEARCH-->
+    <md-toolbar class="md-table-toolbar md-default ng-hide" ng-show="usuariosGrilla.filter.show && !usuariosGrilla.selected.length">
+        <div class="md-toolbar-tools">
+            <md-icon md-svg-src="img/icons/search.svg"></md-icon>
+            <form flex="" name="filter.form" class="ng-valid flex">
+                <input focus-search="usuariosGrilla.filter.show" type="text" ng-model="usuariosGrilla.query.filter" placeholder="Buscar Usuario" >
+                <!--ng-model-options="filter.options"-->
+            </form>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="gdUsuario.removeFilter()">
+                <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <!--TOOLBAR PARA EDICION-->
+    <md-toolbar class="md-table-toolbar alternate" ng-show="usuariosGrilla.selected.length">
+        <div class="md-toolbar-tools">
+            <span>{{usuariosGrilla.selected.length}} {{usuariosGrilla.selected.length > 1 ? 'items' : 'item'}} seleccionados</span>
+            <span flex></span>
+            <md-button ng-show="usuariosGrilla.selected.length < 2" class="md-icon-button"
+                       aria-label="funcionalidad no especifica"
+                       ng-click="gdUsuario.edit($event)">
+                <md-tooltip md-autohide>Modificar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_edit_black_24px.svg"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+
+    <!--GRILLA-->
+    <md-table-container>
+        <table data-md-table data-md-row-select="!hideCheckboxes" data-ng-model="usuariosGrilla.selected" md-progress="promise">
+            <!--barra de titulos-->
+            <thead ng-if="!hideHead" md-head data-md-order="usuariosGrilla.query.order" md-on-reorder="onReorder">
+            <tr md-row>
+                <th md-column md:order:by="nombre"><span>Nombre</span></th>
+                <th md-column data-md-order-by="usuario"><span>Usuario</span></th>
+                <th md-column data-md-order-by="email"><span>Email</span></th>
+                <th md-column data-md-order-by="perfil"><span>Perfil</span></th>
+                <!--<th md-column data-md-order-by="creadoPor"><span>Creado Por</span></th>-->
+                <!--<th md-column data-md-order-by="fecCreacion"><span>Fecha de Creación</span></th>-->
+                <!--<th md-column data-md-order-by="modificadoPor"><span>Modificado Por</span></th>-->
+                <!--<th md-column data-md-order-by="fecModificacion"><span>Fecha de Modificación</span></th>-->
+            </tr>
+            </thead>
+
+
+            <!--rows de datos-->
+            <tbody md-body>
+            <tr md-row md:select="row" data-md-on-select="gdUsuario.log"
+                md-on-deselect="gdUsuario.deselect"
+                x-md-auto-select="!blah"
+                data-ng-repeat="row in usuariosGrilla.data | orderBy: usuariosGrilla.query.order | limitTo: usuariosGrilla.query.limit : (usuariosGrilla.query.page -1) * usuariosGrilla.query.limit">
+                <td md-cell>{{row.nombre}}</td>
+                <td md-cell>{{row.usuario}}</td>
+                <td md-cell>{{row.email}}</td>
+                <td md-cell>{{row.perfil}}</td>
+                <!--<td md-cell>{{row.creadoPor}}</td>-->
+                <!--<td md-cell>{{row.fecCreacion | date:'dd/MM/yyyy'}}</td>-->
+                <!--<td md-cell>{{row.modificadoPor }}</td>-->
+                <!--<td md-cell>{{row.fecModificacion | date:'dd/MM/yyyy'}}</td>-->
+
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+
+    <data-md-table-pagination md-limit="usuariosGrilla.query.limit" md-page="usuariosGrilla.query.page" md-total="{{usuariosGrilla.count}}" md-on-paginate="onPaginate" md-page-select>
+    </data-md-table-pagination>
+
+</md-card>

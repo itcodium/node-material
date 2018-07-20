@@ -1,0 +1,88 @@
+<md-card ng-controller="datosFijosVS.cuentas.ctrl">
+    <md-table-container class="md-scrollX" ng-show="cuentaGrid.data.length > 0">
+        <table data-md-table data-md-row-select="false" md-progress="promiseObj" ng-model="cuentaGrid.selected">
+            <thead md-head data-md-order="cuentaGrid.query.order" md-on-reorder="onReorder">
+                <tr md-row>
+                    <th md-column></th>
+                    <th md-column md:order:by="codigoAltaCuenta">
+                        <span>Mov</span>
+                    </th>
+                    <th md-column data-md-order-by="banco">
+                        <span>Bco</span>
+                    </th>
+                    <th md-column data-md-order-by="tipoCuenta">
+                        <span>Tipo Cuenta</span>
+                    </th>
+                    <th md-column data-md-order-by="codPromotor">
+                        <span>Cod. Promotor</span>
+                    </th>
+                    <th md-column data-md-order-by="codLC">
+                        <span>Limite Compra</span>
+                    </th>
+                    <th md-column data-md-order-by="porcFinanciacion">
+                        <span>Porc. LimCompra</span>
+                    </th>
+                    <th md-column data-md-order-by="modLiq">
+                        <span>Mod Liquidación</span>
+                    </th>
+                    <th md-column data-md-order-by="formaPago">
+                        <span>Forma Pago</span>
+                    </th>
+                    <th md-column data-md-order-by="cartera">
+                        <span>Cartera</span>
+                    </th>
+                    <th md-column data-md-order-by="catCajeroAutomatico">
+                        <span>Cat. Caj. Automatico</span>
+                    </th>
+                    <th md-column data-md-order-by="GAF">
+                        <span>Grupo Afinidad</span>
+                    </th>
+                    <th md-column data-md-order-by="sitIVA">
+                        <span>Sit IVA</span>
+                    </th>
+                    <th md-column data-md-order-by="agrupaUsuario">
+                        <span>Agrupa Usuario</span>
+                    </th>
+                    <th md-column data-md-order-by="producto">
+                        <span>Producto</span>
+                    </th>
+                    <th md-column data-md-order-by="marcaOrigen">
+                        <span>Marca Origen</span>
+                    </th>
+                </tr>
+            </thead>
+
+            <!--rows de datos-->
+            <tbody md-body>
+                <tr md-row data-ng-repeat="row in cuentaGrid.data | orderBy: cuentaGrid.query.order | filter: filtering | limitTo: cuentaGrid.query.limit : (cuentaGrid.query.page - 1) * cuentaGrid.query.limit">
+                    <td md-cell>
+                        <md-checkbox ng-model="row.selected" aria-label="check fila" ng-change="onSelectRow(row, $index)">
+                        </md-checkbox>
+                    </td>
+                    <td md-cell>{{ row.codigoAltaCuenta }}</td>
+                    <td md-cell>{{ row.banco }}</td>
+                    <td md-cell>{{ row.tipoCuenta }}</td>
+                    <td md-cell>{{ row.codPromotor }}</td>
+                    <td md-cell>{{ row.codLC }}</td>
+                    <td md-cell>{{ row.porcFinanciacion }}</td>
+                    <td md-cell>{{ row.modLiq }}</td>
+                    <td md-cell>{{ row.formaPago }}</td>
+                    <td md-cell>{{ row.cartera }}</td>
+                    <td md-cell>{{ row.catCajeroAutomatico }}</td>
+                    <td md-cell>{{ row.GAF }}</td>
+                    <td md-cell>{{ row.sitIVA }}</td>
+                    <td md-cell>{{ row.agrupaUsuario }}</td>
+                    <td md-cell>{{ row.producto }}</td>
+                    <td md-cell>{{ row.marcaOrigen }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+    <data-md-table-pagination ng-if="cuentaGrid.data.length" md-limit="cuentaGrid.query.limit" md-limit-options="[5, 10, 15]"
+        md-page="cuentaGrid.query.page" md-total="{{cuentaGrid.data.length}}" md-page-select>
+    </data-md-table-pagination>
+
+    <div class="md-padding" layout-xs="column" ng-show="cuentaGrid.data.length == 0">
+        No se encontraron datos para mostrar
+    </div>
+</md-card>

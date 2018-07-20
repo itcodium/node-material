@@ -1,0 +1,55 @@
+<md-dialog aria-label="ABM Mails Configurables" ng-cloak flex="50">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Baja de Mail Configurable</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon md-svg-src="/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <form id="formMailsDelete" ng-submit="formMailsDelete.$invalid || save(formMailsDelete.$error)" name="formMailsDelete"  novalidate>
+        <md-dialog-content class="toastParent">
+            <div class="md-dialog-content mddc-thead">
+                <div layout-gt-xs="row">
+                    <md-input-container>
+                        <md-datepicker id="fecBaja" name="fecBaja"
+                                       md-min-date="currentDate"
+                                       ng-model="fecBaja"
+                                       ng-required="true">
+                        </md-datepicker>
+                        <div ng-messages="formMailsDelete.fecBaja.$error">
+                            <div ng-message="required">El campo Fecha Baja es obligatorio</div>
+                        </div>
+                    </md-input-container>
+                </div>
+            </div>
+            <div class="md-dialog-content" style="padding-top: 0;">
+                <div class="modal-body">
+                    <md-table-container>
+                        <table data-md-table>
+                            <thead md-head>
+                            <tr md-row>
+                                <th md-column><span>Código</span></th>
+                                <th md-column><span>Descripción</span></th>
+                            </tr>
+                            </thead>
+                            <tbody md-body>
+                            <tr md-row ng-repeat="mail in mailsDelete">
+                                <td md-cell>{{mail.codigo}}</td>
+                                <td md-cell>{{mail.descripcion}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </md-table-container>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <a href="javascript:void(0)" class= "md-button md-ink-ripple" ng-click="cancel()">Cancelar</a>
+            <md-button type="submit" class="md-raised md-primary md-button md-ink-ripple">
+                <span>Aceptar</span>
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

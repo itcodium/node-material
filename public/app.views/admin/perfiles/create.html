@@ -1,0 +1,155 @@
+<md-dialog aria-label="ABM Perfiles"  ng-init="initPopUp()" ng-cloak flex="80">
+	<md-toolbar>
+		<div class="md-toolbar-tools">
+			<h2>Alta de Perfiles</h2>
+			<span flex></span>
+			<md-button class="md-icon-button" ng-click="ctrl.cancel()">
+				<md-icon md-svg-src="/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+			</md-button>
+		</div>
+	</md-toolbar>
+
+	<form name="formPerfil" ng-submit="savePerfil()" method="post" onsubmit="">
+		<md-dialog-content>
+
+			<div class="md-dialog-content" >
+				<div class="modal-body">
+
+					<!-- DATOS DE CARGA -->
+					<div layout-gt-sm="row">
+						<md-input-container class="md-block" flex-gt-xs>
+							<label>Perfil</label>
+							<input id="perfil" maxlength="30" required ng-model="perfil.perfil" type='text' name="perfil">
+							<div ng-messages="formPerfil.perfil.$error">
+								<div ng-message="required" ng-if="true">*</div>
+								<div ng-message="md-maxlength">30 caracteres como maximo.</div>
+							</div>
+						</md-input-container>
+
+						<md-input-container class="md-block" flex="10">
+							<label>Cod.</label>
+							<input id="codigo" maxlength="25" required ng-model="perfil.codigo" type='text' name="codigo">
+							<div ng-messages="formPerfil.codigo.$error">
+								<div ng-message="required" ng-if="true">*</div>
+								<div ng-message="md-maxlength">25 caracteres como maximo.</div>
+							</div>
+						</md-input-container>
+
+						<md-input-container class="md-block" flex="10">
+							<label>Niv. Seg.</label>
+							<input id="nivelSeguridad" required ng-model="perfil.nivelSeguridad" type='number' value="" name="nivelSeguridad">
+							<div ng-messages="formPerfil.nivelSeguridad.$error">
+								<div ng-message="required" ng-if="true">*</div>
+							</div>
+						</md-input-container>
+
+						<md-input-container class="md-block" flex-gt-xs>
+							<label>Descripcion</label>
+							<input id="descripcion" required=true  ng-model="perfil.descripcion"  type='text'  name="descripcion">
+							<div ng-messages="formPerfil.descripcion.$error">
+								<div ng-message="required" ng-if="true">*</div>
+							</div>
+						</md-input-container>
+					</div>
+
+					<!-- PERMISOS PARA MENU Y ACCIONES -->
+					<div><!-- layout="column" layout-wrap layout-gt-sm="row" >-->
+
+
+						<md-content>
+
+							<md-tabs md-border-bottom class="md-tab-bp4-medium">
+
+								<!-- ACCIONES -->
+								<md-tab label="Permisos de Menú">
+									<md-content class="md-padding">
+										<md-input-container class="md-block" style="margin: 0;" flex="40">
+											<label>Filtrar</label>
+											<input type="text" class="form-control" ng-model="query">
+										</md-input-container>
+
+										<div bp4-tree data-drag-enabled="false" id="tree-root">
+											<ol bp4-tree-nodes ng-model="acciones" style="list-style: none;">
+												<li ng-repeat="node in acciones | filterAcciones:query" bp4-tree-node data-ng-include="'/app.views/admin/perfiles/tree.html'"></li>
+											</ol>
+										</div>
+									</md-content>
+								</md-tab>
+
+
+								<!-- PROCESOS -->
+								<md-tab label="Permisos sobre Procesos">
+									<md-content class="md-padding">
+										<div layout="row">
+
+											<md-input-container class="md-block" style="margin: 0;" flex="40">
+												<label>Filtrar </label>
+												<input type="text" class="form-control" ng-model="queryProcesos">
+											</md-input-container>
+
+											<div ng-show="!queryProcesos" class="tree-list" style="width: 100%">
+												<md-checkbox class="tree-list-check"
+															 ng-model="selectAllProcesos"
+															 ng-change="toggleProcesos()"
+															 aria-label="listnode"
+												>
+												</md-checkbox>
+												<div class="tree-list-label">{{selectAllProcesos ? 'Desmarcar' : 'Marcar'}} todos  &nbsp; &nbsp;</div>
+											</div>
+										</div>
+
+
+										<md-list>
+											<md-list-item class="tree-list-node tree-node" ng-repeat="procesoItem in procesos | filter:queryProcesos"  >
+												<p> {{ procesoItem.nombre}} </p>
+												<md-checkbox ng-model="procesoItem.selected"></md-checkbox>
+											</md-list-item>
+
+										</md-list>
+									</md-content>
+								</md-tab>
+
+								<!-- Funciones -->
+								<md-tab label="Permisos de funcionalidad">
+									<md-content class="md-padding">
+										<div layout="row">
+											<md-input-container class="md-block" style="margin: 0;" flex="40">
+												<label>Filtrar </label>
+												<input type="text" class="form-control" ng-model="queryFuncionalidades">
+											</md-input-container>
+
+											<div ng-show="!queryFuncionalidades" class="tree-list" style="width: 100%">
+												<md-checkbox class="tree-list-check"
+															 ng-model="selectAllFuncionalidades"
+															 ng-change="toggleFuncionalidades()"
+															 aria-label="listnode">
+												</md-checkbox>
+												<div class="tree-list-label">{{selectAllFuncionalidades? 'Desmarcar' : 'Marcar'}} todos  &nbsp; &nbsp;</div>
+											</div>
+										</div>
+										<md-list>
+											<md-list-item class="tree-list-node tree-node" ng-repeat="funcionalidadItem in funcionalidades | filter:queryFuncionalidades"  >
+												<p> {{ funcionalidadItem.descripcion}} </p>
+												<md-checkbox ng-model="funcionalidadItem.selected"></md-checkbox>
+											</md-list-item>
+										</md-list>
+									</md-content>
+								</md-tab>
+								<!-- Funciones Fin -->
+							</md-tabs>
+						</md-content>
+
+					</div>
+				</div>
+			</div>
+		</md-dialog-content>
+
+
+		<md-dialog-actions layout="row">
+			<a href="javascript:void(0)" class="md-button md-ink-ripple" ng-click="ctrl.cancel()">Cancelar</a>
+			<md-button id="btnGuardar_Perfil2" class="md-raised md-primary md-button md-ink-ripple" type="submit">
+				<span>Aceptar</span>
+			</md-button>
+		</md-dialog-actions>
+	</form>
+</md-dialog>

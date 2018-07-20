@@ -1,0 +1,106 @@
+<md-dialog aria-label="ABM Mails Configurables" ng-init="init()" ng-cloak flex="30">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 ng-if="ParentScope.operac!='Modificar'">{{ParentScope.operac}} de Motivos de Rechazo</h2>
+            <h2 ng-if="ParentScope.operac=='Modificar'">Modificación de motivos de rechazo</h2>
+
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon md-svg-src="/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <form id="formMotivosRechazo" ng-submit="ParentScope.config.submit(this.formMotivosRechazo,motivosRechazo);" name="formMotivosRechazo" novalidate>
+        <md-dialog-content class="toastParent">
+            <div class="md-dialog-content">
+                <div class="modal-body">
+                    <div class="row altaPopUp">
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex="50">
+                                <label for="tipo">Tipo</label>
+                                <md-select  required="true"
+                                           ng-disabled="ParentScope.operac.toUpperCase() !== 'ALTA'"
+                                           ng-model="motivosRechazo.tipo"
+                                            id="tipo"
+                                            name="tipo" placeholder="Seleccionar"
+                                           ng-change="ParentScope.config.validTipoCodigo(motivosRechazo)"
+                                        >
+                                    <md-option ng-value="tiposMR.value" ng-repeat="tiposMR in ParentScope.tiposMotivosRechazo">{{tiposMR.text}}</md-option>
+                                </md-select>
+                                <div ng-messages="formMotivosRechazo.tipo.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="50">
+                                <label for="codigo">Código</label>
+                                <input  required="true"
+                                        type="text" name="codigo" id="codigo"
+                                        ng-disabled="ParentScope.operac.toUpperCase() !== 'ALTA'"
+                                        maxlength="3"
+                                        ng-model-options='{ debounce: 1000 }'
+                                        ng-change="ParentScope.config.validTipoCodigo(motivosRechazo)"
+                                        ng-model="motivosRechazo.codigo" required>
+                                <div ng-messages="formMotivosRechazo.codigo.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                    <div ng-message="maxlength">Ingresar como maximo 3 caracteres.</div>
+                                </div>
+                                <div immediate-error class="md-caption" style="color:rgb(221,44,0)" ng-show="motivosRechazo.tipo_codigo>0">
+                                    Los valores {{motivosRechazo.tipo}} - {{motivosRechazo.codigo}} ya existen.
+                                </div>
+                            </md-input-container>
+                        </div>
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex="50">
+                                <label for="descripcion">Descripción</label>
+                                <textarea required="true"
+                                        type="text" name="descripcion" id="descripcion"
+                                        ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA'"
+                                        maxlength="100"
+                                        ng-model="motivosRechazo.descripcion" required>
+                                    </textarea>
+                                <div ng-messages="formMotivosRechazo.descripcion.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                </div>
+
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="50">
+                                <label for="validacion">Validación</label>
+                                <textarea
+                                        type="text" name="validacion" id="validacion"
+                                        ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA'"
+                                        maxlength="250"
+                                        ng-model="motivosRechazo.validacion">
+                                </textarea>
+                                <div ng-messages="formMotivosRechazo.validacion.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                    <div ng-message="maxlength">Ingresar como maximo 3 caracteres.</div>
+                                </div>
+                            </md-input-container>
+                        </div>
+
+                        <div layout-gt-sm="row" ng-if="ParentScope.operac.toUpperCase() == 'BAJA'">
+                                <md-datepicker id="fecBaja" name="fecBaja"   md-placeholder="Fecha baja:"
+                                               ng-model="motivosRechazo.fecBaja" required
+                                               "config.test(motivosRechazo.fecBaja)"
+                                               md-min-date="ParentScope.minFecBaja">
+                                </md-datepicker>
+                                <div class="validation-messages" ng-messages="formMotivosRechazo.fecBaja.$error">
+                                    <div ng-message="valid">La fecha ingresada no es valida.</div>
+                                    <div ng-message="required">El campo es requerido</div>
+                                    <div ng-message="mindate">La fecha de baja no puede ser menor al día en curso.</div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row">
+            <a href="javascript:void(0)" class="md-button md-ink-ripple" ng-click="cancel()">Cancelar</a>
+            <md-button type="submit"  ng-disabled="formMotivosRechazo.$valid==false"  class="md-raised md-primary md-button md-ink-ripple" ng-keyup="$event.keyCode == 13" data-dismiss="modal">
+                <span>Aceptar</span>
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

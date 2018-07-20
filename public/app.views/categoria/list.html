@@ -1,0 +1,77 @@
+<div id="toastSelect">
+    <p></p>
+</div>
+
+<md-card >
+    <!--TOOLBAR PRINCIPAL-->
+    <md-toolbar class="md-table-toolbar md-default" ng-show="!categoriaGrilla.selected.length && !categoriaGrilla.filter.show">
+        <div class="md-toolbar-tools">
+            <span>Categorías Convenios</span>
+            <span flex></span>
+            <button class="md-fab md-button md-success md-ink-ripple" type="button" ng-click="gdCategoria.add($event)">
+                <md-tooltip md-autohide>Agregar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_add_white_24px.svg"> </md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <!--TOOLBAR PARA EDICION-->
+    <md-toolbar class="md-table-toolbar alternate" ng-show="categoriaGrilla.selected.length">
+        <div class="md-toolbar-tools">
+            <span>{{categoriaGrilla.selected.length}} {{categoriaGrilla.selected.length > 1 ? 'items' : 'item'}} seleccionados</span>
+            <span flex></span>
+            <md-button ng-show="categoriaGrilla.selected.length < 2" class="md-icon-button"
+                       aria-label="funcionalidad no especifica"
+                       ng-click="gdCategoria.edit($event)">
+                <md-tooltip md-autohide>Modificar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_edit_black_24px.svg"></md-icon>
+            </md-button>
+
+            <md-button class="md-icon-button"
+                       aria-label="funcionalidad no especifica"
+                       ng-click="gdCategoria.del($event)">
+                <md-tooltip md-autohide>Eliminar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_delete_black_24px.svg"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <!--GRILLA-->
+    <md-table-container>
+        <table data-md-table data-md-row-select="!hideCheckboxes" data-ng-model="categoriaGrilla.selected" md-progress="promise">
+            <!--barra de titulos-->
+            <thead ng-if="!hideHead" md-head data-md-order="categoriaGrilla.query.order" md-on-reorder="onReorder">
+            <tr md-row>
+                <th md-column md:order:by="codigo"><span>Código</span></th>
+                <th md-column data-md-order-by="descripcion"><span>Descripción</span></th>
+                <!--<th md-column data-md-order-by="creadoPor"><span>Creado Por</span></th>-->
+                <!--<th md-column data-md-order-by="fecCreacion"><span>Fecha de Creación</span></th>-->
+                <!--<th md-column data-md-order-by="modificadoPor"><span>Modificado Por</span></th>-->
+                <!--<th md-column data-md-order-by="fecModificacion"><span>Fecha de Modificación</span></th>-->
+            </tr>
+            </thead>
+            <!--rows de datos-->
+            <tbody md-body>
+            <tr md-row md:select="row" data-md-on-select="gdCategoria.log"
+                md-on-deselect="gdCategoria.deselect"
+                x-md-auto-select="!blah"
+                data-ng-repeat="row in categoriaGrilla.data | filter: filter.search | orderBy: categoriaGrilla.query.order | limitTo: categoriaGrilla.query.limit : (categoriaGrilla.query.page -1) * categoriaGrilla.query.limit">
+
+
+                <td md-cell>{{row.codigo}}</td>
+                <td md-cell>{{row.descripcion}}</td>
+                <!--<td md-cell>{{row.creadoPor}}</td>-->
+                <!--<td md-cell>{{row.fecCreacion | date:'dd/MM/yyyy'}}</td>-->
+                <!--<td md-cell>{{row.modificadoPor }}</td>-->
+                <!--<td md-cell>{{row.fecModificacion | date:'dd/MM/yyyy'}}</td>-->
+
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+
+    <data-md-table-pagination md-limit="categoriaGrilla.query.limit" md-page="categoriaGrilla.query.page" md-total="{{categoriaGrilla.count}}" md-on-paginate="onPaginate" md-page-select>
+    </data-md-table-pagination>
+
+</md-card>
+

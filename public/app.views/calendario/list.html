@@ -1,0 +1,97 @@
+<div id="toastSelect">
+    <p></p>
+</div>
+
+<md-card ng-init="initCalendario()">
+    <!--TOOLBAR PRINCIPAL-->
+    <md-toolbar class="md-table-toolbar md-default" ng-show="!calendarioGrilla.selected.length && !calendarioGrilla.filter.show">
+        <div class="md-toolbar-tools">
+            <span>Cronograma de Cierre</span>
+            <span flex></span>
+            <md-button class="md-icon-button md-button md-ink-ripple"
+                       aria-label="filtrar"
+                       ng-click="calendarioGrilla.filter.show = true">
+                <md-tooltip md-autohide>Buscar</md-tooltip>
+                <md-icon md-svg-src="img/icons/search.svg"> </md-icon>
+            </md-button>
+            <button class="md-fab md-button md-success md-ink-ripple" type="button"ng-click="gdCalendario.add($event)">
+                <md-tooltip md-autohide>Agregar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_add_white_24px.svg"> </md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <!--TOOLBAR PARA EDICION-->
+    <md-toolbar class="md-table-toolbar alternate" ng-show="calendarioGrilla.selected.length">
+        <div class="md-toolbar-tools">
+            <span>{{calendarioGrilla.selected.length}} {{calendarioGrilla.selected.length > 1 ? 'items' : 'item'}} seleccionados</span>
+            <span flex></span>
+            <md-button ng-show="calendarioGrilla.selected.length < 2" class="md-icon-button"
+                       aria-label="funcionalidad no especifica"
+                       ng-click="gdCalendario.edit($event)">
+                <md-tooltip md-autohide>Modificar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_edit_black_24px.svg"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <!--TOOLBAR PARA SEARCH-->
+    <md-toolbar class="md-table-toolbar md-default ng-hide" ng-show="calendarioGrilla.filter.show && !calendarioGrilla.selected.length">
+        <div class="md-toolbar-tools">
+            <md-icon md-svg-src="img/icons/search.svg"></md-icon>
+            <form flex="" name="filter.form" class="ng-valid flex">
+                <input type="text" ng-model="calendarioGrilla.query.filter" placeholder="Buscar Período" >
+                <!--ng-model-options="filter.options"-->
+            </form>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="gdCalendario.removeFilter()">
+                <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <!--GRILLA-->
+    <md-table-container>
+        <table data-md-table data-md-row-select="!hideCheckboxes" data-ng-model="calendarioGrilla.selected" md-progress="promise">
+            <!--barra de titulos-->
+            <thead ng-if="!hideHead" md-head data-md-order="calendarioGrilla.query.order" md-on-reorder="onReorder">
+            <tr md-row>
+                <th md-column md:order:by="periodo"><span>Período</span></th>
+                <th md-column data-md-order-by="instancia"><span>Instancia</span></th>
+                <th md-column data-md-order-by="fecCierre"><span>Fecha de Cierre</span></th>
+                <th md-column data-md-order-by="fecControl"><span>Fecha de Control</span></th>
+                <th md-column data-md-order-by="cotizacion"><span>Cotizacion</span></th>
+                <!--<th md-column data-md-order-by="creadoPor"><span>Creado Por</span></th>-->
+                <!--<th md-column data-md-order-by="fecCreacion"><span>Fecha de Creación</span></th>-->
+                <!--<th md-column data-md-order-by="modificadoPor"><span>Modificado Por</span></th>-->
+                <!--<th md-column data-md-order-by="fecModificacion"><span>Fecha de Modificación</span></th>-->
+            </tr>
+            </thead>
+
+
+            <!--rows de datos-->
+            <tbody md-body>
+            <tr md-row md-select="row" data-md-on-select="gdCalendario.log" md-select-id="{{row.idPeriodo}}"
+                md-on-deselect="gdCalendario.deselect"
+                x-md-auto-select="!blah"
+                data-ng-repeat="row in calendarioGrilla.data | filter: filter.search | orderBy: calendarioGrilla.query.order | limitTo: calendarioGrilla.query.limit : (calendarioGrilla.query.page -1) * calendarioGrilla.query.limit">
+                <td md-cell>{{row.periodo}}</td>
+                <td md-cell>{{row.instancia}}</td>
+                <td md-cell>{{row.fecCierre | date:'dd/MM/yyyy'}}</td>
+                <td md-cell>{{row.fecControl | date:'dd/MM/yyyy'}}</td>
+                <td md-cell>{{row.cotizacion}}</td>
+                <!--<td md-cell>{{row.creadoPor}}</td>
+                -->
+                <!--<td md-cell>{{row.fecCreacion | date:'dd/MM/yyyy'}}</td>-->
+                <!--<td md-cell>{{row.modificadoPor }}</td>-->
+                <!--<td md-cell>{{row.fecModificacion | date:'dd/MM/yyyy'}}</td>-->
+
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+
+    <data-md-table-pagination md-limit="calendarioGrilla.query.limit" md-page="calendarioGrilla.query.page" md-total="{{calendarioGrilla.count}}" md-on-paginate="onPaginate" md-page-select>
+    </data-md-table-pagination>
+
+</md-card>
+

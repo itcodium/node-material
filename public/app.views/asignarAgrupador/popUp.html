@@ -1,0 +1,64 @@
+<style>
+    md-dialog{
+        width: 400px;
+    }
+</style>
+
+<md-dialog aria-label="ABM asignarAgrupador" ng-init="init()" ng-cloak>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>{{ParentScope.titulo}}</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon md-svg-src="/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+
+
+        <md-dialog-content class="toastParent">
+            <div class="md-dialog-content">
+                <div class="modal-body">
+                    <div class="row altaPopUp">
+                      <!--
+                      -->
+                        <form id="frmAgrupamiento" ng-submit="ParentScope.config.traerAgrupamiento()" name="frmAgrupamiento" novalidate>
+                            <md-input-container class="md-toolMaster">
+                                <label>Agrupamiento</label>
+                                <input type="text" name="descripcion" ng-model="ParentScope.agrupamientos.config.query.descripcion">
+                                <div ng-messages="frmAgrupamiento.descripcion.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                </div>
+                            </md-input-container>
+                            <md-button  type="submit"    id="Filter"  class="md-icon-button md-button md-ink-ripple" aria-label="filtrar"
+                                       ng-click='ParentScope.config.traerAgrupamiento(this.frmAgrupamiento)' >
+                                <md-tooltip md-autohide>Filtrar</md-tooltip>
+                                <md-icon md-svg-src="img/icons/playlist_play.svg"></md-icon>
+                            </md-button>
+                        </form>
+
+                        <md-table-container class="md-scrollX" style="overflow: auto">
+                            <grilla mostrar-paginacion="true" paginado-db="true"
+                                    selected-grid="true"
+                                    multiple-select="false"
+                                    data="ParentScope.agrupamientos" ></grilla>
+                        </md-table-container>
+
+
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row">
+            <form id="frmAsignarAgrupador" ng-submit="ParentScope.config.submit(this.frmAsignarAgrupador,motivosRechazo);" name="frmAsignarAgrupador" novalidate>
+                <md-button class="md-button md-ink-ripple" ng-click="cancel()">Cancelar</md-button>
+                <md-button type="submit"   class="md-raised md-primary md-button md-ink-ripple" data-dismiss="modal">
+                    <span>Aceptar</span>
+                </md-button>
+            </form>
+        </md-dialog-actions>
+
+</md-dialog>
+

@@ -1,0 +1,125 @@
+<md-card flex="50" style="height:100%; margin-right:0px !important">
+    <md-toolbar class="md-table-toolbar md-default">
+        <div class="md-toolbar-tools">
+            <span>Créditos</span>
+            <span flex></span>
+            <!--
+            <md-input-container class="md-toolMaster">
+                <md-select ng-model="query.report" ng-change="load()">
+                    <md-option ng-repeat="report in reports" value="{{report}}">{{report}}</md-option>
+                </md-select>
+            </md-input-container>
+            -->
+            <button class="md-icon-button md-button md-ink-ripple"
+                    type="button"
+                    ng-click="creditosGrid.exportar()">
+                <md-tooltip md-autohide>Exportar Excel</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_file_download_36px.svg"> </md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <md-card class="md-padding" layout-xs="column" layout="row" ng-if="!showGrids">
+        No se encontraron datos para mostrar
+    </md-card>
+
+    <md-table-container ng-if="showGrids">
+        <table data-md-table data-md-row-select="false" md-progress="promiseCreditos" id="creditos">
+
+            <thead md-head data-md-order="creditosGrid.query.order" md-on-reorder="onReorder">
+            <tr md-row>
+                <th md-column data-md-order-by="convenio" ><span>Convenio</span></th>
+                <th md-column data-md-order-by="cant"  style="text-align: right;"><span>Cant.</span></th>
+                <th md-column data-md-order-by="importeTotal" style="text-align: right;"><span>Importe Total</span></th>
+            </tr>
+            </thead>
+
+            <tbody md-body>
+            <tr md-row data-ng-repeat="row in creditosGrid.data | orderBy: creditosGrid.query.order ">
+                <td md-cell>{{row.convenio}}</td>
+                <td md-cell style="text-align: right; padding-right: 15px;">{{row.cant}}</td>
+                <!--
+                <td md-cell>{{row.importeTotal}}</td>
+                -->
+                <td md-cell style="text-align: right; padding-right: 15px;">{{showVal(row.importeTotal, 'number')}}</td>
+            </tr>
+            </tbody>
+            <tfoot md-foot>
+            <tr md-row>
+                <td md-cell><strong>Total Créditos: </strong></td>
+                <td md-cell style="text-align: right; padding-right: 15px;"><strong>{{creditosGrid.cantidad}}</strong></td>
+                <td md-cell style="text-align: right; padding-right: 15px;"><strong>{{showVal(creditosGrid.importe, 'number')}}</strong></td>
+            </tr>
+            </tfoot>
+        </table>
+    </md-table-container>
+
+    <data-md-table-pagination md-page-select="false"
+                              md-limit="creditosGrid.query.limit"
+                              md-page="creditosGrid.query.page"
+                              md-total="{{creditosGrid.count}}"
+                              md-adc-info="{{creditosGrid.message}}"
+                              ng-disabled="true"
+                              ng-if="showGrids">
+    </data-md-table-pagination>
+</md-card>
+
+<md-card  flex="50" style="height: 100%">
+    <md-toolbar class="md-table-toolbar md-default">
+        <div class="md-toolbar-tools">
+            <span>Débitos</span>
+            <span flex></span>
+            <md-input-container class="md-toolMaster">
+                <md-select ng-model="query.report" ng-change="load()">
+                    <md-option ng-repeat="report in reports" value="{{report}}">{{report}}</md-option>
+                </md-select>
+            </md-input-container>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="debitosGrid.exportar()">
+                <md-tooltip md-autohide>Exportar Excel</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_file_download_36px.svg"> </md-icon>
+            </button>
+        </div>
+
+    </md-toolbar>
+
+    <md-card class="md-padding" layout-xs="column" layout="row" ng-if="!showGrids">
+        No se encontraron datos para mostrar
+    </md-card>
+
+    <md-table-container ng-if="showGrids">
+        <table data-md-table data-md-row-select="false" md-progress="promiseDebitos" id="debitos">
+
+            <thead md-head data-md-order="debitosGrid.query.order" md-on-reorder="onReorder" >
+            <tr md-row>
+                <th md-column data-md-order-by="convenio"><span>Convenio</span></th>
+                <th md-column data-md-order-by="cant" style="text-align: right;"><span>Cant.</span></th>
+                <th md-column data-md-order-by="importeTotal" style="text-align: right;"><span>Importe Total</span></th>
+            </tr>
+            </thead>
+            <tbody md-body>
+            <tr md-row
+                data-ng-repeat="row in debitosGrid.data | orderBy: debitosGrid.query.order ">
+                <td md-cell>{{row.convenio}}</td>
+                <td md-cell style="text-align: right; padding-right: 15px;">{{row.cant}}</td>
+                <td md-cell style="text-align: right; padding-right: 15px;">{{showVal(row.importeTotal, 'number')}}</td>
+            </tr>
+            </tbody>
+            <tfoot md-foot>
+            <tr md-row>
+                <td md-cell><strong>Total Débitos: </strong></td>
+                <td md-cell style="text-align: right; padding-right: 15px;"><strong>{{debitosGrid.cantidad}}</strong></td>
+                <td md-cell style="text-align: right; padding-right: 15px;"><strong>{{showVal(debitosGrid.importe, 'number')}}</strong></td>
+            </tr>
+            </tfoot>
+        </table>
+    </md-table-container>
+
+    <data-md-table-pagination md-page-select="false"
+                              md-limit="debitosGrid.query.limit"
+                              md-page="debitosGrid.query.page"
+                              md-total="{{debitosGrid.count}}"
+                              md-adc-info="{{debitosGrid.message}}"
+                              ng-disabled="true"
+                              ng-if="showGrids">
+    </data-md-table-pagination>
+</md-card>

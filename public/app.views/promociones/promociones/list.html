@@ -1,0 +1,133 @@
+</md-card>
+<style>
+    .layout-padding, .layout-padding-gt-sm, .layout-padding-md, .layout-padding > *, .layout-padding-gt-sm > *, .layout-padding-md > *, .layout-padding > .flex, .layout-padding > .flex-gt-sm, .layout-padding > .flex-md {
+        padding: 0px;
+    }
+</style>
+
+<md-card layout-padding style="overflow:auto">
+    <md-toolbar class="md-table-toolbar md-default" ng-show="promociones.filter.show && promociones.selected.length == 0">
+        <div class="md-toolbar-tools">
+            <span>Promociones</span>
+            <span flex></span>
+            <md-input-container class="md-toolMaster"><style>
+                .row-break {
+                    -ms-word-break: break-all;
+                    word-break: break-all;
+                }
+            </style>
+                <md-select ng-model="seleccionado" ng-change="cboTipoConsulta_onChange()">
+                    <md-option ng-repeat="tipo in tipos" value="{{tipo.codigo}}">{{tipo.descripcion}}</md-option>
+                    <!--<md-option ng-repeat="tipo in tipos" value="{{tipo}}">{{tipo}}</md-option>-->
+                </md-select>
+            </md-input-container>
+            <div flex layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+                <md-switch
+                        ng-change="resetPage()"
+                        ng-model="grid.query.showDeleted"
+                        aria-label="Visible">
+                </md-switch>
+                <p class="md-body-1">Incluir dados de baja</p>
+            </div>
+            <md-button class="md-icon-button md-button md-ink-ripple"
+                       aria-label="filtrar"
+                       ng-click="promociones.filter.show = false;">
+                <md-tooltip md-autohide>Filtrar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_filter_list_black_24px.svg"></md-icon>
+
+            </md-button>
+            <button class="md-fab md-button md-success md-ink-ripple" type="button" ng-click="config.openAddForm()">
+                <md-tooltip md-autohide>Agregar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_add_white_24px.svg"> </md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <md-toolbar class="md-table-toolbar md-default ng-hide" ng-show="!promociones.filter.show && promociones.selected.length ==0">
+        <div class="md-toolbar-tools">
+            <md-icon md-svg-src="img/icons/search.svg"></md-icon>
+            <form flex="" name="formFilter" class="ng-valid flex">
+                <input focus-search="!promociones.filter.show" type="text" ng-model="promociones.query.filter.value" placeholder="Buscar" >
+            </form>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="config.removeFilter()">
+                <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <div>
+        <md-toolbar class="md-table-toolbar alternate md-hide"   ng-show="promociones.selected.length > 0">
+            <div class="md-toolbar-tools">
+                <span>{{promociones.selected.length}} {{promociones.selected.length > 1 ? 'items seleccionados' : 'item seleccionado'}}</span>
+                <span flex></span>
+                <md-button
+                        ng-show="true"
+                        class="md-icon-button"
+                        aria-label="Modificar"
+                        ng-click="config.openUpdateForm()"
+                        ng-if="promociones.puedeModificar"
+                >
+                    <md-tooltip md-autohide>Modificar</md-tooltip>
+                    <md-icon md-svg-src="img/icons/ic_edit_black_24px.svg"></md-icon>
+                </md-button>
+                <md-button
+                        ng-show="true"
+                        class="md-icon-button"
+                        aria-label="Modificar"
+                        ng-click="config.FileGenerator()"
+                        ng-if="promociones.puedeGenerarArchivo"
+                    >
+                    <md-tooltip md-autohide>Generar Archivo de Baja</md-tooltip>
+                    <md-icon md-svg-src="img/icons/ic_insert_drive_file_24px.svg"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-table-container class="md-tableHeadLine md-scrollX" >
+            <table md-progress="promisePromociones" data-md-table ng-model="promociones.selected" id="grillaPromociones">
+
+                <thead data-md-order="promociones.query.order" md-on-reorder="config.onReorder" md-head >
+                <tr md-row>
+                    <th md-column></th>
+                    <th ng-show="column.show" md-column
+                        ng-repeat="column in promociones.columns"
+                        data-md-numeric="column.filter == 'number'"
+                        data-md-order-by="{{column.field}}"
+                        ng-style="{'width': column.width}">
+                        <span ng-bind-html="column.name | html"></span>
+                        <md-tooltip ng-if="column.tip" md-autohide md-direction="top">{{column.tip}}</md-tooltip>
+                    </th>
+                </tr>
+                </thead>
+                <tbody md-body>
+                <tr md-row data-ng-repeat="row in filterResult =( promociones.data  | filter:filtering |  filterFieldsStartBy: promociones.query.filter.value:['tipo','codigo','descripcion','validacion']  | limitTo: promociones.query.limit : (promociones.query.page -1) * promociones.query.limit)">
+                    <td md-cell>
+                        <md-checkbox
+                                ng-model="row.selected"
+                                aria-label="" id="{{$index}}"
+                                ng-change="config.selectCheckbox($index, row)"
+                        >
+                        </md-checkbox>
+                    </td>
+                    <td md-cell ng-repeat="column in promociones.columns" ng-show="column.show"
+                        ng-click="config.editRow($event,row,column)"
+                        ng-style="{'width': column.width}" ng-class="column.class">
+                        {{ config.showVal(row[column.field], column.filter )}}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </md-table-container>
+        <data-md-table-pagination ng-if="promociones.data.length"
+                                  md-limit="promociones.query.limit"
+                                  md-page="promociones.query.page"
+                                  md-total="{{promociones.data.length}}"
+                                  md-on-paginate="onPaginate"
+                                  md-page-select>
+        </data-md-table-pagination>
+    </div>
+
+</md-card>
+
+<md-card class="md-padding" layout-xs="column" layout="row" ng-if="promociones.data.length === 0">
+    No se encontraron datos para mostrar
+</md-card>

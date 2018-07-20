@@ -1,0 +1,141 @@
+<div id="toastSelect">
+	<p></p>
+</div>
+
+<md-card ng-init = "load()">
+	<!--TOOLBAR PRINCIPAL-->
+	<md-toolbar class="md-table-toolbar md-default"  ng-show="!show.filter">
+		<div class="md-toolbar-tools">
+			<span>Reporte de Tarjetas de Crédito</span>
+			<span flex></span>
+			<button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="show.filter=true">
+				<md-tooltip md-autohide>Filtros</md-tooltip>
+				<md-icon md-svg-src="img/icons/ic_filter_list_24px.svg"> </md-icon>
+			</button>
+			<button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="exportarExcel()">
+				<md-tooltip md-autohide>Exportar Excel</md-tooltip>
+				<md-icon md-svg-src="img/icons/ic_file_download_36px.svg"> </md-icon>
+			</button>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="mostrarArchivos()">
+                <md-tooltip md-autohide>Archivos</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_launch_24px.svg"> </md-icon>
+            </button>
+		</div>
+	</md-toolbar>
+
+	<!-- TOOLBAR PARA FILTROS -->
+	<md-toolbar class="md-table-toolbar md-default ng-hide" ng-show="show.filter">
+		<div class="md-toolbar-tools">
+			<form flex="" name="filterfrm" class="ng-valid flex">
+				<md-chips ng-model="chip.selectedItems" name="param"
+						 	md-max-chips="10"
+						  	md-autocomplete-snap
+							md-transform-chip="chip.transformChip($chip, chip.searchText, this.filterfrm.param )"
+                            md-on-remove = "chip.remove(this.filterfrm.param)"
+							md-enable-chip-edit="true"
+                            md-not-auto-append="true">
+					<md-autocomplete
+							md-selected-item="chip.selectedItem"
+							md-search-text="chip.searchText"
+							md-items="elem in chip.querySearch(chip.searchText)"
+							md-item-text="elem.field"
+							placeholder="insertar parámetros">
+						<span md-highlight-text="chip.searchText">{{elem.field}}::{{elem.tip}}</span>
+					</md-autocomplete>
+
+				</md-chips>
+				<div class="errors" ng-messages="filterfrm.param.$error">
+					<div ng-message="md-max-chips">Se alcanzó el maximo de parametros permitidos.</div>
+                    <div ng-message="chip">{{chip.error}}</div>
+				</div>
+			</form>
+
+			<button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="filterfrm.param.$error.chip || onFilter()">
+				<md-icon class="ready" ng-show="chip.selectBuffer" md-svg-src="img/icons/playlist_play.svg"></md-icon>
+                <md-icon class="done" ng-show="!chip.selectBuffer" md-svg-src="img/icons/playlist_check.svg"></md-icon>
+                <md-tooltip md-autohide> {{ chip.selectBuffer ?  'Aplicar filtro' : 'Filtro Aplicado' }}</md-tooltip>
+			</button>
+			<button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="show.filter=false">
+				<md-icon md-svg-src="img/icons/close.svg"></md-icon>
+			</button>
+		</div>
+	</md-toolbar>
+
+
+	<!--GRILLA DATOS -->
+	<md-table-container class="md-scrollX">
+		<table data-md-table data-md-row-select="false" md-progress="promiseObj" id="grillaList">
+			<!--barra de titulos-->
+			<thead md-head data-md-order="grilla.query.order" md-on-reorder="onReorder">
+				<tr md-row>
+					<th ng-show="column.show" md-column
+						ng-repeat="column in columns"
+						data-md-numeric="column.filter == 'number'"
+						data-md-order-by="{{column.field}}" >
+						<span>{{column.name}}</span>
+						<md-tooltip ng-if="column.tip" md-autohide md-direction="top">{{column.tip}}</md-tooltip>
+					</th>
+				</tr>
+			</thead>
+
+			<!--rows de datos-->
+			<tbody md-body>
+				<!--orderBy: grilla.query.order |-->
+				<tr md-row data-ng-repeat="row in grilla.data | limitTo: reporteTC.query.limit : (reporteTC.query.page -1) * reporteTC.query.limit">
+					<td md-cell
+						ng-repeat="column in columns"
+						ng-show="column.show"
+						ng-style="{'min-width': column.width}">
+						{{ showVal(row[column.field], column.filter )}}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</md-table-container>
+
+
+	<data-md-table-pagination md-limit="grilla.query.limit"
+							  md-page="grilla.query.page"
+							  md-total="{{grilla.count}}"
+							  md-on-paginate="onPaginate"
+							  md-adc-info="{{grilla.totales}}"
+							  md-page-select>
+	</data-md-table-pagination>
+</md-card>
+<md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="rightNavArchivos" style="width:500px;">
+    <md-content class="contentSidenav">
+        <section layout="row" layout-sm="column" layout-align="left center" layout-wrap class="instanciaDescripcion">
+            <h2 class="md-title">Archivos</h2>
+        </section>
+        <section layout="row" layout-sm="column" >
+            <md-table-container class="log-detail">
+                <table data-md-table>
+                    <thead md-head>
+                        <tr md-row>
+                            <th md-column ><span>Archivo</span></th>
+                            <th md-column ><span>Fecha de Archivo</span></th>
+                            <th md-column ><span>Entidad</span></th>
+                            <th md-column ><span>Cartera</span></th>
+                        </tr>
+                    </thead>
+                    <tbody md-body>
+                        <tr md-row ng-repeat="archivo in archivos">
+                            <td md-cell>
+                                {{archivo.archivo}}
+                            </td>
+                            <td md-cell>
+                                {{archivo.fechaCierreActual | date: 'dd/MM/yyyy' : 'UTC'}}
+                            </td>
+                            <td md-cell>
+                                {{archivo.entidad}}
+                            </td>
+                            <td md-cell>
+                                {{archivo.grupo}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </md-table-container>
+        </section>
+    </md-content>
+</md-sidenav>

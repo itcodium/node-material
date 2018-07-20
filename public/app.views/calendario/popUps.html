@@ -1,0 +1,85 @@
+<md-dialog aria-label="ABM Calendario" ng-init="initPopUp()" ng-cloak flex="30">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>{{operac}} Calendario</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="ctrl.cancel()">
+                <md-icon md-svg-src="/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="toastParent">
+        <div class="md-dialog-content">
+            <div class="modal-body">
+                <form id="Container_Form" ng-submit="ctrl.confirmOperation(formCalendario.$error)" name="formCalendario" role="form">
+                    <div class="row altaPopUp">
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex="60">
+                                <label for="txtCode">Periodo:</label>
+                                    <input type="text" name="code" id="txtCode" ng-if="operac == 'Alta'" maxlength="7"
+                                           ng-model="calendario.periodo" required placeholder="AAAA-MM" ng-pattern="regex"  role="code">
+                                    <input type="text" name="code" id="txtCodeDos" ng-if="operac != 'Alta'" maxlength="7"
+                                       ng-model="calendario.periodo" required role="code" disabled>
+                                    <span class=".control-group.error .control-label md-error" ng-if="errorForm == true" ng-show="formCalendario.code.$error.pattern">El Período no tiene el formato correcto (XXXX-XX) <i>Sólo carácteres numéricos</i>.</span>
+                                    <span class=".control-group.error .control-label md-error" ng-if="errorForm == true" ng-show="formCalendario.code.$error.required">Ingrese Período.</span>
+                            </md-input-container>
+
+                            <md-input-container class="md-block" flex="20">
+                                <label class="control-label col-sm-2" for="txtDescripcion">Instancia:</label>
+                                <input type="text" name="descripcionUno" ng-if="operac == 'Alta'" id="txtDescripcion" maxlength="1" ng-pattern="regexOnlyNumbers"
+                                       ng-model="calendario.instancia" required role="descripcion">
+                                <input type="text" name="descripcion"  ng-if="operac != 'Alta'" id="txtDescripcionDos" maxlength="1"
+                                       ng-model="calendario.instancia" required role="descripcion" disabled>
+                                <span class=".control-group.error .control-label md-error" ng-if="errorForm == true" ng-show="formCalendario.descripcionUno.$error.pattern">La instancia debe ser mayor a 0 y menor o igual a 4.</span>
+                                <span class=".control-group.error .control-label md-error" ng-if="errorForm == true" ng-show="formCalendario.descripcionUno.$error.required">Ingrese Instancia.</span>
+                            </md-input-container>
+
+                        </div>
+                        <div layout-gt-sm="row">
+                            <!--<label for="fecCierre">Fecha Cierre:</label>-->
+                            <md-datepicker id="fecCierre" name="fecCierre" md-placeholder="Fecha Cierre:" class="mclr"
+                                           ng-model="calendario.fecCierre" required ng-change="changeFecha()">
+                            </md-datepicker>
+                            <div class="validation-messages" ng-messages="formCalendario.fecCierre.$error" ng-if="errorForm == true">
+                                <div class="custom-alert"  ng-if="!formCalendario.fecCierre.$error.valid" ng-message="required">El campo fecha es requerido.</div>
+                                <div class="custom-alert"  ng-message="valid">La fecha no es valida</div>
+                            </div>
+                            <!--<label for="fecControl">Fecha Control:</label>-->
+                            <md-datepicker id="fecControl" name="fecControl" md-placeholder="Fecha Control:" class="mclr"
+                                           md-min-date="calendario.fecCierre" ng-model="calendario.fecControl" required > </md-datepicker>
+                            <div class="validation-messages" ng-messages="formCalendario.fecControl.$error" ng-if="errorForm == true">
+                                <div  class="custom-alert" ng-if="!formCalendario.fecControl.$error.valid" ng-message="required">El campo fecha es requerido.</div>
+                                <div  class="custom-alert" ng-message="valid">La fecha no es valida</div>
+                                <div  class="custom-alert" ng-message="mindate">La fecha de control debe ser mayor que la fecha de cierre.</div>
+                            </div>
+                        </div>
+                        <div layout-gt-sm="row">
+                            <!--<label for="cotizacion">cotizacion:</label>-->
+                            <md-input-container class="md-block" flex="100">
+                                <label class="control-label col-sm-6" for="txtDescripcion">Cotizacion:</label>
+                                <input type="text" name="cotizacion"  ng-if="operac == 'Alta'" id="txtCotizacion"
+                                                                                                    ng-model="calendario.cotizacion"  role="descripcion">
+
+                                <input type="number" name="cotizacion"  ng-if="operac != 'Alta'" id="txtCotizacion"
+                                                                                 ng-model="calendario.cotizacion" >
+                                <div ng-messages="formCalendario.cotizacion.$error" >
+                                    <div ng-message="required">*</div>
+                                    <div ng-message="number">Ingresar solo números</div>
+                                </div>
+                            </md-input-container>
+                        </div>
+                    </div>
+                    <input type="submit"
+                           style="position: absolute; left: -9999px; width: 1px; height: 1px;"
+                           tabindex="-1" />
+                </form>
+            </div>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <a href="javascript:void(0)" class="md-button md-ink-ripple" ng-click="ctrl.cancel()">Cancelar</a>
+        <md-button type="button" class="md-raised md-primary md-button md-ink-ripple" ng-keyup="$event.keyCode == 13" ng-click="ctrl.confirmOperation(formCalendario.$error)" data-dismiss="modal">
+            <span>Aceptar</span>
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

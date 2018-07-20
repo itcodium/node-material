@@ -1,0 +1,192 @@
+
+<div>
+    <md-card>
+
+        <md-toolbar class="md-table-toolbar md-default">
+            <div class="md-toolbar-tools">
+                <span>Rechazos de Novedades Masivas Unificado</span>
+                <span flex></span>
+
+            </div>
+        </md-toolbar>
+
+    <md-card>
+        <md-toolbar class="md-table-toolbar md-default" ng-show="!grillaAccountNumber.filterShow">
+            <div class="md-toolbar-tools">
+                <span>Cuentas</span>
+                <span flex></span>
+                <md-button class="md-icon-button md-button md-ink-ripple"
+                           aria-label="filtrar"
+                           ng-click="grillaAccountNumber.filterShow = true">
+                    <md-tooltip md-autohide>Buscar</md-tooltip>
+                    <md-icon md-svg-src="img/icons/search.svg"> </md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+
+        <md-toolbar class="md-table-toolbar md-default ng-hide" ng-show="grillaAccountNumber.filterShow">
+            <div class="md-toolbar-tools">
+                <div flex layout="row" layout-align="left">
+                    <form name="formValidate">
+                        <md-input-container class="md-toolMaster" style="width: 180px">
+                            <label>Nº de Cuenta</label>
+                            <input id="account_Number" ng-keypress="onKeyUp($event)"  ng-model="grillaAccountNumber.query.filterAccountNumber"  style="width: 200px;" type="text" maxlength="16" name="account_number_cuenta" ng-pattern="/^[0-9]*$/"  />
+                            <div ng-messages="formValidate.account_number_cuenta.$error" >
+                                <div ng-message="number">Ingresar solo números</div>
+                                <div ng-message="min">Ingresar números mayores a cero.</div>
+                                <div ng-message="pattern">Ingresar números enteros</div>
+                            </div>
+                        </md-input-container>
+                        <button class="md-icon-button md-button md-ink-ripple" type="submit" >
+                            <md-tooltip>Realizar Busqueda</md-tooltip>
+                            <md-icon class="ready" ng-click="onFilterAccountNumber(grillaAccountNumber.query.filterAccountNumber)" md-svg-src="img/icons/playlist_play.svg"></md-icon>
+                        </button>
+                    </form>
+
+                </div>
+                <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="onFilter()">
+                    <md-icon class="done" ng-show="filtrado" md-svg-src="img/icons/playlist_check.svg"></md-icon>
+                    <md-tooltip md-autohide> {{ !filtrado ?  'Aplicar filtro' : 'Filtro Aplicado' }}</md-tooltip>
+                </button>
+
+
+                <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="closeFilterAccountNumber();" >
+                    <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+                    <md-tooltip md-autohide>Cerrar</md-tooltip>
+                </button>
+            </div>
+        </md-toolbar>
+
+        <md-card class="md-padding" layout-xs="column" layout="row" ng-if="cuentaGrid.count === 0">
+            No se encontraron datos para mostrar
+        </md-card>
+
+        <md-table-container ng-if="cuentaGrid.count > 0">
+            <table data-md-table data-md-row-select="false" md-progress="promiseRechazosUnificado">
+
+                <thead md-head data-md-order="cuentaGrid.query.order">
+                <tr md-row>
+                    <th md-column md:order:by="fecCreacion" ><span>Fecha de Proceso</span></th>
+                    <th md-column data-md-order-by="entidad"><span>Entidad</span></th>
+                    <th md-column data-md-order-by="cuenta"><span> Cuenta</span></th>
+                    <th md-column data-md-order-by="mensajeValidacion"><span>Motivo</span></th>
+
+                </tr>
+                </thead>
+                <tbody md-body>
+                <tr md-row
+                    data-ng-repeat="row in cuentaGrid.data | orderBy: cuentaGrid.query.order | filter: filtering | limitTo: cuentaGrid.query.limit : (cuentaGrid.query.page - 1) * cuentaGrid.query.limit">
+                    <td md-cell>{{ row.fecCreacion | date: 'dd/MM/yyyy': 'UTC' }}</td>
+                    <td md-cell>{{ row.entidad }}</td>
+                    <td md-cell>{{ row.cuenta }}</td>
+                    <td md-cell>{{ row.mensajeValidacion }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </md-table-container>
+        <data-md-table-pagination ng-if="cuentaGrid.data.length"
+                                  md-limit="cuentaGrid.query.limit"
+                                  md-limit-options="[5, 10, 15]"
+                                  md-page="cuentaGrid.query.page"
+                                  md-total="{{cuentaGrid.data.length}}"
+                                  md-page-select>
+        </data-md-table-pagination>
+
+    </md-card>
+
+
+    <md-card>
+        <md-toolbar class="md-table-toolbar md-default" ng-show="!grillaCard.filterShow">
+            <div class="md-toolbar-tools">
+                <span flex>Tarjetas</span>
+                <span flex></span>
+                <md-button class="md-icon-button md-button md-ink-ripple"
+                           aria-label="filtrar"
+                           ng-click="grillaCard.filterShow = true">
+                    <md-tooltip md-autohide>Buscar</md-tooltip>
+                    <md-icon md-svg-src="img/icons/search.svg"> </md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+
+        <!-- Filter Card-->
+        <md-toolbar class="md-table-toolbar md-default ng-hide" ng-show="grillaCard.filterShow">
+            <div class="md-toolbar-tools">
+                <div flex layout="row" layout-align="left">
+                    <form ng-submit="onFilter()" name="frmCreditCard">
+                        <md-input-container class="md-toolMaster" style="width: 180px">
+                            <label>Nº de Cuenta</label>
+                            <input id="RPT_Account_Number" ng-keypress="onKeyUp($event)"  ng-model="grillaCard.query.filterAccountNumber"  style="width: 200px;" type="text" maxlength="16" name="account_number" ng-pattern="/^[0-9]*$/"  />
+                            <div ng-messages="frmCreditCard.account_number.$error" >
+                                <div ng-message="number">Ingresar solo números</div>
+                                <div ng-message="min">Ingresar números mayores a cero.</div>
+                                <div ng-message="pattern">Ingresar números enteros</div>
+                            </div>
+                        </md-input-container>
+                        <md-input-container class="md-toolMaster" style="width: 180px">
+                            <label>Nº Tarjeta de Crédito</label>
+                            <input id="RPT_Credit_Card_Number" ng-keypress="onKeyUp($event)"  ng-model="grillaCard.query.filterCardNumber" style="width: 200px;" type="text" maxlength="16" name="credit_card_number" ng-pattern="/^[0-9]*$/"  />
+                            <div ng-messages="frmCreditCard.credit_card_number.$error" >
+                                <div ng-message="number">Ingresar solo números</div>
+                                <div ng-message="min">Ingresar números mayores a cero.</div>
+                                <div ng-message="pattern">Ingresar números enteros</div>
+                            </div>
+                        </md-input-container>
+                        <button class="md-icon-button md-button md-ink-ripple" type="submit" >
+                            <md-tooltip>Realizar Busqueda</md-tooltip>
+                            <md-icon class="ready" ng-click="onFilterCard(grillaCard.query.filterAccountNumber, grillaCard.query.filterCardNumber)" md-svg-src="img/icons/playlist_play.svg"></md-icon>
+                        </button>
+                    </form>
+                </div>
+                <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="onFilter()">
+                    <md-icon class="done" ng-show="filtrado" md-svg-src="img/icons/playlist_check.svg"></md-icon>
+                    <md-tooltip md-autohide> {{ !filtrado ?  'Aplicar filtro' : 'Filtro Aplicado' }}</md-tooltip>
+                </button>
+
+
+                <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="closeFilterCard();" >
+                    <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+                    <md-tooltip md-autohide>Cerrar</md-tooltip>
+                </button>
+            </div>
+        </md-toolbar>
+
+        <md-card class="md-padding" layout-xs="column" layout="row" ng-if="tarjetaGrid.count === 0">
+            No se encontraron datos para mostrar
+        </md-card>
+
+        <md-table-container ng-if="tarjetaGrid.count > 0">
+            <table data-md-table md-progress="promiseTarjetas">
+
+                <thead md-head data-md-order="tarjetaGrid.query.order">
+                <tr md-row>
+                    <th md-column md:order:by="fecCreacion" ><span>Fecha de Proceso</span></th>
+                    <th md-column data-md-order-by="entidad"><span>Entidad</span></th>
+                    <th md-column data-md-order-by="cuenta"><span>Cuenta</span></th>
+                    <th md-column data-md-order-by="nroTarjeta"><span>Tarjeta</span></th>
+                    <th md-column data-md-order-by="mensajeValidacion"><span>Motivo</span></th>
+                </tr>
+                </thead>
+                <tbody md-body>
+                <tr md-row
+                    data-ng-repeat="row in tarjetaGrid.data | orderBy: tarjetaGrid.query.order | filter: filtering | limitTo: tarjetaGrid.query.limit : (tarjetaGrid.query.page - 1) * tarjetaGrid.query.limit">
+                    <td md-cell>{{ row.fecCreacion | date: 'dd/MM/yyyy': 'UTC' }}</td>
+                    <td md-cell>{{ row.entidad }}</td>
+                    <td md-cell>{{ row.cuenta }}</td>
+                    <td md-cell>{{ row.nroTarjeta }}</td>
+                    <td md-cell>{{ row.mensajeValidacion }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </md-table-container>
+        <data-md-table-pagination ng-if="tarjetaGrid.data.length"
+                                  md-limit="tarjetaGrid.query.limit"
+                                  md-limit-options="[5, 10, 15]"
+                                  md-page="tarjetaGrid.query.page"
+                                  md-total="{{tarjetaGrid.data.length}}"
+                                  md-page-select>
+        </data-md-table-pagination>
+
+</md-card>
+    </md-card>
+</div>

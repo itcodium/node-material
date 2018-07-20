@@ -1,0 +1,89 @@
+<style>
+    .row-break {
+        -ms-word-break: break-all;
+        word-break: break-all;
+    }
+</style>
+<md-card >
+    <md-toolbar class="md-table-toolbar md-default" ng-show="eventosGrid.selected.length === 0">
+        <div class="md-toolbar-tools">
+            <span>Eventos</span>
+            <span flex></span>
+            <div flex layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+                <md-switch
+                        ng-change="resetPage()"
+                        ng-model="eventosGrid.query.showDeleted"
+                        aria-label="Visible">
+                </md-switch>
+                <p class="md-body-1">Incluir dados de baja</p>
+            </div>
+            <button class="md-fab md-button md-success md-ink-ripple" type="button" ng-click="openAddForm()">
+                <md-tooltip md-autohide>Agregar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_add_white_24px.svg"> </md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <div>
+        <md-toolbar class="md-table-toolbar alternate md-hide" ng-show="eventosGrid.selected.length > 0">
+            <div class="md-toolbar-tools">
+                <span>{{eventosGrid.selected.length}} {{eventosGrid.selected.length > 1 ? 'items seleccionados' : 'item seleccionado'}}</span>
+                <span flex></span>
+                <md-button class="md-icon-button" aria-label="Modificar" ng-hide="eventosGrid.selected.length > 1" ng-click="update()">
+                    <md-tooltip md-autohide>Modificar</md-tooltip>
+                    <md-icon md-svg-src="img/icons/ic_edit_black_24px.svg"></md-icon>
+                </md-button>
+                <md-button class="md-icon-button"
+                           aria-label="Dar de baja"
+                           ng-click="dialogDelete()">
+                    <md-tooltip md-autohide>Baja</md-tooltip>
+                    <md-icon md-svg-src="img/icons/ic_delete_black_24px.svg"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+
+        <md-table-container ng-if="eventosGrid.count > 0">
+            <table data-md-table md-progress="promiseEventos" ng-model="eventosGrid.selected" >
+
+                <thead md-head data-md-order="eventosGrid.query.order">
+                <tr md-row>
+                    <th md-column style="width: 40px"></th>
+                    <th md-column md:order:by="codEvento" style="width: 60px"><span>Evento</span></th>
+                    <th md-column md-order-by="descripcion" style="width: 360px"><span>Descripción</span></th>
+                    <th md-column md-order-by="DescripcionGrupo" style="width: 360px"><span>Descripción Grupo</span></th>
+                    <th md-column md-order-by="fecBaja"><span>Fecha Baja</span></th>
+                </tr>
+                </thead>
+                <tbody md-body>
+                <tr md-row
+                    data-ng-repeat="row in eventosGrid.data | orderBy: eventosGrid.query.order | filter: filtering | limitTo: eventosGrid.query.limit : (eventosGrid.query.page - 1) * eventosGrid.query.limit">
+                    <td md-cell>
+                        <md-checkbox
+                                ng-disabled="!estaVigente(row.fecBaja)"
+                                ng-model="row.selected"
+                                aria-label="" id="{{$index}}"
+                                ng-change="onSelectRow(row, $index)">
+                        </md-checkbox>
+                    </td>
+                    <td md-cell>{{ row.codEvento }}</td>
+                    <td md-cell class="row-break">{{ row.descripcion }}</td>
+                    <td md-cell>{{ row.DescripcionGrupo }}</td>
+                    <td md-cell>{{ row.fecBaja | date: 'dd/MM/yyyy': 'UTC' }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </md-table-container>
+        <data-md-table-pagination ng-if="eventosGrid.data.length"
+                                  md-limit="eventosGrid.query.limit"
+                                  md-limit-options="[5, 10, 15]"
+                                  md-page="eventosGrid.query.page"
+                                  md-total="{{eventosGrid.count}}"
+                                  md-page-select>
+        </data-md-table-pagination>
+    </div>
+
+</md-card>
+
+<md-card class="md-padding" layout-xs="column" layout="row" ng-if="eventosGrid.data.length === 0">
+    No se encontraron datos para mostrar
+</md-card>

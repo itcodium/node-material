@@ -1,0 +1,79 @@
+
+<md-sidenav class="md-sidenav-right md-whiteframe-z2 sidenavClass" md-component-id="rightNavAgenda" style="width:450px;">
+    <md-content class="contentSidenav">
+        <section layout="row" layout-sm="column" layout-align="left center" layout-wrap class="instanciaDescripcion">
+            <b>{{agendaSeleccionada.descripcion}}</b> <span ng-if="agendaSeleccionada.instancia != NULL">/ Instancia:<b>{{agendaSeleccionada.instancia}}</b></span>
+            <span class="titlabel">
+                Datos de corrida del Proceso
+            </span>
+        </section>
+
+        <section ng-if="agendaSeleccionada.periodo != NULL" layout="row" layout-sm="column" layout-align="left center" layout-wrap class="periodoSpan">
+            Periodo: {{agendaSeleccionada.periodo | date:'yyyy MMMM'}}
+        </section>
+
+        <section layout="row" layout-sm="column" layout-align="left center" layout-wrap class="logs">
+            <span class="titlabel">
+                Pasos
+            </span>
+            <md-table-container style="max-height: 310px;">
+                <table data-md-table data-md-row-select="!hideCheckboxes" data-ng-model="pasosAgendas.selected" md-progress="promise">
+                    <thead ng-if="!hideHead" md-head data-md-order="pasosAgendas.query.order" md-on-reorder="onReorder">
+                    </thead>
+                    <tbody md-body>
+                    <tr md-row md:select="pasoAgenda" data-md-on-select="log" md-on-deselect="deselect" data-ng-repeat="(index, pasoAgenda) in pasosAgendas.data | orderBy:'paso -pasoInterno'">
+                        <td class="pasoCell">
+                            <div class="pasoGrid" ng-class="{'firstPasoGrid': index==0}">
+                                <span class="md-caption">{{pasoAgenda.paso}}.{{pasoAgenda.pasoInterno}}</span>
+                                <md-tooltip class="multiline md-whiteframe-3dp" md-direction="right">
+                                    Tarea {{pasoAgenda.paso}} / Paso {{pasoAgenda.pasoInterno}}
+                                    <br> Inicio: {{pasoAgenda.fecInicioCorridaPaso | date: 'yyyy-MM-dd HH:mm:ss:sss'}}
+                                    <br> Final :  {{pasoAgenda.fecFinCorridaPaso | date: 'yyyy-MM-dd HH:mm:ss:sss'}}
+                                </md-tooltip>
+                            </div>
+                            <div class="lineDiv">
+                                <div class="lineDivChild" ng-class="{'lastIndexLine': $last}"></div>
+                            </div>
+
+                        </td>
+
+                        <td md-cell class="md-caption">
+                            {{pasoAgenda.nombre}}
+                            <div class="titlabel" > asdfasdf</div>
+                            <div class="titlabel" > asdfasdfasdfas</div>
+
+                        </td>
+
+                        <!--
+                        <td md-cell><div class="letterGrid">{{pasoAgenda.reservado}}</div></td>
+                         -->
+                        <td md-cell>
+                            <md-icon ng-if="pasoAgenda.estado == 'ERROR'" md-svg-src="img/icons/ic_error_red_24px.svg">
+                                <md-tooltip md-direction="left" class="md-body-1">
+                                    {{pasoAgenda.error.split(".")[1].length<=2 ? pasoAgenda.error : pasoAgenda.error.split(".")[1];}}
+                                </md-tooltip>
+                            </md-icon>
+                            <md-icon ng-if="pasoAgenda.estado == 'WARNING'" md-svg-src="img/icons/ic_warning_yellow_24px.svg">
+                                <!--<md-tooltip md-direction="left" class="md-body-1">-->
+                                <!--{{pasoAgenda.observaciones}}-->
+                                <!--</md-tooltip>-->
+                            </md-icon>
+                            <md-icon ng-if="pasoAgenda.estado == 'OK'" md-svg-src="img/icons/ic_check_circle_green_24px.svg">
+                            </md-icon>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </md-table-container>
+        </section>
+    </md-content>
+    <md-list class="pagin-sidenav">
+        <md-list-item class="md-3-line" >
+            <img src="/img/icons/ic_account_circle_white_24px.svg" class="md-avatar"/>
+            <div class="md-list-item-text">
+                <h5 style="font-weight: bold;color: #fff;">uuuu</h5>
+            </div>
+            <md-icon style="margin-left: 0;margin-right: 0px;width: 18px;" md-svg-icon="/img/icons/ic_input_white_18px.svg" ng-click="global.logout($event)" ></md-icon>
+        </md-list-item>
+    </md-list>
+</md-sidenav>

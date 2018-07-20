@@ -1,0 +1,108 @@
+<div id="toastSelect">
+	<p></p>
+</div>
+
+<md-card ng-init="initPerfiles()">
+	<!--TOOLBAR PRINCIPAL-->
+	<md-toolbar class="md-table-toolbar md-default" ng-show="!perfilGrilla.selected.length && !perfilGrilla.filter.show">
+		<div class="md-toolbar-tools">
+			<span>Perfiles</span>
+			<div flex layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+				<md-switch
+						ng-model="showDadosBaja"
+						ng-click="gdPerfil.getData(!showDadosBaja)"
+						aria-label="Visible"
+						ng-change="vm.toggleActivation()">
+				</md-switch>
+				<p class="md-body-1">Incluir dados de baja</p>
+			</div>
+
+			<md-button class="md-icon-button md-button md-ink-ripple"
+					   aria-label="filtrar"
+					   ng-click="perfilGrilla.filter.show = true">
+				<md-tooltip md-autohide>Buscar</md-tooltip>
+				<md-icon md-svg-src="img/icons/search.svg"> </md-icon>
+			</md-button>
+
+			<button class="md-fab md-button md-success md-ink-ripple" type="button" ng-click="gdPerfil.add($event)">
+				<md-tooltip md-autohide>Agregar</md-tooltip>
+				<md-icon md-svg-src="img/icons/ic_add_white_24px.svg"> </md-icon>
+			</button>
+		</div>
+	</md-toolbar>
+
+
+	<!--TOOLBAR PARA SEARCH-->
+	<md-toolbar class="md-table-toolbar md-default ng-hide" ng-show="perfilGrilla.filter.show && !perfilGrilla.selected.length">
+		<div class="md-toolbar-tools">
+			<md-icon md-svg-src="img/icons/search.svg"></md-icon>
+			<form flex="" name="filter.form" class="ng-valid flex">
+				<input type="text" focus-search="perfilGrilla.filter.show" ng-model="perfilGrilla.query.filter" placeholder="Buscar Perfil" >
+				<!--ng-model-options="filter.options"-->
+			</form>
+			<button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="gdPerfil.removeFilter()">
+				<md-icon md-svg-src="img/icons/close.svg"></md-icon>
+			</button>
+		</div>
+	</md-toolbar>
+
+	<!--TOOLBAR PARA EDICION-->
+	<md-toolbar class="md-table-toolbar alternate" ng-show="perfilGrilla.selected.length">
+		<div class="md-toolbar-tools">
+			<span>{{perfilGrilla.selected.length}} {{perfilGrilla.selected.length > 1 ? 'items' : 'item'}} seleccionados</span>
+			<span flex></span>
+			<md-button ng-show="perfilGrilla.selected.length < 2" class="md-icon-button"
+					   aria-label="funcionalidad no especifica"
+					   ng-click="gdPerfil.edit($event)">
+				<md-tooltip md-autohide>Modificar</md-tooltip>
+				<md-icon md-svg-src="img/icons/ic_edit_black_24px.svg"></md-icon>
+			</md-button>
+
+			<md-button class="md-icon-button"
+					   aria-label="funcionalidad no especifica"
+					   ng-click="gdPerfil.del($event)">
+				<md-tooltip md-autohide>Eliminar</md-tooltip>
+				<md-icon md-svg-src="img/icons/ic_delete_black_24px.svg"></md-icon>
+			</md-button>
+		</div>
+	</md-toolbar>
+
+
+	<!--GRILLA-->
+	<md-table-container>
+		<table data-md-table data-md-row-select="!hideCheckboxes" data-ng-model="perfilGrilla.selected" md-progress="promise">
+			<!--barra de titulos-->
+			<thead ng-if="!hideHead" md-head data-md-order="perfilGrilla.query.order" md-on-reorder="onReorder">
+			<tr md-row>
+				<th md-column md:order:by="nivelSeguridad"><span>Nivel de Seguridad</span></th>
+				<th md-column data-md-order-by="perfil"><span>Perfil</span></th>
+				<!--<th md-column data-md-order-by="creadoPor"><span>Creado Por</span></th>-->
+				<!--<th md-column data-md-order-by="fecCreacion"><span>Fecha de Creación</span></th>-->
+				<!--<th md-column data-md-order-by="modificadoPor"><span>Modificado Por</span></th>-->
+				<!--<th md-column data-md-order-by="fecModificacion"><span>Fecha de Modificación</span></th>-->
+			</tr>
+			</thead>
+
+
+			<!--rows de datos-->
+			<tbody md-body>
+			<tr md-row md:select="row" data-md-on-select="gdPerfil.log"
+				md-on-deselect="gdPerfil.deselect"
+				x-md-auto-select="!blah"
+				data-ng-repeat="row in perfilGrilla.data | orderBy: perfilGrilla.query.order | limitTo: perfilGrilla.query.limit : (perfilGrilla.query.page -1) * perfilGrilla.query.limit">
+				<td md-cell>{{row.nivelSeguridad}}</td>
+				<td md-cell>{{row.perfil}}</td>
+				<!--<td md-cell>{{row.creadoPor}}</td>-->
+				<!--<td md-cell>{{row.fecCreacion | date:'dd/MM/yyyy'}}</td>-->
+				<!--<td md-cell>{{row.modificadoPor }}</td>-->
+				<!--<td md-cell>{{row.fecModificacion | date:'dd/MM/yyyy'}}</td>-->
+
+			</tr>
+			</tbody>
+		</table>
+	</md-table-container>
+
+	<data-md-table-pagination md-limit="perfilGrilla.query.limit" md-page="perfilGrilla.query.page" md-total="{{perfilGrilla.count}}" md-on-paginate="onPaginate" md-page-select>
+	</data-md-table-pagination>
+
+</md-card>

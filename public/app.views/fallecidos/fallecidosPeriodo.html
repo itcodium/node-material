@@ -1,0 +1,87 @@
+<div id="toastSelect">
+    <p></p>
+</div>
+
+<md-card ng-init="initCalendario()">
+    <!--TOOLBAR PRINCIPAL-->
+    <md-toolbar class="md-table-toolbar md-default" ng-show="!calendarioFallecidosGrilla.selected.length && !calendarioFallecidosGrilla.filter.show">
+        <div class="md-toolbar-tools">
+            <span>Fallecidos Periodos</span>
+            <span flex></span>
+            <md-button class="md-icon-button md-button md-ink-ripple"
+                       aria-label="filtrar"
+                       ng-click="calendarioFallecidosGrilla.filter.show = true">
+                <md-tooltip md-autohide>Buscar</md-tooltip>
+                <md-icon md-svg-src="img/icons/search.svg"> </md-icon>
+            </md-button>
+            <button class="md-fab md-button md-success md-ink-ripple" ng-if="calendarioFallecidosGrilla.data.length<=0"  type="button"ng-click="gdFallecidosCalendario.add($event)">
+                <md-tooltip md-autohide>Agregar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_add_white_24px.svg"> </md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <!--TOOLBAR PARA EDICION-->
+    <md-toolbar class="md-table-toolbar alternate" ng-show="calendarioFallecidosGrilla.selected.length">
+        <div class="md-toolbar-tools">
+            <span>{{calendarioFallecidosGrilla.selected.length}} {{calendarioFallecidosGrilla.selected.length > 1 ? 'items' : 'item'}} seleccionados</span>
+            <span flex></span>
+            <md-button ng-show="calendarioFallecidosGrilla.selected.length < 2" class="md-icon-button"
+                       aria-label="funcionalidad no especifica"
+                       ng-click="gdFallecidosCalendario.edit($event)">
+                <md-tooltip md-autohide>Modificar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_edit_black_24px.svg"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <!--TOOLBAR PARA SEARCH-->
+    <md-toolbar class="md-table-toolbar md-default ng-hide" ng-show="calendarioFallecidosGrilla.filter.show && !calendarioFallecidosGrilla.selected.length">
+        <div class="md-toolbar-tools">
+            <md-icon md-svg-src="img/icons/search.svg"></md-icon>
+            <form flex="" name="filter.form" class="ng-valid flex">
+                <input type="text" ng-model="calendarioFallecidosGrilla.query.filter" placeholder="Buscar Período" >
+                <!--ng-model-options="filter.options"-->
+            </form>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="gdFallecidosCalendario.removeFilter()">
+                <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <!--GRILLA-->
+    <md-table-container>
+        <table data-md-table data-md-row-select="!hideCheckboxes" ng-if="calendarioFallecidosGrilla.data.length > 0" data-ng-model="calendarioFallecidosGrilla.selected" md-progress="promise">
+            <!--barra de titulos-->
+            <thead ng-if="!hideHead" md-head data-md-order="calendarioFallecidosGrilla.query.order" md-on-reorder="onReorder">
+            <tr md-row>
+                <th md-column data-md-order-by="fecDesde"><span>Fecha Desde</span></th>
+                <th md-column data-md-order-by="fecHasta"><span>Fecha Hasta</span></th>
+                <th md-column data-md-order-by="margenPerdida"><span>Margen Perdida</span></th>
+            </tr>
+            </thead>
+
+
+            <!--rows de datos-->
+            <tbody md-body>
+            <tr md-row md-select="row" data-md-on-select="gdFallecidosCalendario.log" md-select-id="{{row.idPeriodo}}"
+                md-on-deselect="gdFallecidosCalendario.deselect"
+                x-md-auto-select="!blah"
+                data-ng-repeat="row in calendarioFallecidosGrilla.data | filter: filter.search | orderBy: calendarioFallecidosGrilla.query.order | limitTo: calendarioFallecidosGrilla.query.limit : (calendarioFallecidosGrilla.query.page -1) * calendarioFallecidosGrilla.query.limit">
+                <td md-cell>{{row.fecDesde | date:'dd/MM/yyyy'}}</td>
+                <td md-cell>{{row.fecHasta | date:'dd/MM/yyyy'}}</td>
+                <td md-cell>{{row.margenPerdida}}</td>
+            </tr>
+            </tbody>
+
+        </table>
+        <data-md-table-pagination ng-if="calendarioFallecidosGrilla.data.length > 0"  md-limit="calendarioFallecidosGrilla.query.limit" md-page="calendarioFallecidosGrilla.query.page" md-total="{{calendarioFallecidosGrilla.count}}" md-on-paginate="onPaginate" md-page-select>
+        </data-md-table-pagination>
+    </md-table-container>
+
+</md-card>
+<md-card class="md-padding" layout-xs="column" layout="row" ng-if="calendarioFallecidosGrilla.data.length === 0">
+    No se encontraron datos para mostrar
+</md-card>
+
+

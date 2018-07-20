@@ -1,0 +1,38 @@
+<md-card>
+    <md-table-container>
+        <table md-progress="promiseConfiguracionContable" data-md-table data-md-row-select="false"  id="grillaList">
+            <thead data-md-order="configuracionContable.query.order" md-on-reorder="onReorder" md-head >
+                <tr md-row>
+                    <th ng-show="column.show" md-column
+                        ng-repeat="column in configuracionContable.columns"
+                        data-md-numeric="column.filter == 'number'"
+                        data-md-order-by="{{column.field}}"
+                        ng-style="{'width': column.width}">
+                        <span ng-bind-html="column.name | html"></span>
+                        <md-tooltip ng-if="column.tip" md-autohide md-direction="top">{{column.tip}}</md-tooltip>
+                    </th>
+                </tr>
+            </thead>
+            <tbody md-body>
+            <tr md-row data-ng-repeat="row in configuracionContable.data | limitTo: configuracionContable.query.limit : (configuracionContable.query.page -1) * configuracionContable.query.limit">
+                <td md-cell ng-repeat="column in configuracionContable.columns" ng-show="column.show"
+                    ng-click="config.configuracionContableUpdate($event,column,row)"
+                    ng-style="{'width': column.width}" style="cursor:{{getCursor(column)}}">
+                    {{ config.showVal(row[column.field], column.filter )}}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+    <data-md-table-pagination ng-if="configuracionContable.data.length"
+                              md-limit="configuracionContable.query.limit"
+                              md-page="configuracionContable.query.page"
+                              md-total="{{configuracionContable.count}}"
+                              md-on-paginate="onPaginate"
+                              md-page-select>
+    </data-md-table-pagination>
+</md-card>
+
+<md-card class="md-padding" layout-xs="column" layout="row" ng-if="configuracionContable.data.length === 0">
+    No se encontraron datos para mostrar
+</md-card>

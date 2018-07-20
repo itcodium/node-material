@@ -1,0 +1,65 @@
+<md-dialog aria-label="Alta" flex="50">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>{{mode}} </h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon md-svg-src="/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <form name="formproducto" ng-submit="submit()" role="form" novalidate>
+        <md-dialog-content class="toastParent">
+            <div class="md-dialog-content">
+                <div class="modal-body">
+                        <div class="row altaPopUp">
+                            <div layout-gt-sm="row">
+                                <md-input-container class="md-block" flex>
+                                    <label>Marca</label>
+                                    <md-select ng-model="producto.marca" name="marca" required ng-disabled="mode !== 'Alta'" placeholder="Seleccione">
+                                        <md-option ng-value="opt" ng-repeat="opt in marcas">{{ opt }}</md-option>
+                                    </md-select>
+
+                                    <div ng-messages="formproducto.marca.$error">
+                                        <div ng-message="required">El campo es obligatorio</div>
+                                    </div>
+                                </md-input-container>
+                                <md-input-container class="md-block" flex>
+                                    <label>Tipo de cuenta</label>
+                                    <input type="text" name="tipoCuenta" required ng-model="producto.tipoCuenta" ng-disabled="mode !== 'Alta'"
+                                    maxlength="5" pattern="[a-zA-Z0-9]+">
+
+                                    <div ng-messages="formproducto.tipoCuenta.$error">
+                                        <div ng-message="required">El campo es obligatorio</div>
+                                        <div ng-message="pattern">No es un valor válido</div>
+                                    </div>
+                                </md-input-container>
+                            </div>
+
+                            <div layout-gt-sm="row">
+                                <md-input-container class="md-block" flex>
+                                    <label>Mínimo</label>
+                                    <input type="number" step="1" name="minimo" ng-model="producto.minimo" required
+                                           min="0" max="9999999999" ng-keypress="validateNumber($event)" ng-pattern="/^\s*-?\d+(\.\d{1,2})?\s*$/" />
+
+                                    <div ng-messages="formproducto.minimo.$error">
+                                        <div ng-message="required">El campo es obligatorio</div>
+                                        <div ng-message="max">El valor es mayor al permitido</div>
+                                        <div ng-message="min">Valor menor al permitido</div>
+                                        <div ng-message="pattern">Solo se permite 2 decimales</div>
+                                        <div ng-message="number">No es un número válido</div>
+                                    </div>
+                                </md-input-container>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <a href="javascript:void(0)" class="md-button md-ink-ripple" ng-click="cancel()">Cancelar</a>
+            <md-button type="submit" class="md-raised md-primary md-button md-ink-ripple">
+                <span>Aceptar</span>
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

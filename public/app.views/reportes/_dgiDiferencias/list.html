@@ -1,0 +1,94 @@
+<md-card ng-init="load()">
+    <md-toolbar class="md-table-toolbar md-default" ng-show="!showFilter">
+        <div class="md-toolbar-tools">
+            <span>DGI SICORE</span>
+            <span flex></span>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="showFilter=true">
+                <md-tooltip md-autohide>Filtros</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_filter_list_24px.svg"></md-icon>
+            </button>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="exportarExcel()">
+                <md-tooltip md-autohide>Exportar Excel</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_file_download_36px.svg"> </md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <md-toolbar class="md-table-toolbar md-default ng-hide" ng-show="showFilter">
+        <div class="md-toolbar-tools">
+            <span>DGI SICORE</span>
+            <span flex></span>
+            <md-input-container class="md-toolMaster">
+                <label>Código de Retención</label>
+                <md-select ng-model="grid.query.codRegimen">
+                    <md-option ng-repeat="codRegimen in codigosRegimen" value="{{codRegimen}}">
+                        {{codRegimen}}
+                    </md-option>
+                </md-select>
+            </md-input-container>
+            <md-input-container class="md-toolMaster">
+                <label>Cuenta</label>
+                <md-select ng-model="grid.query.cuenta">
+                    <md-option ng-repeat="cuenta in cuentas" value="{{cuenta.cuenta}}">
+                        {{cuenta.cuentaDesc}}
+                    </md-option>
+                </md-select>
+            </md-input-container>
+            <md-switch ng-model="grid.query.conDiferencias"
+                       aria-label="Con diferencias"
+                       tabindex="0" type="checkbox" role="checkbox"
+                       class="ng-valid ng-touched ng-dirty ng-valid-parse ng-empty"
+                       aria-checked="false" aria-invalid="false">
+                <p class="md-toolMaster">Con diferencias</p>
+            </md-switch>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="onFilter()">
+                <md-icon class="ready" ng-show="!filtrado" md-svg-src="img/icons/playlist_play.svg"></md-icon>
+                <md-icon class="done" ng-show="filtrado" md-svg-src="img/icons/playlist_check.svg"></md-icon>
+                <md-tooltip md-autohide> {{ !filtrado ?  'Aplicar filtro' : 'Filtro Aplicado' }}</md-tooltip>
+            </button>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="closeFilter()">
+                <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+                <md-tooltip md-autohide>Cerrar</md-tooltip>
+            </button>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="exportarExcel()">
+                <md-tooltip md-autohide>Exportar Excel</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_file_download_36px.svg"> </md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <md-table-container class="md-scrollX">
+        <table data-md-table data-md-row-select="false" md-progress="promise" id="dgiSicore">
+            <thead md-head data-md-order="grid.query.order" md-on-reorder="onReorder">
+            <tr md-row>
+                <th md-column md:order:by="mes" ><span>Mes</span></th>
+                <th md-column data-md-order-by="cuenta"><span>Cta. Contable</span></th>
+                <th md-column data-md-order-by="cuentaDesc"><span>Descripción</span></th>
+                <th md-column data-md-order-by="impRetencion"><span>Importe Retención</span></th>
+                <th md-column data-md-order-by="debitoContable"><span>Debito Contable</span></th>
+                <th md-column data-md-order-by="creditoContable"><span>Crédito Contable</span></th>
+                <th md-column data-md-order-by="netoContable"><span>Neto Contable</span></th>
+                <th md-column data-md-order-by="diferenciaContableRet"><span>Diferencia</span></th>
+            </tr>
+            </thead>
+
+            <tbody md-body>
+            <tr md-row data-ng-repeat="row in grid.data | limitTo: grid.query.limit : (grid.query.page -1) * grid.query.limit">
+                <td md-cell>{{row.mes}}</td>
+                <td md-cell>{{row.cuenta}}</td>
+                <td md-cell>{{row.cuentaDesc}}</td>
+                <td md-cell style="text-align: right;">{{showVal(row.impRetencion, "number")}}</td>
+                <td md-cell style="text-align: right;">{{showVal(row.debitoContable, "number")}}</td>
+                <td md-cell style="text-align: right;">{{showVal(row.creditoContable, "number")}}</td>
+                <td md-cell style="text-align: right;">{{showVal(row.netoContable, "number")}}</td>
+                <td md-cell style="text-align: right;">{{showVal(row.diferenciaContableRet, "number")}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+
+    <data-md-table-pagination md-limit="grid.query.limit" md-page="grid.query.page" md-total="{{grid.count}}" md-on-paginate="onPaginate" md-page-select>
+    </data-md-table-pagination>
+
+</md-card>
+

@@ -1,0 +1,117 @@
+<md-dialog aria-label="Archivos de marca"  ng-cloak flex="30" ng-init="initPopUp()">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>{{operac}} de Archivos de marca</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="ctrl.cancel()">
+                <md-icon md-svg-src="/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <form id="formMarca" ng-submit="ctrl.confirmOperation(formMarca.$error)" name="formMarca" role="form">
+        <md-dialog-content class="toastParent">
+            <div class="md-dialog-content">
+                <div class="modal-body">
+                    <div class="row altaPopUp">
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex="60">
+                                <label >Marca</label>
+                                <md-select ng-model="marca.marca"
+                                           ng-disabled="operac === 'Baja'"
+                                           name="marca" placeholder="Marca"
+                                           ng-required="operac === 'Alta'">
+                                    <md-option ng-value="mar.valor" ng-repeat="mar in marcas">{{mar.nombre}}</md-option>
+                                </md-select>
+                                <div ng-messages="formMarca.marca.$error">
+                                    <div ng-message="required">Ingrese Marca.</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex>
+                                <label>Entidad</label>
+                                <input type="text" name="entidad" maxlength="3"
+                                       ng-disabled="operac === 'Baja'"
+                                       ng-model="marca.entidad"
+                                       ng-required="operac === 'Alta'">
+                                <div ng-messages="formMarca.entidad.$error">
+                                    <div ng-message="required">Ingrese Entidad.</div>
+                                </div>
+                            </md-input-container>
+                        </div>
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex="20">
+                                <label >Cartera</label>
+                                <md-select ng-model="marca.cartera"
+                                           ng-disabled="operac === 'Baja'"
+                                           name="cartera" placeholder="Cartera"
+                                           ng-required="operac === 'Alta'">
+                                    <md-option ng-value="cartera" ng-repeat="cartera in carteras">{{cartera}}</md-option>
+                                </md-select>
+                                <div ng-messages="formMarca.cartera.$error">
+                                    <div ng-message="required">Ingrese Cartera.</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex>
+                                <label>Archivo</label>
+                                <input type="text" name="archivo"
+                                       ng-disabled="operac === 'Baja'"
+                                       ng-model="marca.archivo"
+                                       ng-required="operac === 'Alta'">
+                                <div ng-messages="formMarca.archivo.$error">
+                                    <div ng-message="required">Ingrese Archivo.</div>
+                                </div>
+                            </md-input-container>
+                        </div>
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex="100">
+                                <label >Agrupar</label>
+                                <md-select ng-model="marca.agrupar"
+                                           ng-disabled="operac === 'Baja'"
+                                           name="agrupar" placeholder="Agrupar"
+                                           ng-required="operac === 'Alta'">
+                                    <md-option ng-value="grupo.agrupar" ng-repeat="grupo in grupos">{{grupo.descripcion}}</md-option>
+                                </md-select>
+                                <div ng-messages="formMarca.agrupar.$error">
+                                    <div ng-message="required">Ingrese Agrupar.</div>
+                                </div>
+                            </md-input-container>
+                        </div>
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex>
+                                <label>Descripción</label>
+                                <input type="text" name="descripcion"
+                                       ng-disabled="operac === 'Baja'"
+                                       ng-model="marca.descripcion"
+                                       ng-required="operac === 'Alta'">
+                                <div ng-messages="formMarca.descripcion.$error">
+                                    <div ng-message="required">Ingrese Descripción.</div>
+                                </div>
+                            </md-input-container>
+                        </div>
+                    </div>
+                    <input type="submit"
+                           style="position: absolute; left: -9999px; width: 1px; height: 1px;"
+                           tabindex="-1" />
+                </div>
+            </div>
+            <div class="md-dialog-content" ng-show="operac === 'Baja'">
+                <md-datepicker name="fecBaja"
+                               time="false"
+                               md-min-date="currentDate"
+                               ng-model="marca.fecBaja"
+                               md-placeholder="Fecha de baja"
+                               ng-required="operac === 'Baja'">
+                </md-datepicker>
+                <div class="validation-messages datepicker-message" ng-messages="formMarca.fecBaja.$error" ng-if="errorForm">
+                    <div ng-message="required">Ingrese Fecha de Baja.</div>
+                </div>
+            </div>
+        </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <a href="javascript:void(0)" class="md-button md-ink-ripple" ng-click="ctrl.cancel()">Cancelar</a>
+        <md-button type="submit" class="md-raised md-primary md-button md-ink-ripple">
+            <span>Aceptar</span>
+        </md-button>
+    </md-dialog-actions>
+
+    </form>
+</md-dialog>

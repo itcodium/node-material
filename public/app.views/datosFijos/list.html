@@ -1,0 +1,33 @@
+<div id="toastSelect">
+    <p></p>
+</div>
+
+<div>
+    <p></p>
+    <md-card>
+        <md-toolbar class="md-table-toolbar md-default" >
+            <div class="md-toolbar-tools">
+                <span></span>
+                <span flex></span>
+                <md-input-container class="md-toolMaster">
+                    <md-select ng-model="query.report" ng-change="load()">
+                        <md-option ng-repeat="report in reports" value="{{report}}">{{report}}</md-option>
+                    </md-select>
+                </md-input-container>
+            </div>
+        </md-toolbar>
+    </md-card>
+</div>
+
+<md-card>
+    <div layout="row" id="Cuentas"
+         ng-show="query.report === 'Cuentas'"
+         ng-include="'app.views/datosFijos/cuentas/cuentas.html'" style="overflow:auto" ng-controller="cuentas.ctrl">
+    </div>
+</md-card>
+
+
+<div id="Tarjetas"
+     ng-show="query.report === 'Tarjetas'"
+     ng-include="'app.views/datosFijos/tarjetas/tarjetas.html'" ng-controller="tarjetas.ctrl">
+</div>

@@ -1,0 +1,131 @@
+<md-card ng-controller="cuentas.ctrl">
+    <div class="md-padding" layout-xs="column" ng-if="cuentaGrid.count == 0">
+        No se encontraron datos para mostrar
+    </div>
+    <md-table-container class="md-scrollX" ng-if="cuentaGrid.count > 0">
+            <table data-md-table data-md-row-select="false" md-progress="promiseCuentas" ng-model="cuentaGrid.selected">
+                <thead md-head data-md-order="cuentaGrid.query.order" md-on-reorder="onReorder">
+                    <tr md-row>
+                            <th md-column data-md-order-by="Entidad"><span>Entidad</span></th>
+                            <th md-column data-md-order-by="Cuenta"><span>Cuenta</span></th>
+                            <th md-column data-md-order-by="TS"><span>TS</span></th>
+                            <th md-column data-md-order-by="DV"><span>DV</span></th>
+                            <th md-column data-md-order-by="suc"><span>Suc</span></th>
+                            <th md-column data-md-order-by="tipCta"><span>TipCta</span></th>
+                            <th md-column data-md-order-by="fecNoEmisRes"><span>FecNoEmiResumen</span></th>
+                            <th md-column data-md-order-by="nov_Descrip"><span>Nov_Descrip</span></th>
+                            <th md-column data-md-order-by="estado"><span>Estado</span></th>
+                            <th md-column data-md-order-by="motivo"><span>Motivo</span></th>
+                            <th md-column data-md-order-by="modLiq"><span>ModLiq</span></th>
+                            <th md-column data-md-order-by="SMT"><span>SMT</span></th>
+                            <th md-column data-md-order-by="SMG"><span>SMG</span></th>
+                            <th md-column data-md-order-by="SMP"><span>SMP</span></th>
+                            <th md-column data-md-order-by="modLiq_Ant"><span>ModLiq_Ant</span></th>
+                            <th md-column data-md-order-by="GAF"><span>GAF</span></th>
+                            <th md-column data-md-order-by="GAF_Ant"><span>GAF_Ant</span></th>
+                            <th md-column data-md-order-by="sucursal"><span>Sucursal</span></th>
+                            <th md-column data-md-order-by="sucursal_Ant"><span>Sucursal_Ant</span></th>
+                            <th md-column data-md-order-by="cartera"><span>Cartera</span></th>
+                            <th md-column data-md-order-by="cartera_Ant"><span>Cartera_Ant</span></th>
+                            <th md-column data-md-order-by="seguroVida"><span>Seg.Vida</span></th>
+                            <th md-column data-md-order-by="seguroVida"><span>Seg.Vida_Ant</span></th>
+                            <th md-column data-md-order-by="LCLetra"><span>LC_Letra</span></th>
+                            <th md-column data-md-order-by="LCCoef"><span>LC_Coef</span></th>
+                            <th md-column data-md-order-by="LCCredito"><span>LC_Credito</span></th>
+                            <th md-column data-md-order-by="LC_Coef_Ant"><span>LC_Coef_Ant</span></th>
+                            <th md-column data-md-order-by="LC_Cred_Ant"><span>LC_Cred_Ant</span></th>
+                            <th md-column data-md-order-by="formaPago"><span>FormaDePago</span></th>
+                            <th md-column data-md-order-by="ftTipo"><span>FP_Tipo</span></th>
+                            <th md-column data-md-order-by="fpSuc"><span>FP_Suc</span></th>
+                            <th md-column data-md-order-by="fpCuenta"><span>FP_Cuenta</span></th>
+                            <th md-column data-md-order-by="FormaDePago_Ant"><span>FormaDePago_Ant</span></th>
+                            <th md-column data-md-order-by="CUIT"><span>Cuit</span></th>
+                            <th md-column data-md-order-by="Cuit_Ant"><span>Cuit_Ant</span></th>
+                            <th md-column data-md-order-by="Agrupamiento"><span>Agrupamiento</span></th>
+                            <th md-column data-md-order-by="Agrupamiento_Ant"><span>Agrupamiento_Ant</span></th>
+                            <th md-column data-md-order-by="bonifServicioCuotas"><span>Bonif.Servicio(Cuotas)</span></th>
+                            <th md-column data-md-order-by="bonifServicioPorcentaje"><span>Bonif.Servicio(Porcentaje)</span></th>
+                            <th md-column data-md-order-by="bonifServicioMantiene"><span>Bonif.Servicio(Mantiene)</span></th>
+                            <th md-column data-md-order-by="Bonif.Servicio(Cuotas)_Ant"><span>Bonif.Servicio(Cuotas)_Ant</span></th>
+                            <th md-column data-md-order-by="EstadoCuenta_Ant"><span>EstadoCuenta_Ant</span></th>
+                            <th md-column data-md-order-by="FLCC"><span>Factor LC en Cuotas (FLCC)</span></th>
+                            <th md-column data-md-order-by="lCCFct"><span>Factor LC en Cuotas (FLCC)_Ant</span></th>
+                            <th md-column data-md-order-by="modeloAutorizacion"><span>Modelo de Autorizacion</span></th>
+                            <th md-column data-md-order-by="Modelo de Autorización_Ant"><span>Modelo de Autorización_Ant</span></th>
+                            <th md-column data-md-order-by="coeficienteAdelanto"><span>Coeficiente de Adelanto</span></th>
+                            <th md-column data-md-order-by="coefAdelanto"><span>Coeficiente de Adelanto_Ant</span></th>
+                            <th md-column data-md-order-by="promotor"><span>Promotor</span></th>
+                            <th md-column data-md-order-by="promotor_Ant"><span>Promotor_Ant</span></th>
+                            <th md-column data-md-order-by="estCuenta"><span>Baja de Cuenta (VISA)_Ant</span></th>
+                            <th md-column data-md-order-by="porcLimiteFinanciacion"><span>% Limite Financiación</span></th>
+                            <th md-column data-md-order-by="porcFinan"><span>% Limite Financiación_Ant</span></th>
+
+                    </tr>
+                </thead>
+    
+                <!--rows de datos-->
+                <tbody md-body>
+                    <tr md-row data-ng-repeat="row in cuentaGrid.data | orderBy: cuentaGrid.query.order | limitTo: cuentaGrid.query.limit : (cuentaGrid.query.page - 1) * cuentaGrid.query.limit">
+                        <td md-cell>{{ row.Entidad }}</td>
+                        <td md-cell>{{ row.Cuenta }}</td>
+                        <td md-cell style="text-align:right">{{ row.TS }}</td>
+                        <td md-cell style="text-align:right">{{ row.DV }}</td>
+                        <td md-cell style="text-align:right">{{ row.Suc }}</td>
+                        <td md-cell>{{ row.TipCta }}</td>
+                        <td md-cell>{{ row.FecNoEmiResumen | date: 'dd/MM/yyyy': 'UTC'}}</td>
+                        <td md-cell>{{ row.Nov_Descrip }}</td>
+                        <td md-cell>{{ row.Estado }}</td>
+                        <td md-cell>{{ row.Motivo }}</td>
+                        <td md-cell>{{ row.ModLiq }}</td>
+                        <td md-cell style="text-align:right">{{ row.SMT }}</td>
+                        <td md-cell style="text-align:right">{{ row.SMG }}</td>
+                        <td md-cell style="text-align:right">{{ row.SMP }}</td>
+                        <td md-cell>{{ row.ModLiq_Ant }}</td>
+                        <td md-cell style="text-align:right">{{ row.GAF }}</td>
+                        <td md-cell style="text-align:right">{{ row.GAF_Ant }}</td>
+                        <td md-cell style="text-align:right">{{ row.Sucursal }}</td>
+                        <td md-cell style="text-align:right">{{ row.Sucursal_Ant }}</td>
+                        <td md-cell style="text-align:right">{{ row.Cartera }}</td>
+                        <td md-cell style="text-align:right">{{ row.Cartera_Ant }}</td>
+                        <td md-cell>{{ row.SegVida }}</td>
+                        <td md-cell>{{ row.SegVida_Ant }}</td>
+                        <td md-cell>{{ row.LC_Letra }}</td>
+                        <td md-cell>{{ row.LC_Coef }}</td>
+                        <td md-cell>{{ row.LC_Credito }}</td>
+                        <td md-cell>{{ row.LC_Coef_Ant }}</td>
+                        <td md-cell>{{ row.LC_Cred_Ant | number }}</td>
+                        <td md-cell>{{ row.FormaDePago }}</td>
+                        <td md-cell>{{ row.FP_Tipo }}</td>
+                        <td md-cell style="text-align:right">{{ row.FP_Suc }}</td>
+                        <td md-cell>{{ row.FP_Cuenta }}</td>
+                        <td md-cell>{{ row.FormaDePago_Ant }}</td>
+                        <td md-cell>{{ row.CUIT }}</td>
+                        <td md-cell>{{ row.CUIT_Ant }}</td>
+                        <td md-cell>{{ row.Agrupamiento }}</td>
+                        <td md-cell>{{ row.Agrupamiento_Ant }}</td>
+                        <td md-cell style="text-align:right">{{ row.BonifServicioCuotas }}</td>
+                        <td md-cell style="text-align:right">{{ row.BonifServicioPorcentaje }}</td>
+                        <td md-cell style="text-align:right">{{ row.BonifServicioMantiene }}</td>
+                        <td md-cell style="text-align:right">{{ row.BonifServicioCuotas2 }}</td>
+                        <td md-cell>{{ row.EstadoCuenta_Ant }}</td>
+                        <td md-cell style="text-align:right">{{ row.FLCC }}</td>
+                        <td md-cell style="text-align:right">{{ row.FLCC_Ant }}</td>
+                        <td md-cell>{{ row.ModeloAutorizacion }}</td>
+                        <td md-cell>{{ row.ModeloAutorizacion_Ant }}</td>
+                        <td md-cell>{{ row.CoeficienteAdelanto }}</td>
+                        <td md-cell>{{ row.CoeficienteAdelanto_Ant | number }}</td>
+                        <td md-cell style="text-align:right">{{ row.Promotor }}</td>
+                        <td md-cell style="text-align:right">{{ row.Promotor_Ant }}</td>
+                        <td md-cell>{{ row.BajaCuentaVISA_Ant }}</td>
+                        <td md-cell>{{ row.LF }}</td>
+                        <td md-cell>{{ row.LF_Ant }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </md-table-container>
+    <data-md-table-pagination ng-if="cuentaGrid.data.length" md-limit="cuentaGrid.query.limit" md-limit-options="[5, 10, 15]"
+                              md-page="cuentaGrid.query.page" md-total="{{cuentaGrid.count}}" md-page-select>
+    </data-md-table-pagination>
+
+
+</md-card>

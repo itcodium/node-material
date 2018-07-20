@@ -1,0 +1,29 @@
+<md-dialog>
+    <md-dialog-content>
+
+        <div class="md-dialog-content" >
+            <h2 class="md-title">{{title}}</h2>
+            <div flex="100" ng-repeat="item in items">
+                <md-label>
+                    <b>{{ item.nombreArchivo }}</b>
+                </md-label>
+            </div>
+            <br>
+            <div layout-gt-sm="row">
+                <div layout="column">
+                    <div flex>Periodo desde: {{periodos.fecDesde | date:'dd/MM/yyyy' : 'UTC'}}</div>
+                    <div flex>Periodo hasta: {{periodos.fecHasta | date:'dd/MM/yyyy' : 'UTC'}}</div>
+                    <div flex>Margen de perdida: ${{periodos.margenPerdida}}</div>
+                </div>
+            </div>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button ng-click="cancel()">
+            Cancelar
+        </md-button>
+        <md-button ng-click="aceptar()">
+            Aceptar
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

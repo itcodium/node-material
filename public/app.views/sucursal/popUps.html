@@ -1,0 +1,241 @@
+<style type="text/css">
+    md-switch.md-checked .md-ink-ripple {
+        background-color:green;
+    }
+</style>
+<md-dialog aria-label="ABM de Sucursales" ng-init="initPopUp()" ng-cloak flex="50">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>{{operac}} de Sucursales</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="ctrl.cancel()">
+                <md-icon md-svg-src="/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="toastParent">
+        <div class="md-dialog-content">
+            <div class="modal-body">
+                <form id="Container_Form" ng-submit="ctrl.confirmOperation(formSucursal.$error)" name="formSucursal" role="form">
+                    <div class="row altaPopUp">
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex="10">
+                                <label for="txtCodeAgencia">C.Agen.</label>
+                                <input type="text" name="codeAgen" ng-disabled="operac != 'Alta'" ng-pattern="regexOnlyNumbers" id="txtCodeAgencia" maxlength="3"
+                                       ng-model="sucursal.codAgencia" required role="codeAgen">
+                                <div ng-messages="formSucursal.codeAgen.$error">
+                                    <div ng-message="required" ng-if="true">*</div>
+                                    <div ng-message="number">Ingresar solo números </div>
+                                    <div ng-message="min">Ingresar números mayores a cero.</div>
+                                    <div ng-message="pattern">Números enteros</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="10">
+                                <label for="txtCodeSucursal">C.Suc.</label>
+                                <input type="text" name="codeSuc" ng-disabled="operac != 'Alta'" ng-pattern="regexOnlyNumbers"  id="txtCodeSucursal" maxlength="3"
+                                       ng-model="sucursal.codSucursal" required role="codeSuc">
+                                <span class=".control-group.error .control-label md-error" ng-if="errorForm == true" ng-show="formSucursal.codeSuc.$error.pattern">Sólo debe ingresar carácteres numéricos.</span>
+                                <span class=".control-group.error .control-label" style="color:#880000;" ng-if="errorForm == true" ng-show="formSucursal.codeSuc.$error.required">*</span>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex>
+                                <label for="txtDescripcion">Descripción:</label>
+                                <input type="text" name="descripcion" ng-disabled="operac == 'Baja'" maxlength="70" id="txtDescripcion"
+                                       ng-model="sucursal.descripSucursal" required role="descripcion">
+                                <span class=".control-group.error .control-label" style="color:#880000;" ng-if="errorForm == true" ng-show="formSucursal.descripcion.$error.required">*</span>
+                            </md-input-container>
+                        </div>
+
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex>
+                                <label for="txtCalle">Calle</label>
+                                <input type="text" name="calle" ng-disabled="operac == 'Baja'" maxlength="100" id="txtCalle"
+                                       ng-model="sucursal.calle" required role="calle">
+                                <span class=".control-group.error .control-label" style="color:#880000;" ng-if="errorForm == true" ng-show="formSucursal.calle.$error.required">*</span>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="10">
+                                <label for="txtNumero">Nº</label>
+                                <input type="text" name="numero" ng-disabled="operac == 'Baja'" id="txtNumero" maxlength="5"
+                                       ng-model="sucursal.numero" required role="numero">
+                                <span class=".control-group.error .control-label" style="color:#880000;" ng-if="errorForm == true" ng-show="formSucursal.numero.$error.required">*</span>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="10">
+                                <label for="txtCodPostal">CP</label>
+                                <input type="text" name="codPostal" ng-disabled="operac == 'Baja'" id="txtCodPostal" maxlength="4"
+                                       ng-model="sucursal.codPostal" required role="codPostal">
+                                <span class=".control-group.error .control-label" style="color:#880000;" ng-if="errorForm == true" ng-show="formSucursal.codPostal.$error.required">*</span>
+                            </md-input-container>
+                        </div>
+
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex>
+                                <md-autocomplete
+                                    ng-model="sucursal.descripcionLocalidad"
+                                    id="txtLocalidad"
+                                    md-input-name="localidad"
+                                    name="localidad"
+                                    md-input-minlength="3"
+                                    md-min-length="3"
+                                    md-no-cache="noCache"
+                                    md-input-maxlength="50"
+                                    md-selected-item="ctrl.selectedItem"
+                                    md-selected-item-change="selectItem(item)"
+                                    md-search-text="sucursal.descripcionLocalidad"
+                                    md-items="item in getLocalidades(sucursal.descripcionLocalidad)"
+                                    md-item-text="sucursal.descripcionLocalidad"
+                                    md-floating-label="Localidades" required
+                                    style="top: -20px"
+                                    >
+
+                                    <md-item-template>
+                                        <span md-highlight-text="ctrl.descripcion">{{item.descripcion}}</span>
+                                    </md-item-template>
+
+                                </md-autocomplete>
+                                <span class=".control-group.error .control-label" ng-if="errorForm == true" ng-show="formSucursal.localidad.$error.required">*</span>
+                            </md-input-container>
+                            <md-button type="button" class="md-raised md-fab md-mini md-button md-ink-ripple" ng-disabled="operac == 'Baja'" ng-click="toggleRightNav()">
+                                <md-tooltip md-autohide>Seleccionar Localidad</md-tooltip>
+                                <md-icon md-svg-src="img/icons/ic_place_24px.svg"> </md-icon>
+                            </md-button>
+
+                            <md-input-container class="md-block" flex>
+                                <label>Región</label>
+                                <md-select id="selectRegion" name="selectRegion" ng-disabled="operac == 'Baja'" ng-if="operac != 'Modificación'" ng-change="selectRegion(formSucursal.selectRegion.$error)" ng-model="sucursal.codRegion" required aria-label="true">
+                                    <md-option ng-value="region.codigo" ng-repeat="region in dataLoad.regiones">{{region.descripcion}}</md-option>
+                                </md-select>
+                                <span style="color:#880000;" ng-if="errorForm == true" ng-show="formSucursal.selectRegion.$error.required">*</span>
+                                <md-select id="selectRegionTwo" name="selectRegionTwo"  ng-if="operac == 'Modificación'" ng-change="selectRegion(formSucursal.selectRegion.$error)" ng-model="sucursal.codRegion" aria-label="true">
+                                    <md-option ng-value="regionTwo.codigo" ng-repeat="regionTwo in dataLoad.regiones">{{regionTwo.descripcion}}</md-option>
+                                </md-select>
+                            </md-input-container>
+                        </div>
+                        <div layout-gt-sm="row">
+                            <md-switch
+                                    ng-model="sucursal.aplicaFallecido"
+                                    name="aplicaFallecido"
+                                    aria-label="Visible">
+                                Aplica a Fallecidos
+                            </md-switch>
+                        </div>
+
+                        <div class="col-lg-12" ng-show="operac == 'Baja'" flex-gt-sm>
+                            <div class="col-md-6">
+                                <label class="control-label col-sm-2" for="fecBaja">Fecha Baja:</label>
+                            </div>
+                            <div class="col-sm-5">
+                                <md-datepicker id="fecBaja" name="fecBaja" class="form-control input-sm"
+                                               md-min-date="currentDate"
+                                               ng-model="sucursal.fecBaja"> </md-datepicker>
+                                <span class=".control-group.error .control-label" style="color:#880000;"  ng-if="errorForm == true" ng-show="formSucursal.fecBaja.$error.mindate"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="submit" name="asasdasdas"
+                           style="position: absolute; left: -9999px; width: 1px; height: 1px;"
+                           tabindex="-1" />
+                </form>
+            </div>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <a href="javascript:void(0)" class="md-button md-ink-ripple" ng-click="ctrl.cancel()">Cancelar</a>
+        <md-button type="button"  class="md-raised md-primary md-button md-ink-ripple" ng-click="ctrl.confirmOperation(formSucursal.$error)">
+            <span>Aceptar</span>
+        </md-button>
+    </md-dialog-actions>
+
+    <section layout="row" flex>
+        <md-sidenav class="md-sidenav-right md-whiteframe-z2" md-is-open="isSidenavOpen" md-component-id="rightNavLocalidad" style="max-width: 429px; width:500px">
+            <md-toolbar class="md-theme-light">
+                <h1 class="md-toolbar-tools">Seleccionar Localidad</h1>
+            </md-toolbar>
+            <md-content layout-padding style="height: 306px;">
+                <form>
+                    <!--TOOLBAR PRINCIPAL-->
+                    <md-toolbar class="md-table-toolbar md-default" ng-show="!localidadGrilla.filter.show">
+                        <div class="md-toolbar-tools layout-padding-0">
+                            <span>
+                                <md-select id="selectCodigoProvincia" ng-model="filtro.provincia" ng-change="changeGrid()" aria-label="true">
+                                    <md-option ng-value="provincia.descripcion" aria-selected="true" ng-if="provincia.descripcion != 'DESCONOCIDA'"
+                                               ng-repeat="(index, provincia) in dataLoad.provincias" ng-selected="(index == 1) ? true:false">
+                                        {{provincia.descripcion}}
+                                    </md-option>
+                                </md-select>
+                            </span>
+                            <span flex></span>
+                            <md-button class="md-icon-button md-button md-ink-ripple"
+                                       aria-label="filtrar"
+                                       ng-click="localidadGrilla.filter.show = true">
+                                <md-tooltip md-autohide>Buscar</md-tooltip>
+                                <md-icon md-svg-src="img/icons/search.svg"> </md-icon>
+                            </md-button>
+                        </div>
+                    </md-toolbar>
+
+
+                    <!--TOOLBAR PARA SEARCH-->
+                    <md-toolbar class="md-table-toolbar md-default ng-hide" ng-show="localidadGrilla.filter.show">
+                        <div class="md-toolbar-tools layout-padding-0">
+                            <md-icon md-svg-src="img/icons/search.svg"></md-icon>
+                            <form flex="" name="filter.form" class="ng-valid flex">
+                                <input focus-search="localidadGrilla.filter.show" type="text" ng-model="localidadGrilla.query.filter" placeholder="Buscar Localidad" >
+                                <!--ng-model-options="filter.options"-->
+                            </form>
+                            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="gdLocalidad.removeFilter()">
+                                <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+                            </button>
+                        </div>
+                    </md-toolbar>
+
+
+                    <md-toolbar class="md-table-toolbar md-default ng-hide" ng-show="sucursalGrilla.filter.show && !sucursalGrilla.selected.length">
+                        <div class="md-toolbar-tools">
+                            <md-icon md-svg-src="img/icons/search.svg"></md-icon>
+                            <form flex="" name="filter.form" class="ng-valid flex">
+                                <input type="text" ng-model="sucursalGrilla.query.filter" placeholder="Buscar Sucursal" >
+                                <!--ng-model-options="filter.options"-->
+                            </form>
+                            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="gdSucursal.removeFilter()">
+                                <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+                            </button>
+                        </div>
+                    </md-toolbar>
+
+                    <!--GRILLA-->
+                    <md-table-container>
+                        <table data-md-table data-md-row-select="!hideCheckboxes" data-ng-model="localidadGrilla.selected">
+                            <!--barra de titulos-->
+                            <thead ng-if="!hideHead" md-head data-md-order="localidadGrilla.query.order" md-on-reorder="onReorder">
+                            <tr md-row>
+                                <th md-column md:order:by="descripcion"><span>Localidad</span></th>
+
+                            </tr>
+                            </thead>
+
+                            <!--rows de datos-->
+                            <tbody md-body>
+                            <tr md-row md:select="row" data-md-on-select="gdLocalidad.log"
+                                md-on-deselect="gdLocalidad.deselect"
+                                x-md-auto-select="!blah"
+                                data-ng-repeat="row in localidadGrilla.data | orderBy: localidadGrilla.query.order | limitTo: localidadGrilla.query.limit : (localidadGrilla.query.page -1) * localidadGrilla.query.limit">
+                                <td md-cell>{{row.descripcion}}</td>
+
+
+                            </tr>
+                            </tbody>
+                        </table>
+                    </md-table-container>
+                    <!--<data-md-table-pagination md-limit="localidadGrilla.query.limit" md-page="localidadGrilla.query.page"
+                                              md-total="{{localidadGrilla.count}}" md-on-paginate="onPaginateLocalidad" md-page-select>
+                    </data-md-table-pagination>-->
+                </form>
+            </md-content>
+            <md-dialog-actions layout="row">
+                <a href="javascript:void(0)" class="md-button md-ink-ripple" ng-click="closeNav()">Cerrar</a>
+                <md-button type="button" class="md-raised md-primary md-button md-ink-ripple" ng-click="loadLocalidad()">
+                    <span>Aceptar</span>
+                </md-button>
+            </md-dialog-actions>
+        </md-sidenav>
+    </section>
+</md-dialog>

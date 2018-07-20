@@ -1,0 +1,61 @@
+<md-card>
+    <!--TOOLBAR PRINCIPAL-->
+    <md-toolbar class="md-table-toolbar md-default" ng-show="cantSelected == 0 && !limitPurchaseGrilla.filter.show">
+            <div class="md-toolbar-tools">
+                <span flex>{{ report }}</span>
+                <span flex></span>
+                <md-input-container class="md-toolMaster">
+                    <md-select ng-model="report">
+                        <md-option ng-repeat="rep in reports" value="{{rep}}">{{rep}}</md-option>
+                    </md-select>
+                </md-input-container>
+                <md-button class="md-icon-button md-button md-ink-ripple"
+                           aria-label="filtrar"
+                           ng-click="limitPurchaseGrilla.filter.show = true">
+                    <md-tooltip md-autohide>Buscar</md-tooltip>
+                    <md-icon md-svg-src="img/icons/search.svg"> </md-icon>
+                </md-button>
+                <button class="md-fab md-button md-success md-ink-ripple" type="button" ng-click="add()">
+                    <md-tooltip md-autohide>Agregar</md-tooltip>
+                    <md-icon md-svg-src="img/icons/ic_add_white_24px.svg"> </md-icon>
+                </button>
+            </div>
+    </md-toolbar>
+
+    <md-toolbar class="md-table-toolbar md-default alternate" ng-show="cantSelected > 0 ">
+        <div class="md-toolbar-tools">
+            <span>{{cantSelected}} {{cantSelected.length > 1 ? 'items seleccionados' : 'item seleccionado'}}</span>
+            <span flex></span>
+            <md-button ng-show="true" class="md-icon-button" aria-label="Modificar" ng-click="edit()" ng-if="cantSelected === 1">
+                <md-tooltip md-autohide>Modificar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_edit_black_24px.svg"></md-icon>
+            </md-button>
+            <md-button class="md-icon-button" aria-label="Dar de baja" ng-click="delConfirm()">
+                <md-tooltip md-autohide>Baja</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_delete_black_24px.svg"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <!--TOOLBAR PARA SEARCH-->
+    <md-toolbar class="md-table-toolbar md-default ng-hide" ng-show="limitPurchaseGrilla.filter.show && !limitPurchaseGrilla.selected.length">
+        <div class="md-toolbar-tools">
+            <md-icon md-svg-src="img/icons/search.svg"></md-icon>
+            <form flex="" name="filter.form" class="ng-valid flex">
+                <input focus-search="limitPurchaseGrilla.filter.show" type="text" ng-model="limitPurchaseGrilla.query.filter" placeholder="Buscar {{ report }}" >
+                <!--ng-model-options="filter.options"-->
+            </form>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="removeFilter()">
+                <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <div>
+        <div ng-if="report === 'Coeficientes e Importes'" ng-include="'app.views/limitesDeCompras/limitesDeCompras.coeficientesImportes/limitesDeCompras.coeficientesImportes.html'"></div>
+    </div>
+
+    <div>
+        <div ng-if="report === 'Productos'" ng-include="'app.views/limitesDeCompras/limitesDeCompras.productos/limitesDeCompras.productos.html'"></div>
+    </div>
+</md-card>

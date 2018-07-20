@@ -1,0 +1,173 @@
+<!-- ULTIMO_PROCESO_GRILLA1 -->
+<md-card ng-show="grillaFiltered==true"  class="md-scrollX">
+
+    <md-toolbar class="md-table-toolbar md-default" >
+        <div class="md-toolbar-tools" >
+            <span flex="95">Información del último proceso</span>
+            <md-input-container   class="md-toolMaster">
+                <md-button  class="md-icon-button md-button md-ink-ripple" ng-click="consultasTC.exportarGrilla(ULTIMO_PROCESO_GRILLA1)">
+
+                    <md-icon md-svg-src="img/icons/ic_file_download_36px.svg"></md-icon>
+                    <md-tooltip md-autohide>Exportar</md-tooltip>
+                </md-button>
+            </md-input-container>
+        </div>
+    </md-toolbar>
+
+   <md-table-container>
+        <table data-md-table data-md-row-select="false" md-progress="grillaPromise[ULTIMO_PROCESO_GRILLA1]" id="grillaMaster">
+            <thead md-head data-md-order="grilla1_ORDER" md-on-reorder="consultasTC.onReorderBase">
+            <tr md-row>
+                <th ng-show="column_master.show" md-column
+                    ng-repeat="column_master in grilla[ULTIMO_PROCESO_GRILLA1].columns"
+                    data-md-numeric="column_master.filter == 'number'"
+                    data-md-order-by="{{column_master.field+';'+ULTIMO_PROCESO_GRILLA1}}"
+                    ng-style="{'width': column_master.width}">
+                    <span ng-bind-html="column_master.name | html"></span>
+                    <md-tooltip ng-if="column_master.tip" md-autohide md-direction="top">{{column_master.tip}}</md-tooltip>
+                </th>
+            </tr>
+            </thead>
+            <tbody md-body>
+            <tr md-row data-ng-repeat="row_master in grilla[ULTIMO_PROCESO_GRILLA1].data">
+
+                <td md-cell ng-repeat="column_master2 in grilla[ULTIMO_PROCESO_GRILLA1].columns"
+                    ng-show="column_master2.show"
+                    ng-style="{'width': column_master2.width}">
+                    {{ consultasTC.showVal(row_master[column_master2.field], column_master2.filter )}}
+                </td>
+            </tr>
+            </tbody>
+
+        </table>
+    </md-table-container>
+
+    <md-card class="md-padding" layout-xs="column" layout="row" ng-if="grilla[ULTIMO_PROCESO_GRILLA1].data.length===0 && grilla[ULTIMO_PROCESO_GRILLA1].showNoRegister">
+        No se encontraron datos para mostrar
+    </md-card>
+
+    <data-md-table-pagination md-limit="grilla[ULTIMO_PROCESO_GRILLA1].query.limit"
+                              md-page="grilla[ULTIMO_PROCESO_GRILLA1].query.page"
+                              md-total="{{grilla[ULTIMO_PROCESO_GRILLA1].count}}"
+                              md-on-paginate="consultasTC.onPaginateGrilla1"
+                              md-page-select
+                              ng-if="!grilla[ULTIMO_PROCESO_GRILLA1].data.length<=0">
+    </data-md-table-pagination>
+
+</md-card>
+
+
+<!-- GRILLA 2 -->
+<md-card  ng-show="grillaFiltered==true" class="md-scrollX">
+    <md-toolbar class="md-table-toolbar md-default" >
+        <div class="md-toolbar-tools" >
+            <span flex="95" ng-show="grilla[AGRUPACION_PROMOCIONES_GRILLA2].filter.show!=true">Información agrupada de Promociones</span>
+            <div class="md-toolbar-tools" ng-show="grilla[AGRUPACION_PROMOCIONES_GRILLA2].filter.show">
+                <md-icon md-svg-src="img/icons/search.svg"></md-icon>
+
+                <form flex="" name="formFilter" class="ng-valid flex">
+
+                    <md-input-container flex="50">
+                        <md-datepicker id="fecDesde"
+                                       name="fecDesde"
+                                       ng-disabled="true"
+                                       md-placeholder="Fecha Desde:"
+                                       ng-model="grilla[AGRUPACION_PROMOCIONES_GRILLA2].query.fecDesde" >
+                        </md-datepicker>
+                        <!--
+                        <div class="validation-messages" ng-messages="formFilter.fecDesde.$error">
+                            <div ng-message="required">El campo es requerido</div>
+                            <div ng-message="valid">La fecha ingresada no es valida.</div>
+                            <div ng-message="mindate">La fecha de desde debe ser menor que la fecha hasta.</div>
+                        </div>
+                        -->
+                    </md-input-container>
+
+                    <md-input-container flex="50">
+                        <md-datepicker id="fecHasta" name="fecHasta"   md-placeholder="Fecha Hasta"
+                                       ng-change="consultasTC.actualizarFechaDesde(grilla[AGRUPACION_PROMOCIONES_GRILLA2].query.fecHasta)"
+                                        ng-model="grilla[AGRUPACION_PROMOCIONES_GRILLA2].query.fecHasta" >
+                        </md-datepicker>
+                        <div class="validation-messages" ng-messages="formFilter.fecHasta.$error">
+                            <div ng-message="required">El campo es requerido</div>
+                            <div ng-message="valid">La fecha ingresada no es valida.</div>
+                            <div ng-message="maxdate">La fecha de desde debe ser menor que la fecha hasta.</div>
+                        </div>
+                    </md-input-container>
+                    <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="consultasTC.onFilter(AGRUPACION_PROMOCIONES_GRILLA2)">
+                        <md-icon class="ready" md-svg-src="img/icons/playlist_play.svg"></md-icon>
+                        <md-icon class="done" md-svg-src="img/icons/playlist_check.svg"></md-icon>
+                        <md-tooltip md-autohide> {{ !filtrado ?  'Aplicar filtro' : 'Filtro Aplicado' }}</md-tooltip>
+                    </button>
+                </form>
+                <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="grilla[AGRUPACION_PROMOCIONES_GRILLA2].filter.show=false">
+                    <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+                </button>
+            </div>
+            <button  ng-show="grilla[AGRUPACION_PROMOCIONES_GRILLA2].filter.show!=true" class="md-icon-button md-button md-ink-ripple" type="button" ng-click="grilla[AGRUPACION_PROMOCIONES_GRILLA2].filter.show=true">
+                <md-tooltip md-autohide>Filtros</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_filter_list_24px.svg"></md-icon>
+            </button>
+            <md-input-container   class="md-toolMaster">
+                <md-button  class="md-icon-button md-button md-ink-ripple" ng-click="consultasTC.exportarGrilla(AGRUPACION_PROMOCIONES_GRILLA2)" > <!-- {{consultasTC.exportarGrilla1(AGRUPACION_PROMOCIONES_GRILLA2)}} -->
+                    <md-icon md-svg-src="img/icons/ic_file_download_36px.svg"></md-icon>
+                    <md-tooltip md-autohide>Exportar</md-tooltip>
+                </md-button>
+            </md-input-container>
+
+        </div>
+    </md-toolbar>
+
+    <!-- INFORMACIÓN AGRUPADA DE PROMOCIONES -->
+    <!--
+    <div class="md-toolbar-tools ng-hide" >
+        <span flex="95" ng-show="grilla[ULTIMO_PROCESO_GRILLA1].filter.show!=true">Información agrupada de Promociones</span>
+        <md-input-container   class="md-toolMaster">
+            <md-button  class="md-icon-button md-button md-ink-ripple" ng-click="consultasTC.exportarGrilla(AGRUPACION_PROMOCIONES_GRILLA2)">
+                <md-icon md-svg-src="img/icons/ic_file_download_36px.svg"></md-icon>
+                <md-tooltip md-autohide>Exportar 2 </md-tooltip>
+            </md-button>
+        </md-input-container>
+    </div>
+    -->
+
+    <!--TOOLBAR PARA SEARCH-->
+    <md-toolbar class="md-table-toolbar md-default ng-hide" >
+
+    </md-toolbar>
+
+    <md-table-container>
+        <table data-md-table md-progress="grillaPromise[AGRUPACION_PROMOCIONES_GRILLA2]">
+            <thead md-head data-md-order="grilla2_ORDER" md-on-reorder="consultasTC.onReorderBase">
+            <tr md-row>
+                <th ng-show="column_cabal.show" md-column
+                    ng-repeat="column_cabal in grilla[AGRUPACION_PROMOCIONES_GRILLA2].columns"
+                    data-md-numeric="column_cabal.filter == 'number'"
+                    data-md-order-by="{{column_cabal.field+';'+AGRUPACION_PROMOCIONES_GRILLA2}}"
+                    ng-style="{'width': column_cabal.width}">
+                    <span ng-bind-html="column_cabal.name | html"></span>
+                    <md-tooltip ng-if="column_cabal.tip" md-autohide md-direction="top">{{column_cabal.tip}}</md-tooltip>
+                </th>
+            </tr>
+            </thead>
+            <tbody md-body>
+            <tr md-row data-ng-repeat="row_cabal in grilla[AGRUPACION_PROMOCIONES_GRILLA2].data">
+                <td md-cell ng-repeat="column_cabal2 in grilla[AGRUPACION_PROMOCIONES_GRILLA2].columns" ng-show="column_cabal2.show"
+                    ng-style="{'width': column_cabal2.width}">
+                    {{ consultasTC.showVal(row_cabal[column_cabal2.field], column_cabal2.filter )}}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+    <md-card class="md-padding" layout-xs="column" layout="row" ng-if="grilla[AGRUPACION_PROMOCIONES_GRILLA2].data.length===0 && grilla[AGRUPACION_PROMOCIONES_GRILLA2].showNoRegister">
+        No se encontraron datos para mostrar
+    </md-card>
+    <data-md-table-pagination md-limit="grilla[AGRUPACION_PROMOCIONES_GRILLA2].query.limit"
+                              md-page="grilla[AGRUPACION_PROMOCIONES_GRILLA2].query.page"
+                              md-total="{{grilla[AGRUPACION_PROMOCIONES_GRILLA2].count}}"
+                              md-on-paginate="consultasTC.onPaginateGrilla2"
+                              md-page-select
+                              ng-if="!grilla[AGRUPACION_PROMOCIONES_GRILLA2].data.length<=0">
+    </data-md-table-pagination>
+</md-card>

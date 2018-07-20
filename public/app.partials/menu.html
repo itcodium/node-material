@@ -1,0 +1,38 @@
+<h4 class="docs-logotype">Sistema de Servicios Operacionales</h4>
+
+<div class="scrollbar ng-scope" id="style-bar">
+    <ul class="docs-menu">
+        <li ng-repeat="section in menu.sections | filter: { enabled: true }"
+            class="parent-list-item {{section.className || ''}}"
+            ng-class="{'parentActive' : isSectionSelected(section)}" style="width: 242px;">
+
+            <h2 class="menu-heading md-subhead" ng-if="section.type === 'heading'"
+                id="heading_{{ section.name | nospace }}">
+                {{section.name}}
+            </h2>
+            <menu-link section="section" ng-if="section.type === 'link' && !section.hidden"></menu-link>
+
+            <menu-toggle section="section" ng-if="section.type === 'toggle' && !section.hidden"></menu-toggle>
+
+            <ul ng-if="section.children" class="menu-nested-list">
+                <li ng-repeat="child in section.children  | filter: { enabled: true }"
+                    ng-class="{'childActive' : isSectionSelected(child)}" style="width: 242px;">
+                    <menu-link section="child" ng-if="child.type === 'link'"></menu-link>
+                    <menu-toggle section="child" ng-if="child.type === 'toggle'"></menu-toggle>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <md-content class="over-hidden" role="navigation" ng-controller="MenuCtrl">
+      <md-list class="item.md-3-line menu-login" ng-show="global.currentUser!=null" ng-controller="MenuCtrl">
+        <img src="/img/icons/ic_account_circle_white_24px.svg"/>
+        <h5>{{global.currentUser.nombre}}</h5>
+        <md-icon md-svg-icon="/img/icons/ic_input_white_18px.svg" ng-click="global.logout($event)">
+          <md-tooltip md-direction="top" class="md-autohide">Salir / Logout</md-tooltip>
+        </md-icon>
+      </md-list>
+    </md-content>
+ </div>
+
+<!--https://design.google.com/icons/#ic_person-->
+

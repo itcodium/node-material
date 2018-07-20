@@ -1,0 +1,83 @@
+<div id="toastSelect">
+    <p></p>
+</div>
+
+<md-card ng-init="init()">
+    <!--TOOLBAR PRINCIPAL-->
+    <md-toolbar class="md-table-toolbar md-default" ng-show="!buscarPeriodo">
+        <div class="md-toolbar-tools">
+            <span>Baja de apoderados</span>
+            <span flex></span>
+            <md-button class="md-icon-button md-button md-ink-ripple"
+                       aria-label="filtrar"
+                       ng-click="buscarPeriodo = true">
+                <md-tooltip md-autohide>Filtrar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_filter_list_black_24px.svg"></md-icon>
+            </md-button>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-disabled="delayButton" ng-click="exportExcel()">
+                <md-tooltip md-autohide>Exportar Excel</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_file_download_36px.svg"> </md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <!--TOOLBAR PARA SEARCH-->
+    <md-toolbar class="md-table-toolbar md-default ng-hide" ng-show="buscarPeriodo">
+        <div class="md-toolbar-tools">
+            <span>Baja de apoderados</span>
+            <span flex></span>
+            <div flex layout="row" layout-align="space-around center">
+                <md-input-container class="md-toolMaster">
+                    <label>Periodo</label>
+                    <md-select id="selectPeriodo" name="selectPeriodo" ng-change="selectPeriodo()" ng-init="periodo = 'undefined'" ng-model="periodo" aria-label="true">
+                        <md-option ng-value=""></md-option>
+                        <md-option ng-value="periodo" ng-repeat="periodo in periodos">{{periodo}}</md-option>
+                    </md-select>
+                </md-input-container>
+                <md-input-container class="md-toolMaster">
+                    <label>Convenio</label>
+                    <md-select ng-model="grilla.query.convenio" ng-change="selectConvenio()" >
+                        <md-option ng-repeat="convenio in convenios" value="{{convenio.convenio}}">{{convenio.convenio}}</md-option>
+                    </md-select>
+                </md-input-container>
+            </div>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="removeFilter()">
+                <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+            </button>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="exportExcel($event)">
+                <md-tooltip md-autohide>Exportar Excel</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_file_download_36px.svg"> </md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <md-table-container ng-show="grilla.count > 0">
+        <table id="cuentas" data-md-table data-md-row-select="false" data-ng-model="sinRelacion.selected" md-progress="promise">
+            <thead md-head data-md-order="grilla.query.order" md-on-reorder="onReorder">
+                <tr md-row>
+                    <th ng-show="column.show" md-column
+                        ng-repeat="column in columns"
+                        data-md-numeric="column.filter == 'number'"
+                        data-md-order-by="{{column.field}}" >
+                        <span>{{column.name}}</span>
+                        <md-tooltip ng-if="column.tip" md-autohide md-direction="top">{{column.tip}}</md-tooltip>
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody md-body>
+                <tr md-row data-ng-repeat="row in grilla.data">
+                    <td md-cell
+                        ng-repeat="column in columns"
+                        ng-style="{'min-width': column.width}">
+                        {{ row[column.field] }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+
+    <data-md-table-pagination md-limit="grilla.query.limit" md-page="grilla.query.page" md-total="{{grilla.count}}" md-on-paginate="onPaginate" md-page-select>
+    </data-md-table-pagination>
+
+</md-card>

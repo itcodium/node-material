@@ -1,0 +1,199 @@
+﻿<html>
+<head>
+    <style>
+        body{
+            font-size: 10px;
+        }
+        .table{
+            border: 0;
+            border-right: solid 1px #555;
+            border-bottom: solid 1px #555;
+            font-size: 11px;
+            width: 100%;
+        }
+        .paddingLeft{
+            border: 0;
+        }
+
+        .table tr td,.table tr th{
+            border-top: solid 1px #555;
+            border-left: solid 1px #555;
+            padding-left: 5px;
+            padding-right: 5px;
+
+        }
+        table tr td,.table tr th{
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+        h1{
+            color: #000;
+        }
+        .red{
+            color: red;
+        }
+        .blue{
+            color: blue;
+        }
+        .bold{
+            font-weight: bold;
+        }
+        .underlined {
+            text-decoration: underline;
+        }
+        .italic {
+            font-style: italic;
+        }
+        .small-table {
+            width: 25%;
+        }
+
+        hr{
+            color: #eee;;
+            margin-bottom: 3px;
+            margin-top: 3px;
+			line-height:2px;
+        }
+
+    </style>
+
+</head>
+<body>
+<h2 style="text-align: center">SOLICITUD DE PROCESO DE ARCHIVOS PARA TARJETAS DE CRÉDITO</h2>
+<!-- Encabezado-->
+<table  cellspacing="0" cellpadding="0">
+    <tr><td>A:</td><td class="bold">OPERACIONES SISTEMAS</td> <td class="bold">INT. 27038 / 27032</td></tr>
+    <tr><td>De:</td>	<td class="bold">OPERACIONES DE TARJETAS DE CREDITO</td><td class="bold">INT. 38521</td></tr>
+    <tr><td>Fecha/Hora: </td><td class="bold">@FECHA_HORA</td></tr>
+</table>
+<hr>
+<br>
+<!-- ARCHIVO -->
+<table class="table" cellspacing="0" cellpadding="0">
+    <tr>
+        <th></th>
+        <th>ARCHIVO</th>
+        <th>NOMENCLATURA OBLIGATORIA</th>
+        <th colspan="2">PROCESO</th>
+    </tr>
+    <tr>
+        <td>X</td>
+        <td>SO287D</td>
+        <td>SO287D_aammdd(fecha generación)</td>
+        <td>B</td>
+        <td><span class="blue">CA</span></td>
+    </tr>
+    <tr>
+        <td>X</td>
+        <td>IN141D</td>
+        <td>IN141D_GrupoCtaCte_TipoTarj_aammdd(fecha cierre)</td>
+        <td>B</td>
+        <td><span class="blue">CA</span></td>
+    </tr>
+    <tr>
+        <td>X</td>
+        <td>IN147D</td>
+        <td>IN147D_GrupoCtaCte_aammdd(fecha cierre)</td>
+        <td>B</td>
+        <td><span class="blue">CA</span></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>MAETAR</td>
+        <td>MAETAR_Cartera_aammdd(fecha cierre)</td>
+        <td>B</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>MAEUSU</td>
+        <td>MAEUSU_Cartera_aammdd(fecha cierre)</td>
+        <td>B</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>AXMTAR</td>
+        <td>AXMTAR_Cartera_aammdd(fecha cierre)</td>
+        <td>B</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>AXMUSU</td>
+        <td>AXMUSU_Cartera_aammdd(fecha cierre)	B</td>
+        <td>B</td>
+        <td>-</td>
+    </tr>
+</table>
+<br>
+<table class="table" cellspacing="0" cellpadding="0">
+    <tr><th>NOMBRE ARCHIVO ENVIADO</th></tr>
+	<!-- 
+    <tr><td>MAEUSU_C02_067 <span class="red">( archivo  procesado y controlado )</span> </td></tr>
+    <tr><td>MAETAR.067 <span class="red">( archivo  procesado y controlado )</span> </td></tr>
+    <tr><td>MAEUSU_C02_667 <span class="red">( archivo  procesado y controlado )</span> </td></tr>
+    <tr><td>MAETAR.667<span class="red"> ( archivo  procesado y controlado )</span> </td></tr>
+	-->
+	@FILES
+</table>
+<br>
+<table class="table" cellspacing="0" cellpadding="0">    
+    <tr><td class="red bold">RUTA DE LOS ARCHIVOS \\srvfs04-prod\Xcom\Macro\PadronesBansud </td></tr>
+    <tr>
+        <td class="blue italic" ><span class="blue">NOTA: favor de dejar copia de estos archivos en carpetas \\srvaudit-prod\Operaciones\InterfacesAutomaticas  y en </span><span class="bold underlined blue">\\srvaudit-prod\Operaciones\InterfacesAutomaticas</span>
+        </td>
+    </tr>
+</table>
+<br>
+<table class="table" cellspacing="0" cellpadding="0">
+    <tr>
+        <td></td>
+        <td class="bold">TIPO PROCESO SOLICITADO</td>
+    </tr>
+    <tr>
+        <td>B</td>
+        <td>Bajada Archivo a COBIS</td>
+    </tr>
+    <tr>
+        <td><span class="blue">CA</span></td>
+        <td>Copia para Auditoria en carpeta <span class="blue italic bold underlined">\\srvaudit-prod\Operaciones\InterfacesAutomaticas</span></td>
+    </tr>
+</table>
+<br>
+<hr>
+Espacio Reservado para el área de Operaciones Sistemas
+<table class="table" cellspacing="0" cellpadding="0" width="60%">
+
+    <tr>
+        <td>RESULTADO PROCESO:</td>
+        <td>
+            <table style="border: 0" cellspacing="0" cellpadding="0"  width="100%" border="0">
+                <tr>
+                    <td style="border: 0">CON ERROR</td>
+                    <td style="border: 0">SIN ERROR</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td>FECHA/HORA PROCESO:</td>
+        <td> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HS
+        </td>
+    </tr>
+    <tr>
+        <td>OPERADOR:</td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr valign="top">
+        <td style="height: 80px;">FIRMA OPERADOR:</td>
+        <td style="height: 80px;">OBSERVACIONES:</td>
+    </tr>
+</table>
+
+</body>
+</html>
+
+
+

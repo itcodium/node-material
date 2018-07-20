@@ -1,0 +1,141 @@
+﻿<html>
+<head>
+	<style>
+		*{
+			margin:0;
+			padding:3;
+			margin-bottom:5px;
+
+		}
+		.titulo,.titulo2{
+			border:solid 1px #000;
+			font-size:22.0pt;
+			font-weight:bold;
+			text-align:center;
+		}
+		.titulo{
+			margin-bottom:25px;
+		}
+		.titulo2{
+			font-size:18.0pt;
+			border:none;
+		}
+		.text{
+			font-size:9.0pt;
+			font-weight:bold;
+		}
+		p{
+			margin-bottom:0;
+		}
+
+		.box{
+			border:solid 1px #000;
+			padding:3px 150px 8px 15px;
+		}
+		.blue{
+			color:blue;
+			font-weight:bold;
+			font-size: 10.0pt;
+			font-family: Arial,sans-serif;
+			font-style: italic;
+		}
+		table{
+			padding:0;
+			margin:0px;
+			margin-top:20px;
+			border-bottom:solid 1px #000;
+			border::solid 1px #000;
+			width:600px;
+			font-family:Arial,sans-serif;
+		}
+		.bold{
+			font-weight:bold;
+		}
+
+		td,th{
+			border-top:solid 1px #000;
+			border-left:solid 1px #000;
+			border-right:solid 1px #000;
+			padding:0px 2px 0px 2px;
+		}
+		.primeraCelda{
+			border-right:0;
+			border-left:0;
+			border-top:0;
+			width:50px;
+		}
+
+	</style>
+</head>
+<body>
+
+<div class="titulo">JUBILACIONES</div>
+<div class="titulo2">SOLICITUD DE PROCESO DE ARCHIVOS</div>
+
+<p class="text">A:<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>OPERACIONES SISTEMAS</p>
+<p class="text">&nbsp;&nbsp;&nbsp;&nbsp;<span style="mso-tab-count:1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>INT. 7391 a 94 - FAX:  7395</p>
+<p>&nbsp;</p>
+<p class="text">De:<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>OPERACIONES JUBILACIONES</p>
+<p class="text"><span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>
+	Interno 6403</p>
+<p>Fecha/Hora: <span class="box blue" style="color:blue;">@FECHA_HORA</span></p>
+
+<BR>______________________________________________________________________
+
+<BR>
+<BR>
+<table cellspacing=0>
+	<tr>
+		<td class="primeraCelda"></td>
+		<td class="bold">TIPO PROCESO</td>
+	</tr>
+	<tr>
+		<td style="border-right:0;">▬</td>
+		<td class="blue">MIGRACION DE RELACIONES JUB CTA - ANSES</td>
+	</tr>
+</table>
+<BR>
+
+<table cellspacing=0>
+	<tr>
+		<td class="primeraCelda"></td>
+		<td class="bold">Ubicación Vínculo</td>
+	</tr>
+	<tr>
+		<td style="border-right:0;">▬</td>
+		<td class="blue">\\SEABPBA\Listados\jubila\enviados</td>
+	</tr>
+</table>
+<br>
+<BR>
+<p> <span style="background-color:#700f02;color:#fff;">EJECUTAR POR PROBATCH </span></p>
+<p><span style="background-color:#700f02;color:#fff;">BITACORA EVENTUAL INSTANCIA 6</span></p>
+
+<table  border="0" cellspacing=0 cellpadding=0 style="font-family:tahoma;border:0;">
+	<tr style="border:0"><td  style="border:0"><b>Lote:</b> 28254 - MIGRACION DE RELACIONES JUB CTA - ANSES</td></tr>
+	<tr style="border:0"><td  style="border:0"><b>Proceso:</b> 28286 - BORRADO DE TABLAS</td></tr>
+	<tr style="border:0"><td  style="border:0;"><b>Parámetros:</b></td></tr>
+	<tr style="border:0"><td style="border:0;padding-left:40px;">	<b>Filial:</b> <b>1</b></td></tr>
+	<tr style="border:0"><td style="border:0;padding-left:40px;">	<b>Fecha:</b> <b style="color:red;">@FECHA</b></td></tr>
+	<tr style="border:0"><td style="border:0;padding-left:40px;">	<b>Tipo de Proceso (V,M):</b> <b style="color:blue;">V</b></td></tr>
+	<tr style="border:0"><td style="border:0;padding-left:40px;">	<b>Nro. Agencia:</b> <b style="color:blue;">TODAS</b></td></tr>
+</table>
+<BR>
+<BR>
+@ARCHIVOS
+<BR>
+<br>
+<table  border="0" cellspacing=0 cellpadding=0 style="font-family:tahoma;border:0;">
+	<tr style="border:0"><td  style="border:0"><b>Lote:</b> 28254 - MIGRACION DE RELACIONES JUB CTA - ANSES</td></tr>
+	<tr style="border:0"><td  style="border:0"><b>Proceso:</b> 28285 - PROCESO DE RELACIONES</td></tr>
+	<tr style="border:0"><td  style="border:0;"><b>Parámetros:</b></td></tr>
+	<tr style="border:0"><td style="border:0;padding-left:40px;">	<b>Filial:</b> <b>1</b></td></tr>
+	<tr style="border:0"><td style="border:0;padding-left:40px;">	<b>Fecha:</b> <b style="color:red;">@FECHA</b></td></tr>
+	<tr style="border:0"><td style="border:0;padding-left:40px;">	<b>Tipo de Proceso (V,M):</b> <b style="color:blue;">M</b></td></tr>
+	<tr style="border:0"><td style="border:0;padding-left:40px;">	<b>Nro. Agencia:</b> <b style="color:blue;">TODAS</b></td></tr>
+	<tr style="border:0"><td style="border:0;padding-left:40px;">	<b>ENTE:</b> <b style="color:red;">@ENTE_CONVENIO</b></td></tr>
+</table>
+<BR>
+<BR>
+</body>
+</html>

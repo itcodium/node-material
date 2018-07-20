@@ -1,0 +1,128 @@
+<md-dialog aria-label="ABM Digitadores" ng-init="init()" ng-cloak flex="70">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 ng-if="ParentScope.operac!='Modificar'">{{ParentScope.operac}} de Digitadores</h2>
+            <h2 ng-if="ParentScope.operac=='Modificar'">Modificación de Digitadores</h2>
+
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon md-svg-src="/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+
+
+    <form id="formDigitadores" ng-submit="ParentScope.config.submit(this.formDigitadores,digitadores);" name="formDigitadores" novalidate>
+        <md-dialog-content class="toastParent">
+            <div class="md-dialog-content">
+                <div class="modal-body">
+                    <div class="row altaPopUp">
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex>
+                                <label for="proceso">Proceso</label>
+                                <md-select
+                                            id="proceso"
+                                            name="proceso"
+                                            ng-disabled="ParentScope.operac.toUpperCase() !== 'ALTA'"
+                                            ng-model="digitadores.model.idProceso"
+                                            ng-change="ParentScope.config.validTipoCodigo(digitadores)"
+                                >
+                                    <md-option ng-value="proceso.idProceso" ng-repeat="proceso in ParentScope.procesos">{{proceso.nombre}}</md-option>
+                                </md-select>
+                                <div immediate-error class="md-caption" style="color:rgb(221,44,0)" ng-show="digitadores.codigoInvalido">
+                                    El valor debe ser numérico
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex>
+                                <label for="cuenta">Cuenta</label>
+                                <textarea
+                                        md-no-resize
+                                        type="text"
+                                        name="cuenta"
+                                        id="cuenta"
+                                        maxlength="20"
+                                        ng-model="digitadores.model.cuenta"
+                                        ng-change="ParentScope.config.ValidarCuenta(digitadores)"
+                                >
+                                </textarea>
+                                <div immediate-error ng-messages="formDigitadores.cuenta.$error" class="md-caption" style="color:rgb(221,44,0)" ng-show="digitadores.cuentaObligatoria">
+                                    La Cuenta es obligatoria para la acción Eliminar.
+                                </div>
+                                <div immediate-error class="md-caption" style="color:rgb(221,44,0)" ng-show="digitadores.cuentaInexistente">
+                                    La cuenta no existe.
+                                </div>
+                                <div immediate-error class="md-caption" style="color:rgb(221,44,0)" ng-show="digitadores.codigoExistente">
+                                    La combinación Proceso - Cuenta - Digitador ya existe.
+                                </div>
+                            </md-input-container>
+                        </div>
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex>
+                                <label for="digitador">Digitador</label>
+                                <textarea
+                                        md-no-resize
+                                        required="true"
+                                        type="text"
+                                        name="digitador"
+                                        id="digitador"
+                                        ng-disabled="ParentScope.operac.toUpperCase() !== 'ALTA'"
+                                        maxlength="50"
+                                        ng-model="digitadores.model.digitador"
+                                        ng-change="ParentScope.config.ValidarDigitador(digitadores)"
+                                >
+                                </textarea>
+                                <div ng-messages="formDigitadores.digitador.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex>
+                                <label for="accion">Acción</label>
+                                <md-select
+                                        required="true"
+                                        id="accion"
+                                        name="accion"
+                                        ng-model="digitadores.model.accion"
+                                        ng-change="ParentScope.config.accionChange(digitadores)"
+                                >
+                                    <md-option ng-value="accion" ng-repeat="accion in ParentScope.acciones">{{accion}}</md-option>
+                                </md-select>
+                                <div ng-messages="formDigitadores.accion.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                </div>
+                            </md-input-container>
+                        </div>
+                        <div layout-gt-sm="row" ng-if="ParentScope.operac.toUpperCase() == 'BAJA'">
+                            <md-datepicker
+                                    id="fecBaja"
+                                    name="fecBaja"
+                                    md-placeholder="Fecha baja:"
+                                    ng-model="digitadores.model.fecBaja"
+                                    required
+                                    "config.test(digitadores.model.fecBaja)"
+                                    md-min-date="ParentScope.minFecBaja">
+                            </md-datepicker>
+                            <div class="validation-messages" ng-messages="formDigitadores.fecBaja.$error">
+                                <div ng-message="valid">La fecha ingresada no es valida.</div>
+                                <div ng-message="required">El campo es requerido</div>
+                                <div ng-message="mindate">La fecha de baja no puede ser menor al día en curso.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row">
+            <a href="javascript:void(0)" class="md-button md-ink-ripple" ng-click="cancel()">Cancelar</a>
+            <md-button type="submit"  ng-disabled="formDigitadores.$valid==false"  class="md-raised md-primary md-button md-ink-ripple" ng-keyup="$event.keyCode == 13" data-dismiss="modal">
+                <span>Aceptar</span>
+            </md-button>
+        </md-dialog-actions>
+    </form>
+
+</md-dialog>
+
+
+
+

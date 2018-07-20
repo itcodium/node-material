@@ -1,0 +1,115 @@
+<div id="toastSelect">
+    <p></p>
+</div>
+<md-card ng-init="initSucursales()">
+    <!--TOOLBAR PRINCIPAL-->
+    <md-toolbar class="md-table-toolbar md-default" ng-show="!sucursalGrilla.selected.length && !sucursalGrilla.filter.show">
+        <div class="md-toolbar-tools">
+            <span>Sucursales</span>
+            <span flex></span>
+            <md-button class="md-icon-button md-button md-ink-ripple"
+                       aria-label="filtrar"
+                       ng-click="sucursalGrilla.filter.show = true">
+                <md-tooltip md-autohide>Buscar</md-tooltip>
+                <md-icon md-svg-src="img/icons/search.svg"> </md-icon>
+            </md-button>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="exportarExcel()">
+                <md-tooltip md-autohide>Exportar Excel</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_file_download_36px.svg"> </md-icon>
+            </button>
+
+            <button class="md-fab md-button md-success md-ink-ripple" type="button" ng-click="gdSucursal.add($event)">
+                <md-tooltip md-autohide>Agregar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_add_white_24px.svg"> </md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <!--TOOLBAR PARA SEARCH-->
+    <md-toolbar class="md-table-toolbar md-default ng-hide" ng-show="sucursalGrilla.filter.show && !sucursalGrilla.selected.length">
+        <div class="md-toolbar-tools">
+            <md-icon md-svg-src="img/icons/search.svg"></md-icon>
+            <form flex="" name="filter.form" class="ng-valid flex">
+                <input focus-search="sucursalGrilla.filter.show" type="text" ng-model="sucursalGrilla.query.filter" placeholder="Buscar Sucursal" >
+                <!--ng-model-options="filter.options"-->
+            </form>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="gdSucursal.removeFilter()">
+                <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <!--TOOLBAR PARA EDICION-->
+    <md-toolbar class="md-table-toolbar alternate" ng-show="sucursalGrilla.selected.length">
+        <div class="md-toolbar-tools">
+            <span>{{sucursalGrilla.selected.length}} {{sucursalGrilla.selected.length > 1 ? 'items' : 'item'}} seleccionados</span>
+            <span flex></span>
+            <md-button ng-show="sucursalGrilla.selected.length < 2" class="md-icon-button"
+                       aria-label="funcionalidad no especifica"
+                       ng-click="gdSucursal.edit($event)">
+                <md-tooltip md-autohide>Modificar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_edit_black_24px.svg"></md-icon>
+            </md-button>
+
+            <md-button class="md-icon-button"
+                       aria-label="funcionalidad no especifica"
+                       ng-click="gdSucursal.del($event)">
+                <md-tooltip md-autohide>Eliminar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_delete_black_24px.svg"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+
+    <!--GRILLA-->
+    <md-table-container class="md-scrollX">
+        <table data-md-table data-md-row-select="!hideCheckboxes" data-ng-model="sucursalGrilla.selected" md-progress="promiseSucursal">
+            <!--barra de titulos-->
+            <thead ng-if="!hideHead" md-head data-md-order="sucursalGrilla.query.order" md-on-reorder="onReorder">
+            <tr md-row>
+                <th md-column data-md-order-by="codSucursal" style="padding-left: 6px !important;padding-right: 0px !important;"><span>Sucursal</span></th>
+                <th md-column data-md-order-by="descripSucursal"><span>Descripción Sucursal</span></th>
+                <th md-column data-md-order-by="direccion"><span>Dirección</span></th>
+                <th md-column data-md-order-by="descripcionLocalidad"><span>Localidad</span></th>
+                <th md-column data-md-order-by="descripionRegion"><span>Región</span></th>
+                <th md-column data-md-order-by="descripcionDivision"><span>División</span></th>
+                <th md-column data-md-order-by="marcaEDP"><span>EDP</span></th>
+                <th md-column data-md-order-by="codGeografico"><span>Cod. Geografico</span></th>
+                <th md-column data-md-order-by="codSucursalFusionada"><span>Suc. Fusionada</span></th>
+                <th md-column data-md-order-by="fecBaja"><span>Fecha de Baja</span></th>
+            </tr>
+            </thead>
+
+
+            <!--rows de datos-->
+            <tbody md-body>
+            <tr md-row md:select="row" data-md-on-select="gdSucursal.log"
+                md-on-deselect="gdSucursal.deselect"
+                x-md-auto-select="!blah"
+                data-ng-repeat="row in sucursalGrilla.data | orderBy: sucursalGrilla.query.order | limitTo: sucursalGrilla.query.limit : (sucursalGrilla.query.page -1) * sucursalGrilla.query.limit">
+                <td md-cell style="padding-left: 6px !important; padding-right: 0px !important;">{{row.codSucursal}}</td>
+                <td md-cell>{{row.descripSucursal}}</td>
+                <td md-cell>{{row.direccion}}</td>
+                <td md-cell>{{row.descripcionLocalidad}}</td>
+                <td md-cell>{{row.descripcionRegion}}</td>
+                <td md-cell>{{row.descripcionDivision}}</td>
+
+                <td md-cell>
+                    <md-checkbox disabled="true" ng-model="row.marcaEDP" aria-label=""  ng-change=""></md-checkbox>
+                </td>
+                <td md-cell>{{row.codGeografico}}</td>
+                <td md-cell>{{row.codSucursalFusionada}}</td>
+
+                <td md-cell>{{row.fecBaja | date:'dd/MM/yyyy'}}</td>
+
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+
+    <data-md-table-pagination md-limit="sucursalGrilla.query.limit" md-page="sucursalGrilla.query.page" md-total="{{sucursalGrilla.count}}" md-on-paginate="onPaginate" md-page-select>
+    </data-md-table-pagination>
+
+
+</md-card>
+

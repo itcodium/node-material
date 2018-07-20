@@ -1,0 +1,47 @@
+<md-dialog aria-label="ABM Apoderados" ng-init="initPopUp()" ng-cloak flex="30">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>{{operac}} de Apoderados</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="ctrl.cancel()">
+                <md-icon md-svg-src="/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="toastParent">
+        <div class="md-dialog-content">
+            <div class="modal-body">
+                <form id="Container_Form" ng-submit="ctrl.confirmOperation(formApoderado.$error)"  name="formApoderado" role="form">
+                    <div class="row altaPopUp">
+                        <div layout-gt-sm="row">
+
+                            <md-input-container class="md-block" flex="10">
+                                <label for="txtCode">Cod.</label>
+                                <input type="text" name="code" id="txtCode" maxlength="1"
+                                       ng-model="apoderado.codigo" ng-disabled="operac != 'Alta'" required role="codigo">
+                                <span class=".control-group.error .control-label md-error" ng-if="errorForm == true" ng-show="formApoderado.code.$error.required">Ingrese Código.</span>
+                            </md-input-container>
+
+                            <md-input-container class="md-block" flex>
+                                <label for="txtDescripcion">Descripción:</label>
+                                <input type="text" name="descripcion" maxlength="50" id="txtDescripcion"
+                                       ng-model="apoderado.descripcion" required role="descripcion">
+                                <span class=".control-group.error .control-label md-error" ng-if="errorForm == true" ng-show="formApoderado.descripcion.$error.required">Ingrese Descripción.</span>
+                            </md-input-container>
+
+                        </div>
+                    </div>
+                    <input type="submit"
+                           style="position: absolute; left: -9999px; width: 1px; height: 1px;"
+                           tabindex="-1" />
+                </form>
+            </div>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <a href="javascript:void(0)" class="md-button md-ink-ripple" ng-click="ctrl.cancel()">Cancelar</a>
+        <md-button type="button" class="md-raised md-primary md-button md-ink-ripple" ng-click="ctrl.confirmOperation(formApoderado.$error)">
+            <span>Aceptar</span>
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

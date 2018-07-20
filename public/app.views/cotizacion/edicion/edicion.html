@@ -1,0 +1,73 @@
+<md-dialog aria-label="ABM Cotizacion" flex="30">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 >{{mode}} de Cotización</h2>
+
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon md-svg-src="/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <form ng-submit="formCotizacion.$valid && submit()" name="formCotizacion" novalidate>
+        <md-dialog-content class="toastParent">
+            <div class="md-dialog-content">
+                <div class="modal-body">
+                    <div class="row altaPopUp">
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex="30">
+                                <label for="moneda">Moneda</label>
+                                <md-select required="true" ng-disabled="mode !== 'Alta'" ng-model="cotizacion.monedaOrigen" name="monedaOrigen" placeholder="Moneda">
+                                    <md-option ng-value="opt.moneda" ng-repeat="opt in monedas">{{opt.moneda}}</md-option>
+                                </md-select>
+                                <div ng-messages="formCotizacion.monedaOrigen.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="30">
+                                <label for="moneda">Moneda</label>
+                                <md-select required="true" ng-disabled="mode !== 'Alta'" ng-model="cotizacion.monedaDestino" name="monedaDestino" placeholder="Moneda">
+                                    <md-option ng-value="opt.moneda" ng-repeat="opt in monedas">{{opt.moneda}}</md-option>
+                                </md-select>
+                                <div ng-messages="formCotizacion.monedaDestino.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                </div>
+                            </md-input-container>
+                        </div>
+                        <div layout-gt-sm="row">
+                            <md-input-container>
+                                <md-datepicker name="dia" required disabled
+                                               ng-model="cotizacion.dia">
+                                </md-datepicker>
+                                <div class="validation-messages" ng-messages="formCotizacion.dia.$error">
+                                    <div ng-message="valid">La fecha no es valida!</div>
+                                </div>
+                            </md-input-container>
+
+                            <md-input-container class="md-block" flex="50">
+                                <label>Cotización</label>
+                                <input type="number" name="importe" ng-model="cotizacion.cotizacion" required 
+                                    min="0" max="999999999999999999.9999" ng-pattern="/^\s*-?\d+(\.\d{1,4})?\s*$/" ng-keypress="validateNumber($event)"/>
+                                <div ng-messages="formCotizacion.importe.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                    <div ng-message="max">Superó el valor maximo permitido</div>
+                                    <div ng-message="pattern">Solo se permite 4 decimales</div>
+                                    <div ng-message="number">Número inválido</div>
+                                    <div ng-message="min">El valor no puede ser menor a 0</div>
+                                </div>
+                            </md-input-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row">
+            <a href="javascript:void(0)" class="md-button md-ink-ripple" ng-click="cancel()">Cancelar</a>
+            <md-button type="submit" class="md-raised md-primary md-button md-ink-ripple" data-dismiss="modal">
+                <span>Aceptar</span>
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

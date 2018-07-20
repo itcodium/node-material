@@ -1,0 +1,103 @@
+<md-card layout-padding>
+    <md-toolbar class="md-table-toolbar md-default" ng-show="digitadores.filter.show && digitadores.selected.length == 0">
+        <div class="md-toolbar-tools">
+            <span>Digitadores</span>
+            <span flex></span>
+            <div flex layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+                <md-switch
+                        ng-change="resetPage()"
+                        ng-model="grid.query.showDeleted"
+                        aria-label="Visible">
+                </md-switch>
+                <p class="md-body-1">Incluir dados de baja</p>
+            </div>
+            <md-button class="md-icon-button md-button md-ink-ripple"
+                       aria-label="filtrar"
+                       ng-click="digitadores.filter.show = false;">
+                <md-tooltip md-autohide>Filtrar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_filter_list_black_24px.svg"></md-icon>
+
+            </md-button>
+            <button class="md-fab md-button md-success md-ink-ripple" type="button" ng-click="config.openAddForm()">
+                <md-tooltip md-autohide>Agregar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_add_white_24px.svg"> </md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+
+
+    <md-toolbar class="md-table-toolbar md-default ng-hide" ng-show="!digitadores.filter.show &&  digitadores.selected.length ==0">
+        <div class="md-toolbar-tools">
+            <md-icon md-svg-src="img/icons/search.svg"></md-icon>
+            <form flex="" name="formFilter" class="ng-valid flex">
+                <input focus-search="!digitadores.filter.show" type="text" ng-model="digitadores.query.filter.value" placeholder="Buscar" >
+            </form>
+            <button class="md-icon-button md-button md-ink-ripple" type="button"  ng-click="config.removeFilter()">
+                <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <md-toolbar class="md-table-toolbar md-default md-hide" ng-show="digitadores.selected.length > 0 ">
+        <div class="md-toolbar-tools">
+            <span>{{digitadores.selected.length}} {{digitadores.selected.length > 1 ? 'items' : 'item'}} seleccionados</span>
+            <span flex></span>
+            <md-button ng-show="true" class="md-icon-button"
+                       aria-label="Modificar"
+                       ng-click="config.openUpdateForm()"
+                       ng-if="digitadores.puedeModificar">
+                <md-tooltip md-autohide>Modificar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_edit_black_24px.svg"></md-icon>
+            </md-button>
+            <md-button class="md-icon-button"
+                       aria-label="Dar de baja"
+                       ng-click="config.openDeleteForm()">
+                <md-tooltip md-autohide>Baja</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_delete_black_24px.svg"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <md-table-container class="md-tableHeadLine md-scrollX" >
+        <table md-progress="promiseDigitadores" data-md-table ng-model="digitadores.selected" id="grillaDigitadores">
+
+            <thead data-md-order="digitadores.query.order" md-on-reorder="config.onReorder" md-head >
+            <tr md-row>
+                <th md-column></th>
+                <th ng-show="column.show" md-column
+                    ng-repeat="column in digitadores.columns"
+                    data-md-numeric="column.filter == 'number'"
+                    data-md-order-by="{{column.field}}"
+                    ng-style="{'width': column.width}">
+                    <span ng-bind-html="column.name | html"></span>
+                    <md-tooltip ng-if="column.tip" md-autohide md-direction="top">{{column.tip}}</md-tooltip>
+                </th>
+            </tr>
+            </thead>
+            <tbody md-body>
+            <tr md-row data-ng-repeat="row in filterResult =( digitadores.data | filter:filtering | filterFieldsStartBy: digitadores.query.filter.value:['cuenta','Nombre','digitador']  | limitTo: digitadores.query.limit : (digitadores.query.page -1) * digitadores.query.limit)">
+                <td md-cell>
+                    <md-checkbox ng-model="row.selected" aria-label="" id="{{$index}}" ng-change="config.selectCheckbox($index, row)"></md-checkbox>
+                </td>
+                <td md-cell ng-repeat="column in digitadores.columns" ng-show="column.show"
+                    ng-click="config.editRow($event,row,column)"
+                    ng-style="{'width': column.width}" style="cursor:{{getCursor(column)}}">
+                    {{ config.showVal(row[column.field], column.filter )}}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+    <data-md-table-pagination ng-if="digitadores.data.length"
+                              md-limit="digitadores.query.limit"
+                              md-page="digitadores.query.page"
+                              md-total="{{digitadores.data.length}}"
+                              md-on-paginate="onPaginate"
+                              md-page-select>
+    </data-md-table-pagination>
+</md-card>
+
+<md-card class="md-padding" layout-xs="column" layout="row" ng-if="digitadores.data.length === 0">
+    No se encontraron datos para mostrar
+</md-card>

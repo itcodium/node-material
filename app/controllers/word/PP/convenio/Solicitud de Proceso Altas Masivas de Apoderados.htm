@@ -1,0 +1,134 @@
+﻿<html>
+<head>
+<style>
+table.CSSTable {
+border-width: 1px;
+border-spacing: 0px;
+border-style: solid;
+border-color: black;
+border-collapse: collapse;
+background-color: white;
+}
+table.CSSTable th {
+    border-width: 1px;
+    padding: 0px;
+    border-style: solid;
+    border-color: black;
+    background-color: white;
+    -moz-border-radius: ;
+	font-size:12pt;
+	text-align: left;
+	font-family:arial;
+}
+table.CSSTable td {
+    border-width: 1px;
+    padding: 2px;
+    border-style: solid;
+    border-color: black;
+    background-color: white;
+    -moz-border-radius: ;
+	font-family:Arial;
+	font-size:10pt;
+}
+
+
+</style>
+ 
+</head>
+<body>
+
+<div style="font-size:22.0pt;border:solid 1px #000;font-weight:bold;text-align:center;margin-bottom: 15px;padding: 3px;">JUBILACIONES</div>
+<div style="font-size:18.0pt;font-weight:bold;text-align:center;padding: 3px;color:red;" >PROCESAR DESPUES DE LAS 18.00 HS</div>
+<div style="font-size:18.0pt;font-weight:bold;text-align:center;padding: 3px;">SOLICITUD DE EJECUCION DE PROCESO</div>
+<br>
+<br>
+<!-- Datos de operaciones -->
+
+<table cellspacing="0" cellpadding="0" border="0" style="border:0;font-size:9.0pt;">
+	<tr><td width="100">A:</td><td ><b>OPERACIONES SISTEMAS</b></td></tr>
+	<tr><td width="100"></td><td><b>INT. 7391 a 94 - FAX:  7395</b></td></tr>
+</table>
+<br>
+<table cellspacing="0" cellpadding="0" style="200px" width="300" >
+	<tr>
+		<td style="font-size:9.0pt;">Fecha/Hora:</td>
+		<td style="width: 250px;color:blue;border:solid 1px #000;font-weight:bold;">
+			<p style="color:blue;font-weight:bold;padding: 3px;margin:3px;">@FECHA</p>
+		</td>
+	</tr>
+</table>
+
+<br>
+<hr>
+<br>
+ 
+
+
+<table  class="CSSTable" width="100%" >
+	<tr><th width="50" style="border-top:0;border-left:0;" >&nbsp;</th><th>Tipo de Proceso</th></tr>
+	<tr style="color: blue;"><td width="50" style="font-family: Wingdings;"></td><td><i> <b>Ejecución de Proceso de Incorporación de Integrantes</b></i></td></tr>
+</table>
+<br>
+<table  class="CSSTable" width="100%" >
+	<tr><th width="50" style="border-top:0;border-left:0;" >&nbsp;</th><th>Datos del Proceso</th></tr>
+	<tr style="color: blue;"><td width="50" style="font-family: Wingdings;"></td>
+	<td>
+		Descripción:<b> <i style="font-size:12pt">"ALTA MASIVA DE APODERADOS EN  CUENTA"</i></b>
+	</td>
+	</tr>
+</table>
+
+<br>
+<table  class="CSSTable" width="100%" >
+	<tr><th width="50" style="border-top:0;border-left:0;" >&nbsp;</th><th>Ubicación Vínculo</th></tr>
+	<tr style="color: blue;"><td width="50" style="font-family: Wingdings;"></td>
+	<td>
+			<b><i style="font-size:12pt">@PATH_OPERACIONES</i></b>
+	</td>
+	</tr>
+</table>
+
+<br>
+<table  class="CSSTable" width="100%" >
+	<tr><th width="50" style="border-top:0;border-left:0;" >&nbsp;</th><th>Nombre del archivo:</th></tr>
+	<tr style="color: blue;"><td width="50" style="font-family: Wingdings;"></td>
+	<td>
+			<b><i style="font-size:12pt">@ARCHIVO</i></b>
+	</td>
+	</tr>
+</table>
+<br>
+<table  class="CSSTable" width="100%" >
+	<tr><th width="50" style="border-top:0;border-left:0;" >&nbsp;</th><th>Parámetros del Proceso</th></tr>
+	<tr style="color: blue;">
+		<td width="50" style="font-family: Wingdings;"></td>
+		<td style="color:#000;">1)  Verificar que NO exista el archivo cliente_ah.txt en el siguiente directorio:/programas/ctahorro/batch/scripts9 (eliminar si existe)</td>
+	</tr>
+	<tr style="color: blue;">
+		<td width="50" style="font-family: Wingdings;"></td>
+		<td style="color:#000;">2) Copiar archivo txt adjunto en la carpeta /programas/ctahorro/batch/scripts9</td>
+	</tr>
+	<tr style="color: blue;">
+		<td width="50" style="font-family: Wingdings;"></td>
+		<td style="color:#000;">3) Ingresar a UNIX con Usuario de SQR9 e ir a /programas/ctahorro/batch/menus9</td>
+	</tr>
+	<tr style="color: blue;">
+		<td width="50" style="font-family: Wingdings;"></td>
+		<td style="color:#000;">
+		4) Del Lote MIGRA_CTAHORRO	<br>
+			Ejecutar punto 1 TRUNCATE Y BCPS CAJAS DE AHORRO<br>
+			NEMONICO =  @ARCHIVO <br><br>
+
+			Cuando finalice<br><br>
+
+			Ejecutar punto 3 INTEGRANTES DE CAJAS DE AHORRO<br>
+			Parámetros:<br>
+			Fecha (mm/dd/aaaa):  INDICAR FECHA DE PROCESO (igual fecha del archivo)<br>
+			Tipo de Proceso: M<br><br>
+		</td>
+	</tr>
+	
+</table>
+ <p style="color:red;font-family:arial;font-size10pt;"><b>Cuando finalice, por favor copiar los reportes de salida en: <span style="color:blue;"> <u> @PATH_OPERACIONES_RECIBIDO</span></u> y responder mail a los remitentes.-</b></p>
+</body>
+</html>

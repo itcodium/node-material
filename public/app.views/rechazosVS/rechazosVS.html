@@ -1,0 +1,46 @@
+<div ng-controller="rechazosVS.ctrl">
+
+
+
+    <md-card>
+
+            <md-table-container >
+                <table data-md-table data-md-row-select="false" md-progress="promiseRechazosUnificado">
+
+                    <thead md-head data-md-order="rechazoVSGrid.query.order">
+                    <tr md-row>
+
+                        <th md-column md:order:by="motivoRechazo" ><span>Motivo de Rechazo</span></th>
+
+
+                    </tr>
+                    </thead>
+                    <tbody md-body>
+                    <tr md-row
+                        data-ng-repeat="row in rechazoVSGrid.data | orderBy: rechazoVSGrid.query.order | filter: filtering | limitTo: rechazoVSGrid.query.limit : (rechazoVSGrid.query.page - 1) * rechazoVSGrid.query.limit">
+                      <!--  <td md-cell>
+                            <md-checkbox
+                                    ng-model="row.selected"
+                                    aria-label="check fila"
+                                    ng-change="onSelectRow(row, $index)">
+                            </md-checkbox>
+                        </td> -->
+
+                        <td md-cell style="text-align: left;">{{ row.motivoRechazo }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </md-table-container>
+            <data-md-table-pagination ng-if="rechazoVSGrid.data.length"
+                                      md-limit="rechazoVSGrid.query.limit"
+                                      md-limit-options="[5, 10, 15]"
+                                      md-page="rechazoVSGrid.query.page"
+                                      md-total="{{rechazoVSGrid.data.length}}"
+                                      md-page-select>
+            </data-md-table-pagination>
+
+
+
+
+    </md-card>
+</div>

@@ -1,0 +1,159 @@
+<md-dialog aria-label="ABM porcentaje comisión" flex="50">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>{{mode}} </h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon md-svg-src="/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <form name="formTarjetas" ng-submit="formTarjetas.$valid && submit()" role="form" novalidate>
+        <md-dialog-content class="toastParent">
+            <div class="md-dialog-content">
+                <div class="modal-body">
+                        <div class="row altaPopUp">
+                            <div layout-gt-sm="row">
+                                <md-input-container class="md-block" flex="31">
+                                    <label>Código de Alta</label>
+                                    <input type="number" ng-disabled="true" ng-model="tarjeta.codigoAltaTarjeta" required ng-value="50">
+    
+                                    <div ng-messages="formTarjetas.codigoAltaTarjeta.$error">
+                                        <div ng-message="required">El campo es obligatorio</div>
+                                    </div>
+                                </md-input-container>
+                                <md-input-container class="md-block" flex="15">
+                                    <label>Banco</label>
+                                    <input type="text" name="banco" required ng-model="tarjeta.banco" ng-disabled="mode !== 'Alta'">
+    
+                                    <div ng-messages="formTarjetas.banco.$error">
+                                        <div ng-message="required">El campo es obligatorio</div>
+                                    </div>
+                                </md-input-container>
+                                <md-input-container class="md-block" flex="50">
+                                    <label>Tipo de Tarjeta</label>
+                                    <md-select ng-model="tarjeta.tipoTarjeta" name="tipoTarjeta" required ng-disabled="mode !== 'Alta'">
+                                        <md-option ng-value="opt.codigoTipoTarjeta" ng-repeat="opt in tipoCuentas">{{ opt.descripcion }}</md-option>
+                                    </md-select>
+    
+                                    <div ng-messages="formTarjetas.tipoTarjeta.$error">
+                                        <div ng-message="required">El campo es obligatorio</div>
+                                    </div>
+                                </md-input-container>
+                            </div>
+
+                            <div layout-gt-sm="row">
+                                    <md-input-container class="md-block" flex>
+                                        <label>Cat. Tarjeta</label>
+                                        <input type="text" name="categoriaTarjeta" ng-model="tarjeta.categoriaTarjeta" maxlength="2">
+        
+                                        <div ng-messages="formTarjetas.categoriaTarjeta.$error">
+                                            <div ng-message="required">El campo es obligatorio</div>
+                                            <div ng-message="maxlength">Máximo 2 caracteres</div>
+                                        </div>
+                                    </md-input-container>
+                                    <md-input-container class="md-block" flex>
+                                        <label>Bonificación</label>
+                                        <input type="text" name="bonificacion" ng-model="tarjeta.bonificacion" >
+        
+                                        <div ng-messages="formTarjetas.codLC.$error">
+                                            <div ng-message="required">El campo es obligatorio</div>
+                                        </div>
+                                    </md-input-container>
+                                    <md-input-container class="md-block" flex>
+                                        <label>Ocupación</label>
+                                        <md-select ng-model="tarjeta.ocupacion" name="ocupacion">
+                                            <md-option ng-value="opt.ocupacion" ng-repeat="opt in ocupaciones">{{ opt.ocupacion }}</md-option>
+                                        </md-select>
+        
+                                        <div ng-messages="formTarjetas.ocupacion.$error">
+                                            <div ng-message="required">El campo es obligatorio</div>
+                                            <div ng-message="max">Superó el valor maximo permitido</div>
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                                <div layout-gt-sm="row">
+                                    <md-input-container class="md-block" flex>
+                                        <label>Habilitación</label>
+                                        <input type="text" name="habilitacion" ng-model="tarjeta.habilitacion" >
+        
+                                        <div ng-messages="formTarjetas.habilitacion.$error">
+                                            <div ng-message="required">El campo es obligatorio</div>
+                                            <div ng-message="maxlength">Máximo 2 caracteres</div>
+                                        </div>
+                                    </md-input-container>
+                                    <md-input-container class="md-block" flex>
+                                        <label>Cargo</label>
+                                        <input type="text" name="cargo" ng-model="tarjeta.cargo" >
+        
+                                        <div ng-messages="formTarjetas.cargo.$error">
+                                            <div ng-message="required">El campo es obligatorio</div>
+                                            <div ng-message="maxlength">Máximo 2 caracteres</div>
+                                        </div>
+                                    </md-input-container>
+                                    <md-input-container class="md-block" flex>
+                                        <label>Distribución</label>
+                                        <input type="text" name="distribucion" ng-model="tarjeta.distribucion" >
+        
+                                        <div ng-messages="formTarjetas.distribucion.$error">
+                                            <div ng-message="required">El campo es obligatorio</div>
+                                            <div ng-message="maxlength">Máximo 2 caracteres</div>
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                                <div layout-gt-sm="row">
+                                    <md-input-container class="md-block" flex>
+                                        <label>Código Producto</label>
+                                        <input type="text" name="codProducto" ng-model="tarjeta.codProducto" >
+        
+                                        <div ng-messages="formTarjetas.codProducto.$error">
+                                            <div ng-message="required">El campo es obligatorio</div>
+                                        </div>
+                                    </md-input-container>
+                                    <md-input-container class="md-block" flex>
+                                        <label>Cat. Empresa</label>
+                                        <input type="text" name="ctaEmpresa" ng-model="tarjeta.ctaEmpresa" >
+        
+                                        <div ng-messages="formTarjetas.ctaEmpresa.$error">
+                                            <div ng-message="required">El campo es obligatorio</div>
+                                        </div>
+                                    </md-input-container>
+                                    <md-input-container class="md-block" flex>
+                                        <label>TipoTarjetaPcto</label>
+                                        <input type="text" name="tipoTarjetaProducto" ng-model="tarjeta.tipoTarjetaProducto" >
+        
+                                        <div ng-messages="formTarjetas.tipoTarjetaProducto.$error">
+                                            <div ng-message="required">El campo es obligatorio</div>
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                                <div layout-gt-sm="row">
+                                    <md-input-container class="md-block" flex>
+                                        <label>Marca Origen</label>
+                                        <input type="text" name="marcaOrigen" ng-model="tarjeta.marcaOrigen" >
+        
+                                        <div ng-messages="formTarjetas.marcaOrigen.$error">
+                                            <div ng-message="required">El campo es obligatorio</div>
+                                        </div>
+                                    </md-input-container>
+                                    <md-input-container class="md-block" flex>
+                                        <label>4ta Línea</label>
+                                        <input type="text" name="cuartaLinea" ng-model="tarjeta.cuartaLinea" >
+        
+                                        <div ng-messages="formTarjetas.cuartaLinea.$error">
+                                            <div ng-message="required">El campo es obligatorio</div>
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                        </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <a href="javascript:void(0)" class="md-button md-ink-ripple" ng-click="cancel()">Cancelar</a>
+            <md-button type="submit" class="md-raised md-primary md-button md-ink-ripple">
+                <span>Aceptar</span>
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

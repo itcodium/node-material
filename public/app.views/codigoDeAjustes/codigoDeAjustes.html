@@ -1,0 +1,77 @@
+<md-card>
+    <md-toolbar class="md-table-toolbar md-default" ng-show="codigoAjustesGrid.selected.length == 0">
+        <div class="md-toolbar-tools">
+            <span>Códigos de ajustes</span>
+            <span flex></span>
+            <button class="md-fab md-button md-success md-ink-ripple" type="button" ng-click="openAddForm()">
+                <md-tooltip md-autohide>Agregar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_add_white_24px.svg"> </md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+    <md-toolbar class="md-table-toolbar md-default alternate" ng-show="codigoAjustesGrid.selected.length > 0 ">
+        <div class="md-toolbar-tools">
+            <span>{{codigoAjustesGrid.selected.length}} {{codigoAjustesGrid.selected.length > 1 ? 'items seleccionados' : 'item seleccionado'}}</span>
+            <span flex></span>
+            <md-button ng-show="true" class="md-icon-button"
+                       aria-label="Modificar"
+                       ng-click="edit()"
+                       ng-if="codigoAjustesGrid.selected.length === 1">
+                <md-tooltip md-autohide>Modificar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_edit_black_24px.svg"></md-icon>
+            </md-button>
+            <md-button class="md-icon-button"
+                       aria-label="Dar de baja"
+                       ng-click="delConfirm()">
+                <md-tooltip md-autohide>Baja</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_delete_black_24px.svg"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <md-table-container>
+        <table md-progress="promisecodigoDeAjustes" data-md-table ng-model="codigoAjustesGrid.selected">
+
+            <thead data-md-order="codigoAjustesGrid.query.order" md-head >
+            <tr md-row>
+                <th md-column></th>
+                <th md-column md-order-by="entidad" ><span>Entidad</span></th>
+                <th md-column md-order-by="descripcion" ><span>Descripcion</span></th>
+                <th md-column md-order-by="emisor" ><span>Emisor</span></th>
+                <th md-column md-order-by="entidadMarca" ><span>Marca</span></th>
+                <th md-column md-order-by="codAjuste" ><span>Código de ajuste</span></th>
+                <th md-column md-order-by="ImpAjuste" ><span>Importe</span></th>
+            </tr>
+            </thead>
+            <tbody md-body>
+            <tr md-row data-ng-repeat="row in codigoAjustesGrid.data | orderBy: codigoAjustesGrid.query.order | limitTo: codigoAjustesGrid.query.limit : (codigoAjustesGrid.query.page -1) * codigoAjustesGrid.query.limit">
+                <td md-cell>
+                    <md-checkbox
+                            ng-model="row.selected"
+                            aria-label="check fila"
+                            ng-change="onSelectRow(row, $index)">
+                    </md-checkbox>
+                </td>
+                </td>
+                <td md-cell>{{ row.entidad }}</td>
+                <td md-cell>{{ row.descripcion }}</td>
+                <td md-cell>{{ row.emisor }}</td>
+                <td md-cell>{{ row.entidadMarca }}</td>
+                <td md-cell>{{ row.codAjuste }}</td>
+                <td md-cell>{{ row.ImpAjuste }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+    <data-md-table-pagination ng-if="codigoAjustesGrid.data.length"
+                              md-limit="codigoAjustesGrid.query.limit"
+                              md-page="codigoAjustesGrid.query.page"
+                              md-total="{{codigoAjustesGrid.data.length}}"
+                              md-page-select>
+    </data-md-table-pagination>
+</md-card>
+
+<md-card class="md-padding" layout-xs="column" layout="row" ng-if="codigoDeAjustes.data.length === 0">
+    No se encontraron datos para mostrar
+</md-card>

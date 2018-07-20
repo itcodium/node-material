@@ -1,0 +1,20 @@
+<md-dialog>
+    <md-dialog-content>
+        <div class="md-dialog-content" >
+            <h2 class="md-title">{{title}}</h2>
+            <md-radio-group ng-model="selected" flex="100" >
+                <md-radio-button ng-value="item.value" ng-repeat="item in items">
+                    {{ item.name }}
+                </md-radio-button>
+            </md-radio-group>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button ng-click="cancel()">
+            Cancelar
+        </md-button>
+        <md-button ng-click="aceptar()">
+            Aceptar
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

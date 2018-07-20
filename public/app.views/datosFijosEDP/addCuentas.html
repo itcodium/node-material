@@ -1,0 +1,185 @@
+<md-dialog aria-label="ABM Mails Configurables" ng-init="init()" ng-cloak >
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 ng-if="ParentScope.operac!='Modificar'">{{ParentScope.operac}} Cuentas</h2>
+            <h2 ng-if="ParentScope.operac=='Modificar'">Modificación de Cuentas</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon md-svg-src="/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <form id="formDatosFijosEDP" ng-submit="ParentScope.datosFijosEdpCtrl.submit(this.formDatosFijosEDP,model);" name="formDatosFijosEDP" novalidate>
+        <md-dialog-content class="toastParent">
+            <div class="md-dialog-content">
+                <div class="modal-body">
+                    <div class="row altaPopUp">
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex="50">
+                                <label for="codigoAlta">Código de Alta</label>
+                                <input  required="true"
+                                        type="text" name="codigoAlta" id="codigoAlta"
+                                        ng-disabled="true"
+                                        ng-model="model.codigoAlta">
+                                <div ng-messages="formDatosFijosEDP.codigoAltaCuenta.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="50">
+                                <label for="entidad">Entidad</label>
+                                <input  required
+                                        disabled="true"
+                                        ng-change="ParentScope.datosFijosEdpCtrl.validarCantidadCuentas(model)"
+                                        type="number" name="entidad"
+                                        ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA' || ParentScope.operac.toUpperCase() == 'MODIFICAR'"
+                                        ng-model="model.entidad"
+                                        ng-pattern="/^[0-9]{1,10}$/">
+                                <div ng-messages="formDatosFijosEDP.entidad.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                    <div ng-message="pattern">Sólo números enteros</div>
+                                    <div ng-message="number">No es un número válido</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="50">
+                                <label for="tipo">Tipo Cuenta</label>
+                                <md-select  required="true"
+                                            ng-disabled="ParentScope.operac.toUpperCase() !== 'ALTA'"
+                                            ng-model="model.tipoCuenta"
+                                            ng-model-options='{ debounce: 500 }'
+                                            ng-change="ParentScope.datosFijosEdpCtrl.validarCantidadCuentas(model)"
+                                            id="tipo"
+                                            name="tipoCuenta" placeholder="Seleccionar">
+                                    <md-option ng-value="tipoCT.codigoTipoCuenta" ng-repeat="tipoCT in ParentScope.tiposCtasTarjetas">
+                                        {{tipoCT.descCuenta +' '+ tipoCT.codigoTipoCuenta + ' '+tipoCT.descTarjeta}}</md-option>
+                                </md-select>
+                                <div ng-messages="formDatosFijosEDP.tipoCuenta.$error">
+                                    <div ng-message="required">El campo es obligatorio</div>
+                                </div>
+                                <div immediate-error class="md-caption" style="color:rgb(221,44,0)" ng-show="model.cantCuotasTarjetas_existe==0">
+                                    La combinación de los valores  {{model.entidad}} - {{model.codigoAlta}} - {{model.tipoCuenta}} no se encuentra cargada en la pantalla Cantidad Cuentas Tarjetas.
+                                </div>
+
+                                <div immediate-error class="md-caption" style="color:rgb(221,44,0)" ng-show="model.datofijocuenta_existe">
+                                    Ya existe una cuenta para la combinacion: {{model.entidad}} - {{model.codigoAlta}} - {{model.tipoCuenta}}
+                                </div>
+                            </md-input-container>
+                        </div>
+                        <!-- Linea 2 -->
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex="50">
+                                <label for="codLC">codLC</label>
+                                <input  type="text" name="codLC" id="codLC"
+                                        ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA'"
+                                        ng-model="model.codLC">
+                                </input>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="50">
+                                <label for="porcFinanciacion">porcFinanciacion</label>
+                                <input  type="text" name="porcFinanciacion" id="porcFinanciacion"
+                                        ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA'"
+                                        ng-model="model.porcFinanciacion">
+                                </input>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="50">
+                                <label for="modLiq">modLiq</label>
+                                <input  type="text" name="modLiq" id="modLiq"
+                                        ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA'"
+                                        ng-model="model.modLiq">
+                                </input>
+                            </md-input-container>
+                        </div>
+                        <div layout-gt-sm="row">
+
+                            <md-input-container class="md-block" flex="50">
+                                <label for="formaPago">formaPago</label>
+                                <input  type="text" name="formaPago" id="formaPago"
+                                        ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA'"
+                                        ng-model="model.formaPago">
+                                </input>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="50">
+                                <label for="cartera">cartera</label>
+                                <input  type="text" name="cartera" id="cartera"
+                                        ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA'"
+                                        ng-model="model.cartera">
+                                </input>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="50">
+                                <label for="fpSucursal">fpSucursal</label>
+                                <input  type="text" name="fpSucursal" id="fpSucursal"
+                                        ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA'"
+                                        ng-model="model.fpSucursal">
+                                </input>
+                            </md-input-container>
+                        </div>
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex="50">
+                                <label for="fpTipoCta">fpTipoCta</label>
+                                <input  type="text" name="fpTipoCta" id="fpTipoCta"
+                                        ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA'"
+                                        ng-model="model.fpTipoCta">
+                                </input>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="50">
+                                <label for="fpNroCta">fpNroCta</label>
+                                <input  type="text" name="fpNroCta" id="fpNroCta"
+                                        ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA'"
+                                        ng-model="model.fpNroCta">
+                                </input>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="50">
+                                <label for="catCajeroAutomatico">catCajeroAutomatico</label>
+                                <input  type="text" name="catCajeroAutomatico" id="catCajeroAutomatico"
+                                        ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA'"
+                                        ng-model="model.catCajeroAutomatico">
+                                </input>
+                            </md-input-container>
+                        </div>
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex="50">
+                                <label for="gaf">gaf</label>
+                                <input  type="text" name="gaf" id="gaf"
+                                        ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA'"
+                                        ng-model="model.gaf">
+                                </input>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="50">
+                                <label for="tipoIva">tipoIva</label>
+                                <input  type="text" name="tipoIva" id="tipoIva"
+                                        ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA'"
+                                        ng-model="model.tipoIva">
+                                </input>
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="50">
+                                <label for="cuit">cuit</label>
+                                <input  type="text" name="cuit" id="cuit"
+                                        ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA'"
+                                        ng-model="model.cuit">
+                                </input>
+                            </md-input-container>
+                        </div>
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex="50">
+                                <label for="codAGrupo">codAGrupo</label>
+                                <input  type="text" name="codAGrupo" id="codAGrupo"
+                                        ng-disabled="ParentScope.operac.toUpperCase() == 'BAJA'"
+                                        ng-model="model.codAGrupo">
+                                </input>
+                            </md-input-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row">
+            <a href="javascript:void(0)" class="md-button md-ink-ripple" ng-click="cancel()">Cancelar</a>
+            <md-button type="submit"  ng-disabled="formDatosFijosEDP.$valid==false"  class="md-raised md-primary md-button md-ink-ripple" ng-keyup="$event.keyCode == 13" data-dismiss="modal">
+                <span>Aceptar</span>
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>
+
+

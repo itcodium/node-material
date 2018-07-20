@@ -1,0 +1,47 @@
+doctype
+html(lang='es', xmlns='http://www.w3.org/1999/xhtml', itemscope='itemscope', itemtype='http://schema.org/Product')
+  include ../includes/head
+
+  base(href="/")
+
+  body.row(layout="row" ng-cloak="")
+
+    //- (left side panel) section intended for menu related things
+    md-sidenav.site-sidenav.md-sidenav-left.md-whiteframe-z2.hide-print(md-component-id="left" md-is-locked-open="$mdMedia('gt-sm')" )
+
+      header.nav-header
+        a.docs-logo.md-whiteframe-glow-z1(ng-href="/")
+          img(src="img/lay.jpg" alt="")
+
+      //- data-ng-include="'/app.views/header.html'"
+      md-content.flex(role="navigation" data-ng-include="'/app.partials/menu.html'" ng-controller="MenuCtrl" )
+
+
+    //- Main screen sector
+    div.flex(layout="column" tabIndex="-1" role="main")
+
+      md-toolbar.md-whiteframe-glow-z1.site-content-toolbar(
+            data-ng-include="'/app.partials/toolbar.html'"
+            ng-controller="ToolbarCtrl")
+
+      md-content.md-scroll-y.flex(layout="column")
+        //div.layout-padding(flex="noshrink"), todo caob... no se de donde saque el noshrink y para q me servia
+          //- todas las rutas van a transcludir acá
+        block content
+
+
+    //- right side utilitary panel...
+      md-sidenav.md-sidenav-right.md-whiteframe-z2(md-component-id="right")
+        md-toolbar.md-theme-light
+        h1.md-toolbar-tools.
+          Sidenav Right
+        md-content(ng-controller="RightCtrl" layout-padding="")
+          form
+            md-input-container
+              label(for="testInput").
+                Test input
+              input(type="text" id="testInput" ng-model="data" md-autofocus="")
+
+
+
+    include ../includes/foot

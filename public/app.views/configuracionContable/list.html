@@ -1,0 +1,109 @@
+<style>
+    #demoContainer span {
+        background-color: #ddd;
+        padding: 12px;
+    }
+
+    #demoContainer {
+        cursor: pointer;
+        position: relative;
+    }
+
+    #divPopup {
+        position: absolute;
+        top: -26px;
+        left: 83px;
+    }
+
+    #divPopup span {
+        background-color: #B46D6D;
+        padding: 12px;
+        color: whitesmoke;
+    }
+
+    .floatLeft {
+        float: left;
+    }
+
+    .margin3 {
+        margin-top: 3px;
+    }
+
+</style>
+
+<md-card>
+    <md-toolbar class="md-table-toolbar md-default" ng-show="configuracionContable.filter.show">
+        <div class="md-toolbar-tools">
+            <span>Contabilidad</span>
+            <span flex></span>
+            <md-button class="md-icon-button md-button md-ink-ripple"
+                       aria-label="filtrar"
+                       ng-click="configuracionContable.filter.show = false">
+                <md-tooltip md-autohide>Filtrar</md-tooltip>
+                <md-icon md-svg-src="img/icons/ic_filter_list_black_24px.svg"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <!--TOOLBAR PARA SEARCH-->
+    <md-toolbar class="md-table-toolbar md-default ng-hide" ng-show="!configuracionContable.filter.show">
+        <div class="md-toolbar-tools">
+            <span>{{tituloPagina}}</span>
+
+            <span flex></span>
+            <form flex="20" name="formFilter" class="ng-valid flex">
+                <input focus-search="configuracionContable.filter.show" type="text" ng-model="configuracionContable.query.filter.value" placeholder="Buscar" >
+            </form>
+            <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="config.removeFilter()">
+                <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+            </button>
+        </div>
+    </md-toolbar>
+
+
+    <md-table-container>
+        <table md-progress="promiseConfiguracionContable" data-md-table data-md-row-select="false"  id="grillaList">
+            <thead data-md-order="configuracionContable.query.order" md-on-reorder="config.onReorder" md-head >
+                <tr md-row>
+                    <th ng-show="column.show" md-column
+                        ng-repeat="column in configuracionContable.columns"
+                        data-md-numeric="column.filter == 'number'"
+                        data-md-order-by="{{column.field}}"
+                        ng-style="{'width': column.width}">
+                        <span ng-bind-html="column.name | html"></span>
+                        <md-tooltip ng-if="column.tip" md-autohide md-direction="top">{{column.tip}}</md-tooltip>
+                    </th>
+                </tr>
+            </thead>
+            <tbody md-body>
+
+            <!--
+
+            filter:configuracionContable.query.filter.value:
+            -->
+            <tr md-row data-ng-repeat="row in filterResult =( configuracionContable.data |
+
+                    myTableFilter: configuracionContable.query.filter.value | limitTo: configuracionContable.query.limit : (configuracionContable.query.page -1) * configuracionContable.query.limit)">
+                <td md-cell ng-repeat="column in configuracionContable.columns" ng-show="column.show"
+                    ng-click="config.editRow($event,row,column)"
+                    ng-style="{'width': column.width}" style="cursor:{{getCursor(column)}}">
+                    {{ config.showVal(row[column.field], column.filter )}}
+
+
+
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+    <data-md-table-pagination ng-if="configuracionContable.data.length"
+                              md-limit="configuracionContable.query.limit"
+                              md-page="configuracionContable.query.page"
+                              md-total="{{configuracionContable.data.length}}"
+                              md-on-paginate="onPaginate"
+                              md-page-select>
+    </data-md-table-pagination>
+</md-card>
+
+<md-card class="md-padding" layout-xs="column" layout="row" ng-if="configuracionContable.data.length === 0">
+    No se encontraron datos para mostrar
+</md-card>
