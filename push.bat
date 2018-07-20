@@ -1,3 +1,3 @@
 git add .
-git commit -m "Se actualiza la ruta a C mayuscula II. "
+git commit -m "Se borra el archivo de la carpeta routes "
 git push origin master
