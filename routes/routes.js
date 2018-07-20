@@ -140,8 +140,8 @@ module.exports = function (app, passport, auth) {
   app.put('/api/apoderado/:idApoderado', auth.requiresLogin, vApoderados.update);
   app.put('/api/apoderadoDelete/:idApoderado', auth.requiresLogin, vApoderados.delete);
 
-  //Categorias -- Tenes en cuenta la letra C (Esta en mayuscula)
-  var vCategoria= require('../app/controllers/Categoria/categoria');
+  //Categorias
+  var vCategoria= require('../app/controllers/categoria/categoria');
   app.get('/api/categoria', auth.requiresLogin, vCategoria.categoriasGetAll);
   app.get('/api/categoria/:idCodigo', auth.requiresLogin, vCategoria.GetById);
   app.post('/api/categoria', auth.requiresLogin, vCategoria.insert);
