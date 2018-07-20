@@ -192,7 +192,7 @@ module.exports = function (app, passport, auth) {
     app.delete('/api/CodigoDeAjustes', auth.requiresLogin,vCodigoDeAjustes.eliminar);
 
     //ABM cantidad cuentas
-  var vCantidadCuentas = require('../app/controllers/CantidadCuentasTarjetas/CantidadCuentasTarjetas');
+  var vCantidadCuentas = require('../app/controllers/cantidadCuentasTarjetas/cantidadCuentasTarjetas');
   app.get('/api/CantidadCuentasTarjetas/', auth.requiresLogin, vCantidadCuentas.obtenerTodos);
   app.get('/api/TipoCuentas', auth.requiresLogin, vCantidadCuentas.obtenerTipoCuentas);
   app.get('/api/CantidadCuentasTarjetas/controlDuplicado', auth.requiresLogin, vCantidadCuentas.controlDuplicado);
