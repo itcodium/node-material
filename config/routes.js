@@ -551,7 +551,7 @@ module.exports = function (app, passport, auth) {
   app.post('/api/Agrupamientos', auth.requiresLogin,vAgrupamientos.insertar);
   app.put('/api/Agrupamientos/:idAgrupamiento', auth.requiresLogin,vAgrupamientos.modificar);
 
-  var vDigitadores= require('../app/controllers/digitadores/digitadores');
+  var vDigitadores= require('../app/controllers/digitadores/Digitadores');
   app.get ('/api/digitadores',auth.requiresLogin, vDigitadores.traer);
   app.get ('/api/digitadores/:idDigitador',auth.requiresLogin, vDigitadores.seleccionar);
   app.get ('/api/digitadores.ControlDuplicado/',auth.requiresLogin, vDigitadores.controlDuplicado);
