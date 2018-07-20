@@ -1,1 +1,1 @@
-node ./bin/www
+C:\Users\vargake\Desktop\Survey\nodejs\node.exe  ./bin/www

@@ -49,14 +49,31 @@ app.set('view engine', 'jade')
 var port = config.port
 process.config.sql = config.sql;
 
+
+console.log('The value of PORT is:', process.env.PORT);
+
+
 var mysql = require('mysql');
-var pool  = mysql.createPool({
-  connectionLimit : 50,
-  host            : 'localhost',
-  user            : 'root',
-  password        : '123123',
-  database        : 'mean'
-});
+
+var pool;
+
+	if(process.env.NODE_ENV=="PRODUCTION"){
+		pool= mysql.createPool({
+		  connectionLimit : 50,
+		  host            : 'mysql',
+		  user            : 'root',
+		  password        : '123123',
+		  database        : 'mean'
+		});
+	}else{
+		pool= mysql.createPool({
+		  connectionLimit : 50,
+		  host            : 'localhost',
+		  user            : 'root',
+		  password        : '123123',
+		  database        : 'mean'
+		});
+	}
 process.database=pool;
 
 
@@ -71,23 +88,23 @@ var logger = new (winston.Logger)({
     exitOnError: false
 });
 
- */
 process.config.sql.password="123123";
 server.listen(port,function(){
 	console.log('Express server se ha iniciado correctamente - port: ',port);
 });
  
  
-process.config.ldap = config['Ldap'];
+// process.config.ldap = config['Ldap'];
 
+ */
 exports = module.exports = app
 
-
+/*
 console.log("Ambiente:", config.app.name)
 console.log("Código:", env)
 console.log('La aplicación escucha en el puerto #', port)
 console.log('Express escucha en el puerto #', port)
 console.log('La base de datos es ',process.config.sql.database)
 
-
+*/
 
