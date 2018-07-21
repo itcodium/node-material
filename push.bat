@@ -1,3 +1,3 @@
 git add .
-git commit -m "Se borran algunos archivos (I)."
+git commit -m "Test db (I)."
 git push origin master

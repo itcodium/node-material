@@ -74,9 +74,7 @@ process.database=pool;
  // mean.perfilAccion
 
 process.database.query('select * from mean.perfilAccion',  function (error,data, fields) {
-          if (error) {
-                res.status(500).send(ErrorSQL.getError(error));
-            }
+            console.log(" - error - ",error);
             console.log(" - mean.perfilAccion - ",data);
         });
 
