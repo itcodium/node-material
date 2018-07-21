@@ -73,7 +73,7 @@ process.database=pool;
 
  // mean.perfilAccion
 
-process.database.query('select * from mean.perfilAccion',  function (error,data, fields) {
+process.database.query('select * from mean.perfilaccion',  function (error,data, fields) {
             console.log(" - error - ",error);
             console.log(" - mean.perfilAccion - ",data);
         });
