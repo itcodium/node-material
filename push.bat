@@ -1,3 +1,3 @@
 git add .
-git commit -m "Se actualiza el puerto del la app (II)."
+git commit -m "Se borran algunos archivos (I)."
 git push origin master
