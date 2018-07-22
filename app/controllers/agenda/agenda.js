@@ -47,13 +47,26 @@ exports.agendaAutomaticoGetAll= function(req, res){
 };
 
 exports.agendaManualGetAll= function(req, res){
+    console.log("req.params.idPerfil", req.params.idPerfil)
     process.database.query('call agenda_traerManual(?)', req.params.idPerfil,function (error,data, fields) {
                   if (error) {
                         res.status(500).send(ErrorSQL.getError(error));
                     }
-                    res.jsonp(data[0]);
-                });
+                    console.log("data -> ", data)
 
+                    if(data.length==0){
+                        console.log(" data.length==0")
+                            res.status(500).send(ErrorSQL.getCustomError('No se encontraron procesos.'));
+                    }else{
+                            if(data[0].length==0){
+                                console.log("ELSE IF  data[0].length==0 ")
+                                    res.status(500).send(ErrorSQL.getCustomError('No se encontraron procesos.'));   
+                            }else{
+                                console.log(" ELSE ELSE -  DATA OK")
+                                    res.jsonp(data[0]);
+                            }
+                        }
+                });
 };
 
 exports.agendaHistoricoGetAll = function (req, res) {
