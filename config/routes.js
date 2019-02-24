@@ -60,7 +60,7 @@ module.exports = function (app, passport, auth) {
 
   // app.post('/users', users.create)
   
-  app.post('/users/session', passport.authenticate('local', {failureRedirect: '/signin', failureFlash: 'Invalid email or password.'}), users.session)
+  app.post('/users/session', passport.authenticate('local', {failureRedirect: '/', failureFlash: 'Invalid email or password.'}), users.session)
   app.get('/users/me', users.me)
   app.get('/api/users/:userId', auth.requiresLogin, users.getById)
   app.get('/api/usuarios', auth.requiresLogin, users.getAll)

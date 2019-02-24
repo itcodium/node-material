@@ -5,6 +5,7 @@ var mysql      = require('mysql');
 var _mysql=require('../app/utils/MySql.js')
 
 
+
 var env = process.env.NODE_ENV || 'desconocido'  ,
     config = require('./config')[env]
 
@@ -34,7 +35,8 @@ module.exports = function (passport, config) {
 						}
 						user[0][0].permisos = item[0];
 						user[0][0].destrabaAgenda = item[0].filter(function (it) { return it.codigo === 'agenda.destrabarAgenda'; }).length > 0;
-						user[0][0].app = 'TEST';
+                        user[0][0].app = 'TEST';
+                        console.log("user[0][0]",user[0][0])
 						return done(null, user[0][0]);
 							
 					});

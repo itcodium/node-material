@@ -70,14 +70,7 @@ var pool;
 		pool= mysql.createPool(ldb);
 	}
 process.database=pool;
-
- // mean.perfilAccion
-
-process.database.query('select * from mean.perfilaccion',  function (error,data, fields) {
-            console.log(" - error - ",error);
-            console.log(" - mean.perfilAccion - ",data);
-        });
-
+ 
 
 console.log('The db is:', ldb);
 
@@ -103,13 +96,4 @@ server.listen(port,function(){
 
  */
 exports = module.exports = app
-
-/*
-console.log("Ambiente:", config.app.name)
-console.log("Código:", env)
-console.log('La aplicación escucha en el puerto #', port)
-console.log('Express escucha en el puerto #', port)
-console.log('La base de datos es ',process.config.sql.database)
-
-*/
-
+ 

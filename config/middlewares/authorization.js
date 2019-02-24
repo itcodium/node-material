@@ -22,6 +22,7 @@
 */
 
 exports.requiresLogin = function (req, res, next) {
+    /*
     if (!req.isAuthenticated()) {
         if (req.session) {
             req.session._garbage = undefined;
@@ -37,13 +38,17 @@ exports.requiresLogin = function (req, res, next) {
     else {
         next()
     }
+    */
+   next()
 };
 
 
 exports.requiresLoginSql = function (req, res, next) {
+    /*
     if (req.query.token != 'aa4b5a08e686243bbf06c424c01d5fa93f61f6252da6e4b738342249ee9d0e90bad809') {
         res.end('Unauthorized');
     }
+    */
     next()
 };
 
@@ -55,11 +60,12 @@ exports.requiresLoginSql = function (req, res, next) {
 
 exports.user = {
     hasAuthorization : function (req, res, next) {
-      if (req.profile.id != req.user.id) {
+    /*  if (req.profile.id != req.user.id) {
         return res.redirect('/users/'+req.profile.id)
-      }
+      } */
       next()
     }
+    
 }
 
 

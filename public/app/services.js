@@ -51,7 +51,8 @@ window.angular.module('bp4.services.global', [])
         }
 
         function isSignedIn() {
-            return !!currentUser;
+            true
+            // return !!currentUser;
         }
 
         function setModule(mod) {
