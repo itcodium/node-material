@@ -1,3 +1,3 @@
 git add .
-git commit -m "Agen modif (I)."
+git commit -m "Se guarda copia base datos."
 git push origin master
