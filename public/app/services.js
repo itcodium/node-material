@@ -6,7 +6,7 @@ window.angular.module('bp4.services.global', [])
 
 
 
-        debugger
+
         var currentUser = window.user;
 
         var currentModule = 'TC';
