@@ -3,11 +3,11 @@
  */
 
 
-var  crypto = require('crypto');
-var vEncriptar=require('../../app/utils/encriptar.js')
+var crypto = require('crypto');
+var vEncriptar = require('../../app/utils/encriptar.js')
 
 
-var pimEmail=require('../../app/controllers/email/email.js')
+var pimEmail = require('../../app/controllers/email/email.js')
 
 
 //exports.signin = function (req, res) {}
@@ -21,85 +21,85 @@ var pimEmail=require('../../app/controllers/email/email.js')
 
 var sql = require('mysql');
 
-var MSSQLError=require('../utils/MSSQLError.js')
-var ErrorSQL=new MSSQLError.MSSQLError();
+var MSSQLError = require('../utils/MSSQLError.js')
+var ErrorSQL = new MSSQLError.MSSQLError();
 
 
-exports.usuariosTraerResponsables= function(req, res){
-/*
-    sql.connect(process.config.sql).then(function() {
-        new sql.Request()
-            .execute('dbo.usuarios_traerResponsables').then(function(recordset) {
-                if(recordset[0].length==0){
-                    throw new Error("No se encontraron registros.");
-                }
-                res.jsonp(recordset[0])
-            }).catch(function(err) {
-                res.jsonp(err)
-            });
-    }).catch(function(err) {
-        res.jsonp(err)
-    });
-    */
-
-    
-
-     
-       process.database.query('call usuarios_traerResponsables();',  function (error,data, fields) {
-                  if (error) {
-                        res.status(500).send(ErrorSQL.getError(error));
-                    }else{
-                        if(data[0].length==0){
-                            res.status(500).send(ErrorSQL.getCustomError('No se encontraron usuarios.'));
-                        }else{
-                            res.jsonp(data[0]);
-                        }
+exports.usuariosTraerResponsables = function (req, res) {
+    /*
+        sql.connect(process.config.sql).then(function() {
+            new sql.Request()
+                .execute('dbo.usuarios_traerResponsables').then(function(recordset) {
+                    if(recordset[0].length==0){
+                        throw new Error("No se encontraron registros.");
                     }
+                    res.jsonp(recordset[0])
+                }).catch(function(err) {
+                    res.jsonp(err)
                 });
-       
+        }).catch(function(err) {
+            res.jsonp(err)
+        });
+        */
+
+
+
+
+    process.database.query('call usuarios_traerResponsables();', function (error, data, fields) {
+        if (error) {
+            res.status(500).send(ErrorSQL.getError(error));
+        } else {
+            if (data[0].length == 0) {
+                res.status(500).send(ErrorSQL.getCustomError('No se encontraron usuarios.'));
+            } else {
+                res.jsonp(data[0]);
+            }
+        }
+    });
+
 }
 
 
 
-exports.getAllByLevel= function(req, res){
+exports.getAllByLevel = function (req, res) {
     console.log("1 Usuarios All");
-    if(typeof req.user=='undefined'){
+    if (typeof req.user == 'undefined') {
         res.status(500).send(ErrorSQL.getError("La sesion ha expirado."));
         return;
     }
-    var connection = new sql.Connection(process.config.sql, function(err) {
+    var connection = new sql.Connection(process.config.sql, function (err) {
         new sql.Request(connection)
             .input('nivelSeguridad', sql.Int, req.user.nivelSeguridad)
-            .execute('dbo.usuarios_traerPorNivel').then(function(item) {
-                console.log("2 Usuarios All",item);
+            .execute('dbo.usuarios_traerPorNivel').then(function (item) {
+                console.log("2 Usuarios All", item);
                 res.jsonp(item[0])
-            }).catch(function(err) {
+            }).catch(function (err) {
                 res.status(500).send(ErrorSQL.getError(err));
             });
     });
 }
 
 
-exports.getAll= function(req, res){
+exports.getAll = function (req, res) {
     console.log("1 Usuarios All");
-    var connection = new sql.Connection(process.config.sql, function(err) {
+    var connection = new sql.Connection(process.config.sql, function (err) {
         new sql.Request(connection)
-            .execute('dbo.usuarios_traer').then(function(item) {
-                console.log("2 Usuarios All",item);
+            .execute('dbo.usuarios_traer').then(function (item) {
+                console.log("2 Usuarios All", item);
                 res.jsonp(item[0])
-            }).catch(function(err) {
+            }).catch(function (err) {
                 res.status(500).send(ErrorSQL.getError(err));
             });
     });
 }
 
-exports.getById= function(req, res){
-    var connection = new sql.Connection(process.config.sql, function(err) {
+exports.getById = function (req, res) {
+    var connection = new sql.Connection(process.config.sql, function (err) {
         new sql.Request(connection)
             .input('idUsuario', sql.Int, req.params.userId)
-            .execute('dbo.usuarios_traerPorId').then(function(item) {
+            .execute('dbo.usuarios_traerPorId').then(function (item) {
                 res.jsonp(item[0])
-            }).catch(function(err) {
+            }).catch(function (err) {
                 res.status(500).send(ErrorSQL.getError(err));
             });
     });
@@ -108,7 +108,7 @@ exports.getById= function(req, res){
 
 
 
-exports.update= function (req, res) {
+exports.update = function (req, res) {
 
 }
 
@@ -117,7 +117,7 @@ exports.update= function (req, res) {
 // SQL END-----------------------------------------------------------------
 
 exports.authCallback = function (req, res, next) {
-  res.redirect('/')
+    res.redirect('/')
 }
 
 /**
@@ -127,9 +127,9 @@ exports.authCallback = function (req, res, next) {
 exports.signin = function (req, res) {
 
     res.render('users/signin', {
-    title: 'Signin',
-    message: req.flash('error')
-  })
+        title: 'Signin',
+        message: req.flash('error')
+    })
 }
 
 /**
@@ -137,10 +137,10 @@ exports.signin = function (req, res) {
  */
 
 exports.signup = function (req, res) {
-  res.render('users/signup', {
-    title: 'Sign up',
-    user: new User()
-  })
+    res.render('users/signup', {
+        title: 'Sign up',
+        user: new User()
+    })
 }
 
 /**
@@ -148,10 +148,10 @@ exports.signup = function (req, res) {
  */
 
 exports.signout = function (req, res) {
-  req.logout()
-  req.session.destroy(function (err) {
+    req.logout()
+    req.session.destroy(function (err) {
         res.redirect('/signin'); //Inside a callback… bulletproof!
-  });
+    });
 }
 
 
@@ -169,10 +169,10 @@ exports.session = function (req, res) {
  * Create user
  */
 
-function makePassword(){
+function makePassword () {
     var text = "";
     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    for( var i=0; i < 20; i++ ){
+    for (var i = 0; i < 20; i++) {
         text += possible.charAt(Math.floor(Math.random() * possible.length));
     }
     return text;
@@ -185,17 +185,17 @@ function makePassword(){
  */
 
 exports.show = function (req, res) {
-  console.log("exports.show",req.profile);
-  var user = req.profile
-  res.render('users/show', {
-    title: user.name,
-    user: user
-  })
+    console.log("exports.show", req.profile);
+    var user = req.profile
+    res.render('users/show', {
+        title: user.name,
+        user: user
+    })
 }
 
 exports.me = function (req, res) {
-  console.log("req.user exports.me",req.user);
-  res.jsonp(req.user || null);
+    console.log("req.user exports.me", req.user);
+    res.jsonp(req.user || null);
 }
 
 /**
@@ -203,16 +203,16 @@ exports.me = function (req, res) {
  */
 
 exports.user = function (req, res, next, id) {
-  console.log("exports.user", id);
-  User
-    .findOne({ _id : id })
-    .exec(function (err, user) {
-      if (err) return next(err)
-      if (!user) return next(new Error('Failed to load User ' + id))
-      req.profile = user
+    console.log("exports.user", id);
+    User
+        .findOne({ _id: id })
+        .exec(function (err, user) {
+            if (err) return next(err)
+            if (!user) return next(new Error('Failed to load User ' + id))
+            req.profile = user
 
-      next()
-    })
+            next()
+        })
 }
 
 /**
@@ -223,38 +223,38 @@ exports.abm = function (req, res, next) {
     req.institucion = [];
     req.perfiles = [];
 
-    Institucion.find({},function(err, items) {
+    Institucion.find({}, function (err, items) {
         if (!err) {
             req.institucion = items;
             generarPantalla();
         }
     });
-    Perfiles.find({},function(err, items) {
+    Perfiles.find({}, function (err, items) {
         if (!err) {
             req.perfiles = items;
             generarPantalla();
         }
     });
 
-    function generarPantalla(){
-        if(req.institucion.length > 0 && req.perfiles.length > 0){
-            if(req.id){
+    function generarPantalla () {
+        if (req.institucion.length > 0 && req.perfiles.length > 0) {
+            if (req.id) {
                 User
-                .findOne({ _id : req.id })
-                .exec(function (err, user) {
-                    if (err) return next(err);
-                    if (!user) return next(new Error('Failed to load User ' + id));
-                    var objUser = user;
-                    res.render('users/abm', {
-                        title: 'ABM Usuarios',
-                        action: 'editar',
-                        user: req.user ? JSON.stringify(req.user) : null,
-                        institucion: req.institucion,
-                        perfiles: req.perfiles,
-                        objUser: objUser
-                    });
-                })
-            }else{
+                    .findOne({ _id: req.id })
+                    .exec(function (err, user) {
+                        if (err) return next(err);
+                        if (!user) return next(new Error('Failed to load User ' + id));
+                        var objUser = user;
+                        res.render('users/abm', {
+                            title: 'ABM Usuarios',
+                            action: 'editar',
+                            user: req.user ? JSON.stringify(req.user) : null,
+                            institucion: req.institucion,
+                            perfiles: req.perfiles,
+                            objUser: objUser
+                        });
+                    })
+            } else {
                 res.render('users/abm', {
                     title: 'ABM Usuarios',
                     action: 'alta',
@@ -268,22 +268,22 @@ exports.abm = function (req, res, next) {
     }
 }
 
-exports.deleteUsers = function(req, res, next){
+exports.deleteUsers = function (req, res, next) {
     var x = 0;
-    function dUser(){
-        if(x < req.ids.length){
-            if(req.ids[x] != ""){
+    function dUser () {
+        if (x < req.ids.length) {
+            if (req.ids[x] != "") {
                 User.findByIdAndRemove(req.ids[x],
-                                        function(err){
-                                            if (err) return next(err);
-                                            dUser();
-                                        });
+                    function (err) {
+                        if (err) return next(err);
+                        dUser();
+                    });
                 x++;
-            }else{
+            } else {
                 x++;
                 dUser();
             }
-        }else{
+        } else {
             return res.redirect('/#!/usuarios')
         }
     }
@@ -291,18 +291,18 @@ exports.deleteUsers = function(req, res, next){
 }
 
 exports.createABM = function (req, res) {
-    if(req.body.action == "editar"){
+    if (req.body.action == "editar") {
         var objUser = new User();
 
         var ObjUpdate = new Object();
         ObjUpdate.name = req.body.name;
         ObjUpdate.email = req.body.email;
         ObjUpdate.instituciones = [];
-        if(Array.isArray(req.body.instituciones)){
-            for(var x = 0; req.body.instituciones.length > x; x++){
+        if (Array.isArray(req.body.instituciones)) {
+            for (var x = 0; req.body.instituciones.length > x; x++) {
                 ObjUpdate.instituciones.push(req.body.instituciones[x]);
             }
-        }else{
+        } else {
             ObjUpdate.instituciones.push(req.body.instituciones);
         }
 
@@ -315,38 +315,38 @@ exports.createABM = function (req, res) {
 
 
         User
-            .findByIdAndUpdate(req.body._id, ObjUpdate, function (err,itemUser) {
+            .findByIdAndUpdate(req.body._id, ObjUpdate, function (err, itemUser) {
                 if (err) {
-                    return res.redirect('/usuarios/'+objUser._id);
+                    return res.redirect('/usuarios/' + objUser._id);
                 }
 
-                Institucion.find({},function(err, items) {
+                Institucion.find({}, function (err, items) {
                     if (!err) {
 
-                        var institu=[];
-                        console.log ("req.body.instituciones",req.body.instituciones);
+                        var institu = [];
+                        console.log("req.body.instituciones", req.body.instituciones);
 
-                        if (typeof req.body.instituciones!='undefined'){
-                            for(var i = 0; (req.body.instituciones.length > i) ; i++){
-                                for(var j = 0; items.length > j; j++){
-                                    if(items[j]._id==req.body.instituciones[i]){
+                        if (typeof req.body.instituciones != 'undefined') {
+                            for (var i = 0; (req.body.instituciones.length > i); i++) {
+                                for (var j = 0; items.length > j; j++) {
+                                    if (items[j]._id == req.body.instituciones[i]) {
                                         institu.push(items[j]);
                                         break;
                                     }
                                 }
                             }
                         }
-                        
+
                     }
                 });
             }).populate("instituciones");
 
-    }else{
+    } else {
         var objUser = new User(req.body)
         objUser.provider = 'local'
         objUser.save(function (err) {
             if (err) {
-                return res.redirect('/usuarios/'+objUser._id);
+                return res.redirect('/usuarios/' + objUser._id);
             }
             return res.redirect('/#!/usuarios')
         })
@@ -355,14 +355,13 @@ exports.createABM = function (req, res) {
 
 };
 
-exports.getUser = function(req, res){
-    var filter= null;//{ 'fechaProceso': undefined};
-    User.find(filter,function(err, items) {
+exports.getUser = function (req, res) {
+    var filter = null;//{ 'fechaProceso': undefined};
+    User.find(filter, function (err, items) {
         if (err) {
-            res.render('error', {status: 500});
+            res.render('error', { status: 500 });
         } else {
             res.jsonp(items);
         }
     });
 };
-

@@ -3,19 +3,19 @@
  */
 
 var express = require('express')
-  , flash = require('connect-flash')
+
   , helpers = require('view-helpers')
 var favicon = require('serve-favicon');
 
 var session = require('express-session')
-
+var flash = require('connect-flash')
 var methodOverride = require('method-override')
 //var mongoStore = require('connect-mongo')(session);
 var compress = require('compression')
 
 module.exports = function (app, config, passport) {
 
-	
+
 
   app.set('showStackError', true)
   // should be placed before express.static
@@ -27,7 +27,7 @@ module.exports = function (app, config, passport) {
   }))
 
 
-//app.use(favicon(__dirname + '/public/favicon.ico'));
+  //app.use(favicon(__dirname + '/public/favicon.ico'));
   app.use(express.static(config.root + '/public'))
 
 
@@ -35,20 +35,22 @@ module.exports = function (app, config, passport) {
   //set views path, template engine and default layout
   app.set('views', config.root + '/app/views')
   app.set('view engine', 'jade')
-  
+
   //  enable jsonp
   app.enable("jsonp callback")
 
   // ---- Nuevo codigo ----
-  
+
   app.use(helpers(config.app.name))
   app.use(methodOverride())
 
-  app.use(session({ resave: true,
+  app.use(session({
+    resave: true,
     saveUninitialized: true,
-    secret: 'uwotm80088mm0000' ,
+    secret: 'uwotm80088mm0000',
     name: process.env.NODE_ENV,
-    cookie: { maxAge:3600000 }}));
+    cookie: { maxAge: 3600000 }
+  }));
   app.use(function (req, res, next) {
     if ('HEAD' == req.method || 'OPTIONS' == req.method) { return next() }
     // console.log('Last expires: ', req.session.cookie._expires);
@@ -68,10 +70,9 @@ module.exports = function (app, config, passport) {
     }));
   */
 
-  app.use(flash())
-  app.use(passport.initialize())
-  app.use(passport.session())
 
-  
+  app.use(passport.initialize())
+  app.use(passport.session({ secret: '123' }))
+  app.use(flash())
 
 }

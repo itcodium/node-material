@@ -6,7 +6,7 @@ window.angular.module('bp4.services.global', [])
 
 
 
-
+        debugger
         var currentUser = window.user;
 
         var currentModule = 'TC';
@@ -15,6 +15,7 @@ window.angular.module('bp4.services.global', [])
             module: []
         };
 
+
         if (!isSignedIn()) {
 
             if (window.location.pathname != "/signin") {
@@ -22,6 +23,7 @@ window.angular.module('bp4.services.global', [])
             }
 
         }
+
 
         var menu = [];
 
@@ -42,20 +44,19 @@ window.angular.module('bp4.services.global', [])
         return global;
 
 
-        function goToSignIn() {
+        function goToSignIn () {
             window.location.href = "signin"
         }
 
-        function logout() {
+        function logout () {
             window.location.href = "/signout";
         }
 
-        function isSignedIn() {
-            true
-            // return !!currentUser;
+        function isSignedIn () {
+            return !!currentUser;
         }
 
-        function setModule(mod) {
+        function setModule (mod) {
 
             switch (mod) {
                 case 'TC':
@@ -143,14 +144,14 @@ window.angular.module('bp4.services.global', [])
                                     url: 'controlSucursales',
                                     type: 'link'
                                 },
-                           
+
                                 {
                                     name: 'Beneficiarios Sin Relación Con Cuenta',
                                     enabled: enabledMenu.sinRelacion,
                                     url: 'sinRelacion',
                                     type: 'link'
                                 },
-                                
+
                                 {
                                     name: 'Clientes Rechazados',
                                     enabled: enabledMenu.reportesClientesRechazados,
@@ -546,7 +547,7 @@ window.angular.module('bp4.services.global', [])
                 sections.push({
                     name: 'Seguridad',
                     // enabled:  enabledMenu.seguridad,
-                    enabled:  false,
+                    enabled: false,
                     type: 'heading',
                     children: [
 
@@ -607,9 +608,9 @@ window.angular.module('bp4.services.global', [])
                 }
             };
 
-            function loadEnabledMenuOptions(permisos) {
-                function tienePermiso(permiso) {
-                    function filtrarPorCodigo(permiso) {
+            function loadEnabledMenuOptions (permisos) {
+                function tienePermiso (permiso) {
+                    function filtrarPorCodigo (permiso) {
                         return permiso.codigo === this.valueOf();
                     }
                     return permisos.filter(filtrarPorCodigo, permiso).length > 0;
@@ -665,7 +666,7 @@ window.angular.module('bp4.services.global', [])
                 var categorias = allTablasParametricas || tienePermiso('tablasParametricas.categorias');
                 var sucursales = allTablasParametricas || tienePermiso('tablasParametricas.sucursales');
                 var sucursal2 = allTablasParametricas || tienePermiso('tablasParametricas.sucursal2');
-                
+
                 var caracteres = allTablasParametricas || tienePermiso('tablasParametricas.caracteresEspeciales');
                 var divisiones = allTablasParametricas || tienePermiso('tablasParametricas.divisiones');
                 var regiones = allTablasParametricas || tienePermiso('tablasParametricas.regiones');
@@ -677,7 +678,7 @@ window.angular.module('bp4.services.global', [])
                 var digitadores = allTablasParametricas || tienePermiso('tablasParametricas.digitadores');
                 const cotizacion = allTablasParametricas || tienePermiso('tablasParametricas.cotizacion');
 
-                var tablasParametricas = apoderados || categorias || sucursales || sucursal2 ||  ejemplo || mailsConfigurables || retenciones || fallecidosPeriodo || contabilidad || digitadores || cotizacion;
+                var tablasParametricas = apoderados || categorias || sucursales || sucursal2 || ejemplo || mailsConfigurables || retenciones || fallecidosPeriodo || contabilidad || digitadores || cotizacion;
 
                 var allUsuarios = tienePermiso('usuarios');
                 var usuariosList = allUsuarios || tienePermiso('usuarios.usuariosList');
@@ -688,16 +689,16 @@ window.angular.module('bp4.services.global', [])
 
 
                 var administracion = procesos || tablasParametricas;
-                var seguridad = usuarios;  
+                var seguridad = usuarios;
 
 
                 var allReportes = tienePermiso('reportes');
                 var reporteTC = allReportes || tienePermiso('reportes.reportesTC');
-                
-                
+
+
                 var masterSeguros = allReportes || tienePermiso('reportes.masterSeguros');
                 var controlSucursales = allReportes || tienePermiso('reportes.controlSucursales');
-                
+
                 var sinRelacion = allReportes || tienePermiso('reportes.sinRelacion');
                 var reporteTarjetasEnBoletin = allReportes || tienePermiso('reportes.reporteTarjetasEnBoletin');
                 var reporteBajaApoderados = allReportes || tienePermiso('reportes.bajaApoderados');
@@ -708,7 +709,7 @@ window.angular.module('bp4.services.global', [])
                 var movimientosLiquidados = allReportes || tienePermiso('reportes.movimientosLiquidados');
                 var cuotasPendientes = allReportes || tienePermiso('reportes.cuotasPendientes');
 
-                var reportes = reporteTC || procesoConvenio || dgiDiferencias || controlSucursales ||   masterSeguros || sinRelacion || reporteBajaApoderados || reporteTarjetasEnBoletin || recargables || campaniasPorCierre || movimientosLiquidados || cuotasPendientes;
+                var reportes = reporteTC || procesoConvenio || dgiDiferencias || controlSucursales || masterSeguros || sinRelacion || reporteBajaApoderados || reporteTarjetasEnBoletin || recargables || campaniasPorCierre || movimientosLiquidados || cuotasPendientes;
 
                 var allReclamos = tienePermiso('reclamos');
                 var cruceVISACO = allReclamos || tienePermiso('reclamos.cruceVISACO');
@@ -718,7 +719,7 @@ window.angular.module('bp4.services.global', [])
 
                 var reclamos = allReclamos || cruceVISACO || cancelaciones || partPendientesVi || electron;
 
-                var allNovedadesMasivas= tienePermiso('novedadesMasivas');
+                var allNovedadesMasivas = tienePermiso('novedadesMasivas');
                 var allNovedadesMasivas = tienePermiso('novedadesMasivas');
                 var cantidadCuentasTarjetas = allNovedadesMasivas || tienePermiso('novedadesMasivas.cantidadCuentasTarjetas');
                 var rechazosUnificado = allNovedadesMasivas || tienePermiso('novedadesMasivas.rechazosUnificado');
@@ -781,7 +782,7 @@ window.angular.module('bp4.services.global', [])
                     categorias: categorias,
                     sucursales: sucursales,
                     sucursal2: sucursal2,
-                    
+
                     caracteres: caracteres,
                     divisiones: divisiones,
                     regiones: regiones,
@@ -793,8 +794,8 @@ window.angular.module('bp4.services.global', [])
                     dgiDiferencias: dgiDiferencias,
                     controlSucursales: controlSucursales,
                     reporteTC: reporteTC,
-                    
-                    
+
+
                     masterSeguros: masterSeguros,
                     sinRelacion: sinRelacion,
                     recargables: recargables,
@@ -818,15 +819,15 @@ window.angular.module('bp4.services.global', [])
                     cruceVISACO: cruceVISACO,
                     cancelaciones: cancelaciones,
                     partPendientesVi: partPendientesVi,
-                    electron:electron,
-		    partPendientesVi : partPendientesVi,
+                    electron: electron,
+                    partPendientesVi: partPendientesVi,
                     movimientosLiquidados: movimientosLiquidados,
                     cuotasPendientes: cuotasPendientes
                 };
             }
 
             /* funcion de Debug -- completar lista*/
-            function returnFullyEnabled() {
+            function returnFullyEnabled () {
                 return {
                     portal: true,
                     agenda: true,
@@ -843,7 +844,7 @@ window.angular.module('bp4.services.global', [])
                     categorias: true,
                     sucursales: true,
                     sucursal2: true,
-                    
+
                     ejemplo: true,
                     usuarios: true,
                     usuariosList: true,
@@ -853,7 +854,7 @@ window.angular.module('bp4.services.global', [])
 
 
 
-            function onLocationChange() {
+            function onLocationChange () {
                 var path = $location.path();
 
                 var introLink = {
@@ -923,7 +924,7 @@ window.angular.module('bp4.services.global', [])
              str = substr(str, start);
              str = substr(str, start, end);
              */
-            function substr(miben, start, end) {
+            function substr (miben, start, end) {
                 if (length(miben) == 0) {
                     return "";
                 }
@@ -943,7 +944,7 @@ window.angular.module('bp4.services.global', [])
             }
 
 
-            function clone(obj) {
+            function clone (obj) {
                 if (obj === null || typeof obj !== 'object') {
                     return obj;
                 }
@@ -956,12 +957,12 @@ window.angular.module('bp4.services.global', [])
                 return temp;
             }
 
-            function extraer(qfrom, qwhere) {
+            function extraer (qfrom, qwhere) {
                 return clone($filter('filter')(qfrom, qwhere)[0]);
             }
 
 
-            function alertar(obj, mensaje, type, timoff, strong, linkText, linkFunc) {
+            function alertar (obj, mensaje, type, timoff, strong, linkText, linkFunc) {
 
                 var len = obj.length;
                 if (len > 5) {
@@ -1010,7 +1011,7 @@ window.angular.module('bp4.services.global', [])
                 }
             };
 
-            function setModule(module) {
+            function setModule (module) {
 
             }
 
@@ -1032,7 +1033,7 @@ window.angular.module('bp4.services.global', [])
 
         return logger;
 
-        function log(message, type) {
+        function log (message, type) {
 
             var logEntry = {
                 id: counter++,
@@ -1042,7 +1043,7 @@ window.angular.module('bp4.services.global', [])
             logEntries.push(logEntry);
         }
 
-        function cach(oper, obj, tabla) {
+        function cach (oper, obj, tabla) {
 
 
             switch (oper) {
@@ -1164,7 +1165,7 @@ window.angular.module('bp4.services.global', [])
             showSuccess: showSuccess
         };
 
-        function showError(message, className) {
+        function showError (message, className) {
             var msg = message ? message : 'Hubo un error al realizar la operación';
 
             $mdToast.show({
@@ -1175,7 +1176,7 @@ window.angular.module('bp4.services.global', [])
             });
         }
 
-        function showSuccess(message, hideDelay) {
+        function showSuccess (message, hideDelay) {
             var msg = message ? message : 'La operación se realizó correctamente';
 
             $mdToast.show({
@@ -1224,7 +1225,7 @@ window.angular.module('bp4.services.global', [])
         });
     }])
 
-     
+
 
     .factory('Retenciones', ['$resource', function ($resource) {
         return $resource('/api/retencion/:idRegimen', null, {

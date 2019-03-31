@@ -1,8 +1,8 @@
 window.angular.module('bp4.controllers.header', [])
 
-//warning: there´r 3 controllers included... see above, caob.
+    //warning: there´r 3 controllers included... see above, caob.
 
-	.controller('MenuCtrl',
+    .controller('MenuCtrl',
         //['$scope', 'Global', '$timeout', '$mdSidenav', '$log',
         // testing: Apparently this (way of enunciation) is no longer necessary, todo caob.
 
@@ -10,7 +10,7 @@ window.angular.module('bp4.controllers.header', [])
 
             var self = this;
 
-
+            debugger
             $scope.global = Global;
 
             Global.setModule('TC');  //todo caob
@@ -25,10 +25,10 @@ window.angular.module('bp4.controllers.header', [])
              * Supplies a function that will continue to operate until the
              * time is up.
              */
-            function debounce(func, wait, context) {
+            function debounce (func, wait, context) {
                 var timer;
 
-                return function debounced() {
+                return function debounced () {
                     var context = $scope,
                         args = Array.prototype.slice.call(arguments);
                     $timeout.cancel(timer);
@@ -43,7 +43,7 @@ window.angular.module('bp4.controllers.header', [])
              * Build handler to open/close a SideNav; when animation finishes
              * report completion in console
              */
-            function buildDelayedToggler(navID) {
+            function buildDelayedToggler (navID) {
                 return debounce(function () {
                     $mdSidenav(navID)
                         .toggle()
@@ -53,7 +53,7 @@ window.angular.module('bp4.controllers.header', [])
                 }, 200);
             }
 
-            function buildToggler(navID) {
+            function buildToggler (navID) {
                 return function () {
                     $mdSidenav(navID)
                         .toggle()
@@ -86,7 +86,7 @@ window.angular.module('bp4.controllers.header', [])
                 configurable: true
             });
 
-            $rootScope.redirectToUrl = function(url) {
+            $rootScope.redirectToUrl = function (url) {
                 $location.path(url);
                 $timeout(function () { $rootScope.relatedPage = null; }, 100);
             };
@@ -104,24 +104,24 @@ window.angular.module('bp4.controllers.header', [])
             // Internal methods
             // *********************
 
-            function closeMenu() {
-                $timeout(function() { $mdSidenav('left').close(); });
+            function closeMenu () {
+                $timeout(function () { $mdSidenav('left').close(); });
             }
 
-            function openMenu() {
-                $timeout(function() { $mdSidenav('left').open(); });
+            function openMenu () {
+                $timeout(function () { $mdSidenav('left').open(); });
             }
 
-            function path() {
+            function path () {
                 return $location.path();
             }
 
-            function goHome($event) {
+            function goHome ($event) {
                 menu.selectPage(null, null);
-                $location.path( '/' );
+                $location.path('/');
             }
 
-            function openPage() {
+            function openPage () {
                 $scope.closeMenu();
 
                 if (self.autoFocusContent) {
@@ -130,29 +130,29 @@ window.angular.module('bp4.controllers.header', [])
                 }
             }
 
-            function focusMainContent($event) {
+            function focusMainContent ($event) {
                 // prevent skip link from redirecting
                 if ($event) { $event.preventDefault(); }
 
-                $timeout(function(){
+                $timeout(function () {
                     mainContentArea.focus();
-                },90);
+                }, 90);
 
             }
 
-            function isSelected(page) {
+            function isSelected (page) {
                 return menu.isPageSelected(page);
             }
 
-            function isSectionSelected(section) {
+            function isSectionSelected (section) {
                 var selected = false;
                 var openedSection = menu.openedSection;
-                if(openedSection === section){
+                if (openedSection === section) {
                     selected = true;
                 }
-                else if(section.children) {
-                    section.children.forEach(function(childSection) {
-                        if(childSection === openedSection){
+                else if (section.children) {
+                    section.children.forEach(function (childSection) {
+                        if (childSection === openedSection) {
                             selected = true;
                         }
                     });
@@ -160,11 +160,11 @@ window.angular.module('bp4.controllers.header', [])
                 return selected;
             }
 
-            function isOpen(section) {
+            function isOpen (section) {
                 return menu.isSectionSelected(section);
             }
 
-            function toggleOpen(section) {
+            function toggleOpen (section) {
                 menu.toggleSelectSection(section);
             }
 
@@ -182,9 +182,9 @@ window.angular.module('bp4.controllers.header', [])
         $scope.fbhover = false;
 
 
-        $scope.$watch('fb.isOpen', function(isOpen) {
+        $scope.$watch('fb.isOpen', function (isOpen) {
             if (isOpen) {
-                $timeout(function() {
+                $timeout(function () {
                     $scope.tooltipVisible = self.isOpen;
                 }, 600);
             } else {
@@ -202,28 +202,28 @@ window.angular.module('bp4.controllers.header', [])
         }
 
         $scope.openMenu = function () {
-            $timeout(function() { $mdSidenav('left').open(); });
+            $timeout(function () { $mdSidenav('left').open(); });
         }
 
-        $scope.goTo = function(action) {
+        $scope.goTo = function (action) {
             var path = $location.path();
 
-            if (action == 'next'){$window.history.forward();}
+            if (action == 'next') { $window.history.forward(); }
 
             if (path == '/') {
-                $location.path( '/' );
+                $location.path('/');
                 return;
             }
 
 
-            if (action == 'home'){
+            if (action == 'home') {
                 $scope.menu.selectPage(null, null);
-                $location.path( '/' );
+                $location.path('/');
             }
 
-            if (action == 'last'){$window.history.back();}
+            if (action == 'last') { $window.history.back(); }
 
-            if (action == 'me'){
+            if (action == 'me') {
                 $route.reload();
             }
 

@@ -1,32 +1,34 @@
 var express = require('express'),
-    fs = require('fs'),
-    passport = require('passport')
+	fs = require('fs'),
+	passport = require('passport')
 
 var path = require('path')
 var http = require('http')
-var vEncriptar=require('./config/encriptar.js')
+var vEncriptar = require('./config/encriptar.js')
 
 var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser')
 var connect = require('connect')
-var  crypto = require('crypto')
+var crypto = require('crypto')
 var _ = require('underscore')
 var winston = require('winston')
 require('./config/polyfills.js');
 
-var env = process.env.NODE_ENV || 'desconocido'  ,
-    config = require('./config/config')
-    , auth = require('./config/middlewares/authorization')
+
+
+var env = process.env.NODE_ENV || 'desconocido',
+	config = require('./config/config')
+	, auth = require('./config/middlewares/authorization')
 
 require('./config/passport')(passport, config)
 var app = express();
 
 var server = http.createServer(app);
 
-server.on('request', function(request, response) {
-	
-	if(request.url.indexOf("/api")>=0){
-		console.log("- Request -",request.url)
+server.on('request', function (request, response) {
+
+	if (request.url.indexOf("/api") >= 0) {
+		console.log("- Request -", request.url)
 	}
 });
 
@@ -53,25 +55,31 @@ process.config.sql = config.sql;
 
 var mysql = require('mysql');
 
-var ldb={
-		  connectionLimit : 50,
-		  host            : 'localhost',
-		  user            : 'root',
-		  password        : '123123',
-		  database        : 'mean'
-		};
-		
+var ldb = {
+	connectionLimit: 50,
+	host: 'localhost',
+	user: 'root',
+	password: '123123',
+	database: 'mean_last'
+};
+
+
 var pool;
 
-	if(process.env.NODE_ENV=="PRODUCTION"){
-		ldb.host="mysql"
-		pool= mysql.createPool( ldb);
-	}else{
-		pool= mysql.createPool(ldb);
-	}
-process.database=pool;
- 
+if (process.env.NODE_ENV == "PRODUCTION") {
+	ldb.host = "mysql"
+	pool = mysql.createPool(ldb);
+} else {
+	pool = mysql.createPool(ldb);
+}
+process.database = pool;
 
+/*
+process.database.query('select * from mean_last.perfilaccion', function (error, data, fields) {
+	console.log(" - error - ", error);
+	console.log(" - mean.perfilAccion - ", data);
+});
+*/
 console.log('The db is:', ldb);
 
 
@@ -90,10 +98,9 @@ process.config.sql.password="123123";
 server.listen(port,function(){
 	console.log('Express server se ha iniciado correctamente - port: ',port);
 });
- 
- 
+
+
 // process.config.ldap = config['Ldap'];
 
  */
 exports = module.exports = app
- 
