@@ -10,7 +10,7 @@ window.angular.module('bp4.controllers.header', [])
 
             var self = this;
 
-            debugger
+
             $scope.global = Global;
 
             Global.setModule('TC');  //todo caob
