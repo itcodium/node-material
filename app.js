@@ -67,7 +67,7 @@ var ldb = {
 var pool;
 
 if (process.env.NODE_ENV == "PRODUCTION") {
-	ldb.host = "mysql"
+	ldb.host = "ilimek"
 	pool = mysql.createPool(ldb);
 } else {
 	pool = mysql.createPool(ldb);

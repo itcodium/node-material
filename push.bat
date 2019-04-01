@@ -1,3 +1,3 @@
 git add .
-git commit -m "Se cambia el nombre de la base de datos a mean."
+git commit -m "Se el host de la coneccion a la base de datos."
 git push origin master
