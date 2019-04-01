@@ -60,7 +60,7 @@ var ldb = {
 	host: 'localhost',
 	user: 'root',
 	password: '123123',
-	database: 'mean_last'
+	database: 'mean'
 };
 
 
