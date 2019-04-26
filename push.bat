@@ -1,3 +1,3 @@
 git add .
-git commit -m "Se el host de la coneccion a la base de datos."
+git commit -m "agrega enpoint de video."
 git push origin master

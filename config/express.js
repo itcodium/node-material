@@ -12,6 +12,8 @@ var flash = require('connect-flash')
 var methodOverride = require('method-override')
 //var mongoStore = require('connect-mongo')(session);
 var compress = require('compression')
+var cors = require('cors')
+
 
 module.exports = function (app, config, passport) {
 
@@ -25,6 +27,8 @@ module.exports = function (app, config, passport) {
     },
     level: 9
   }))
+
+  app.use(cors())
 
 
   //app.use(favicon(__dirname + '/public/favicon.ico'));

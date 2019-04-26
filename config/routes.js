@@ -2,6 +2,8 @@
   , http = require('http')
   , fs = require('fs');
 
+  var cors = require('cors')
+
 module.exports = function (app, passport, auth) {
 
   /*
@@ -720,6 +722,17 @@ module.exports = function (app, passport, auth) {
   app.get('/api/cotizacion/moneda', auth.requiresLogin, vCotizacion.ObtenerMonedas);
   app.post('/api/cotizacion/cotizacion', auth.requiresLogin, vCotizacion.GuardarCotizacion);
   app.delete('/api/cotizacion/cotizacion', auth.requiresLogin, vCotizacion.EliminarCotizaciones);
+
+
+  
+  const vVideo = require('../app/controllers/video');
+  app.get('/api/video/contents',cors(), vVideo.videoContentFilterGetAll);
+  
+  /*
+  app.get('/api/cotizacion/moneda', auth.requiresLogin, vCotizacion.ObtenerMonedas);
+  app.post('/api/cotizacion/cotizacion', auth.requiresLogin, vCotizacion.GuardarCotizacion);
+  app.delete('/api/cotizacion/cotizacion', auth.requiresLogin, vCotizacion.EliminarCotizaciones);
+*/
 
   // exceptions: si es "lib" y no "api" no sigue (no tiene next(); )
   app.use('/lib/*', function (req, res, next) {
