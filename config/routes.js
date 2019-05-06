@@ -724,9 +724,17 @@ module.exports = function (app, passport, auth) {
   app.delete('/api/cotizacion/cotizacion', auth.requiresLogin, vCotizacion.EliminarCotizaciones);
 
 
-  
+
+
+    
   const vVideo = require('../app/controllers/video');
-  app.get('/api/video/contents',cors(), vVideo.videoContentFilterGetAll);
+  
+  app.get('/api/video/contentsV0',cors(), vVideo.videoContentFilterGetAllV0);
+  app.get('/api/video/contentsV1',cors(), vVideo.videoContentFilterGetAllV1);
+  app.get('/api/video/contentSimple',cors(), vVideo.videoContentFilterGetAllSimple);
+  app.post('/api/video/contentReorder',cors(), vVideo.contentReorder);
+  
+  
   
   /*
   app.get('/api/cotizacion/moneda', auth.requiresLogin, vCotizacion.ObtenerMonedas);

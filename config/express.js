@@ -28,7 +28,8 @@ module.exports = function (app, config, passport) {
     level: 9
   }))
 
-  app.use(cors())
+
+
 
 
   //app.use(favicon(__dirname + '/public/favicon.ico'));
@@ -78,5 +79,14 @@ module.exports = function (app, config, passport) {
   app.use(passport.initialize())
   app.use(passport.session({ secret: '123' }))
   app.use(flash())
+    
+ 
+
+  app.options('*', cors()) 
+
+
+ 
+
+
 
 }
