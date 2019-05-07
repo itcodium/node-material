@@ -39,6 +39,7 @@ exports.videoContentFilterGetAllV1 = function (req, res) {
         page,
         new_order
     ];
+    console.log("+ params + ",params)
     process.database.query('call video_contentFilter_getAll(?,?,?,?,?)', params,function (error,data, fields) {
         if (error) {
             res.status(500).send(ErrorSQL.getError(error));
@@ -91,12 +92,12 @@ exports.videoContentFilterGetAllV0 = function (req, res) {
     });
 };
 
-exports.videoContentFilterGetAllSimple = function (req, res) {
+exports.contentSimple = function (req, res) {
     var params=[ 
               req.query.periodo,
               typeof req.query.convenio=='undefined'? '':  req.query.convenio,
                req.query.limit,
-              req.query.page,
+              req.query.page * req.query.limit,
               req.query.order
           ];
      console.log("-----------------------------------------")
@@ -115,9 +116,12 @@ exports.videoContentFilterGetAllSimple = function (req, res) {
 };
  
 exports.contentReorder = function (req, res) {
-    var params=[req.body.id,req.body.position];
-    console.log("params 0",params);
-    process.database.query('call video_contentFilter_ChangeOrder(?,?)', params,function (error,data, fields) {
+  
+    console.log("req.body: ",req.body );
+    var paramsSql=[req.body.idOrigen,req.body.idDest];
+    console.log("paramsSql: ",paramsSql);
+    
+    process.database.query('call video_contentFilter_ChangeOrder(?,?)', paramsSql,function (error,data, fields) {
         if (error) {
             console.log("error 0",error);
              res.jsonp({"status":"ERROR","message": error.sqlMessage });

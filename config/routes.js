@@ -731,7 +731,7 @@ module.exports = function (app, passport, auth) {
   
   app.get('/api/video/contentsV0',cors(), vVideo.videoContentFilterGetAllV0);
   app.get('/api/video/contentsV1',cors(), vVideo.videoContentFilterGetAllV1);
-  app.get('/api/video/contentSimple',cors(), vVideo.videoContentFilterGetAllSimple);
+  app.get('/api/video/contentSimple',cors(), vVideo.contentSimple);
   app.post('/api/video/contentReorder',cors(), vVideo.contentReorder);
   
   
