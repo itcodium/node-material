@@ -733,6 +733,13 @@ module.exports = function (app, passport, auth) {
   app.get('/api/video/contentsV1',cors(), vVideo.videoContentFilterGetAllV1);
   app.get('/api/video/contentSimple',cors(), vVideo.contentSimple);
   app.post('/api/video/contentReorder',cors(), vVideo.contentReorder);
+  // Amco 
+  app.get('/api/amco/filters',cors(), vVideo.amcoFilterGetAll);
+  app.get('/api/amco/filters/:idFilter',cors(), vVideo.GetAmcoFiltersById);
+  app.post('/api/amco/filters/content',cors(), vVideo.contentFilterCheckInsert);
+  
+  
+  app.get('/api/amco/contents/:idFilter',cors(), vVideo.amcoContentFilterGetAll);
   
   
   
