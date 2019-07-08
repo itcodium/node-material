@@ -12,6 +12,8 @@ var flash = require('connect-flash')
 var methodOverride = require('method-override')
 //var mongoStore = require('connect-mongo')(session);
 var compress = require('compression')
+var cors = require('cors')
+
 
 module.exports = function (app, config, passport) {
 
@@ -25,6 +27,9 @@ module.exports = function (app, config, passport) {
     },
     level: 9
   }))
+
+
+
 
 
   //app.use(favicon(__dirname + '/public/favicon.ico'));
@@ -74,5 +79,32 @@ module.exports = function (app, config, passport) {
   app.use(passport.initialize())
   app.use(passport.session({ secret: '123' }))
   app.use(flash())
+
+  const whitelist = ['http://172.21.34.161', 'http://dev.adm.dlatv.net', 'http://example2.com']
+  const corsOptions = {
+  origin: function(origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  }
+  } 
+
+  app.options('*', cors())
+  app.use(cors(corsOptions ));
+
+  /*
+  app.use(function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+    res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
+    next();
+});
+*/
+
+
+
 
 }

@@ -2,6 +2,8 @@
   , http = require('http')
   , fs = require('fs');
 
+  var cors = require('cors')
+
 module.exports = function (app, passport, auth) {
 
   /*
@@ -720,6 +722,32 @@ module.exports = function (app, passport, auth) {
   app.get('/api/cotizacion/moneda', auth.requiresLogin, vCotizacion.ObtenerMonedas);
   app.post('/api/cotizacion/cotizacion', auth.requiresLogin, vCotizacion.GuardarCotizacion);
   app.delete('/api/cotizacion/cotizacion', auth.requiresLogin, vCotizacion.EliminarCotizaciones);
+
+
+
+
+    
+  const vVideo = require('../app/controllers/video');
+  
+  app.get('/api/video/contentsV0',cors(), vVideo.videoContentFilterGetAllV0);
+  app.get('/api/video/contentsV1',cors(), vVideo.videoContentFilterGetAllV1);
+  app.get('/api/video/contentSimple',cors(), vVideo.contentSimple);
+  app.post('/api/video/contentReorder',cors(), vVideo.contentReorder);
+  // Amco 
+  app.get('/api/amco/filters',cors(), vVideo.amcoFilterGetAll);
+  app.get('/api/amco/filters/:idFilter',cors(), vVideo.GetAmcoFiltersById);
+  app.post('/api/amco/filters/content',cors(), vVideo.contentFilterCheckInsert);
+  
+  
+  app.get('/api/amco/contents/:idFilter',cors(), vVideo.amcoContentFilterGetAll);
+  
+  
+  
+  /*
+  app.get('/api/cotizacion/moneda', auth.requiresLogin, vCotizacion.ObtenerMonedas);
+  app.post('/api/cotizacion/cotizacion', auth.requiresLogin, vCotizacion.GuardarCotizacion);
+  app.delete('/api/cotizacion/cotizacion', auth.requiresLogin, vCotizacion.EliminarCotizaciones);
+*/
 
   // exceptions: si es "lib" y no "api" no sigue (no tiene next(); )
   app.use('/lib/*', function (req, res, next) {
