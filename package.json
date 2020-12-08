@@ -21,7 +21,7 @@
     "express": "^4.16.3",
     "express-session": "^1.15.6",
     "express-timeout": "^0.2.1",
-    "fast-csv": "0.6.0",
+    "fast-csv": "4.3.6",
     "fs": "0.0.1-security",
     "gzippo": "0.2.0",
     "http-errors": "~1.6.2",
